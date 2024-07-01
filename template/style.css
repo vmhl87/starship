@@ -5,7 +5,12 @@ html, body {
 
 body {
 	background-color: #151515;
-	font-family: Monospace;
+
+	font-family: "Noto Sans Mono", monospace;
+	font-variation-settings: "wdth" 100;
+	font-optical-sizing: auto;
+	font-weight: <weight>;
+	font-style: normal;
 	font-size: 14px;
 }
 
@@ -65,6 +70,7 @@ div.post-title {
 
 h3.post-title-name {
 	margin-bottom: 5px;
+	color: #A0A0C0;
 }
 
 div.post-title-date {
