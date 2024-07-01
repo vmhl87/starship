@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css">
+		<title>Blog</title>
+	</head>
+	<body>
+		<div id="main">
+			<div id="title">
+				<h2>Hello World</h2>
+			</div>
+			<div id="posts">
+				<div class="post">
+					<div class="content">
+						<h3>A post</h3>
+						<p>Starship is a templating blog generation system.</p>
+						<a>read more...</a>
+					</div>
+				</div>
+				<div class="post">
+					<div class="content">
+						<h3>How does templating work?</h3>
+						<p>It doesn't. Not yet.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
