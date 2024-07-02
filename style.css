@@ -188,6 +188,7 @@ h1, h2, h3, h4, h5 {
 }
 
 hr {
+	border-top: 1px solid var(--highlight-color);
 	border-color: var(--highlight-color);
 	color: var(--highlight-color);
 }
