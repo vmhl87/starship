@@ -90,6 +90,6 @@ def handle(page):
     print("Index updated successfully")
 
 for i in range(1, len(sys.argv)):
-    if i == "-y": continue
+    if sys.argv[i] == "-y": continue
     print(f"\nHandling {sys.argv[i]}")
     handle(sys.argv[i])
