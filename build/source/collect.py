@@ -1,8 +1,9 @@
 import os
 
-cfg_title = "Blog"
+cfg_version = 1
 
-cfg_version = 1  # DO NOT CHANGE
+script_dir = os.path.dirname(__file__)
+cfg_title = open(os.path.join(script_dir, "title.cfg")).read().strip()
 
 def collect(body, pageroot="index.html", styleroot="style.css"):
     final = ""

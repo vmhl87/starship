@@ -5,6 +5,7 @@ Reads in raw content and returns:
     title - article title
     summary - cut & interlinked summary block
     full - entire standalone page
+    pubname - pagename in URL
 """
 
 def draft(content, pageid):
@@ -69,4 +70,4 @@ def draft(content, pageid):
 </div>\n""" + full
     full += "</div></div>"
 
-    return (title, summary, full)
+    return (title, summary, full, pubname)
