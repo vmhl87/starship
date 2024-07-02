@@ -1,6 +1,6 @@
 import config as cfg
 
-def collect(body):
+def collect(body, root_url="index.html"):
     final = ""
 
     template = open("template.html")
@@ -24,7 +24,7 @@ def collect(body):
 
             elif "name" in line:
                 title = cfg.title()
-                final += f"<a href=\"index.html\">{title}</a>\n"
+                final += f"<a href=\"{root_url}\">{title}</a>\n"
 
             elif "posts" in line:
                 final += body
