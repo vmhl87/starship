@@ -188,6 +188,7 @@ h1, h2, h3, h4, h5 {
 }
 
 hr {
+	border-color: var(--highlight-color);
 	color: var(--highlight-color);
 }
 
@@ -198,5 +199,6 @@ ul li {
 pre.code {
 	background-color: var(--background-color);
 	color: var(--code-color);
+	white-space: pre-wrap;
 	padding: 10px;
 }
