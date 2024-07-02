@@ -26,12 +26,12 @@ def handle(page):
     oid = int(open("../old/state").read().strip())
 
     draft = None
+    o_draft = None
 
     # parse draft
     try:
-        reader = open(page)
-        draft = Draft(reader, pid, "")
-        reader.close()
+        draft = Draft(open(page), pid, "")
+        o_draft = Draft(open(page), pid, "../")
     except Exception as e:
         print(e)
         return
@@ -50,9 +50,11 @@ def handle(page):
     try:
         content = draft[1]
         if pid != 1: content += "\n<div class=\"post-spacer\"></div>\n"
-        artifact = open(".artifacts/index.html")
-        content += artifact.read()
-        artifact.close()
+        content += open(".artifacts/index.html").read()
+
+        o_content = o_draft[1]
+        if pid != 1: o_content += "\n<div class=\"post-spacer\"></div>\n"
+        o_content += open(".artifacts/o_index.html").read()
 
         if conf("You are updating main. Proceed?"): return
 
@@ -60,16 +62,20 @@ def handle(page):
         artifact.write(content)
         artifact.close()
  
+        artifact = open(".artifacts/o_index.html", "w")
+        artifact.write(o_content)
+        artifact.close()
+ 
         if fsz == 40:
             # rotate index, old
             # also do smth with oid
-            if os.path.isfile(".artifacts/old.html"):
+            if os.path.isfile(".artifacts/o_old.html"):
                 oid += 1
                 ostr = open("../old/state", "w")
                 ostr.write(str(oid))
                 ostr.close()
 
-                nextcont = open(".artifacts/old.html").read()
+                nextcont = open(".artifacts/o_old.html").read()
                 if oid > 1:
                     nextcont += f"""<div class="post-spacer"></div>
 <div style="margin: 0 auto; text-align: center">
@@ -87,6 +93,14 @@ def handle(page):
             xfer.close()
 
             xfer = open(".artifacts/index.html", "w")
+            xfer.write("<!-- op 0 -->")
+            xfer.close()
+
+            xfer = open(".artifacts/o_old.html", "w")
+            xfer.write(o_content)
+            xfer.close()
+
+            xfer = open(".artifacts/o_index.html", "w")
             xfer.write("<!-- op 0 -->")
             xfer.close()
 
