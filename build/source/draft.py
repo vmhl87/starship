@@ -17,7 +17,7 @@ def draft(content, pageid, pageroot):
     for line in content:
         if len(line.strip()) == 0: continue
 
-        if "<!--" in line:
+        if "<!--" in line and not had_header:
             had_header = True
             header = True
 
