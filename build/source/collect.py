@@ -1,30 +1,40 @@
-import config as cfg
+import os
 
-def collect(body, root_url="index.html"):
+cfg_title = "Blog"
+
+cfg_version = 1  # DO NOT CHANGE
+
+def collect(body, pageroot="index.html", styleroot="style.css"):
     final = ""
 
-    template = open("template.html")
+    script_dir = os.path.dirname(__file__)
+    filepath = os.path.join(script_dir, "template.html")
+    template = open(filepath)
 
     for line in template:
         final += line
 
         if line.startswith("<!--"):
             if "head" in line:
-                head = open("head.html")
+                filepath = os.path.join(script_dir, "head.html")
+                head = open(filepath)
                 final += head.read()
                 head.close()
 
+            elif "css" in line:
+                final += f"<link rel=\"stylesheet\" href=\"{styleroot}\">"
+
             elif "title" in line:
-                title = cfg.title()
+                title = cfg_title
                 final += f"<title>{title}</title>\n"
 
             elif "grabber" in line:
-                version = cfg.version()
+                version = cfg_version
                 final += f"<div id=\"starship\">Powered by Starship v{version}<div id=\"grabber\">🔥</div></div>\n"
 
             elif "name" in line:
-                title = cfg.title()
-                final += f"<a href=\"{root_url}\">{title}</a>\n"
+                title = cfg_title
+                final += f"<a href=\"{pageroot}\">{title}</a>\n"
 
             elif "posts" in line:
                 final += body

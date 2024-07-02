@@ -7,9 +7,11 @@ Reads in raw content and returns:
     full - entire standalone page
 """
 
-def draft(content, pubname):
+def draft(content, pageid):
     title, summary, full = "", "", ""
     cutoff, header = False, True
+
+    form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
 
     for line in content:
         if "<!--" in line:
@@ -20,8 +22,13 @@ def draft(content, pubname):
                 header = False
 
             ls = line.strip()
-            if ls.startswith("<title>") and ls.endswith("</title>"):
-                title = ls[7:-8]
+
+            if ls.startswith(":title "):
+                title = ls[7:]
+
+            elif ls.startswith(":date "):
+                form_date = ls[6:]
+
             # IMPLEMENT TAGS HERE LATER
 
         if not cutoff and "[[ENDSUM]]" in line:
@@ -33,7 +40,9 @@ def draft(content, pubname):
 
         full += line
 
-    form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
+    pubname = title.lower().replace(' ', '-')
+    if len(pubname) > 32: pubname = pubname[:32]
+    pubname = str(pageid) + '_' + pubname
 
     summary = f"""<div class="post"><div class="content">
 <div class="post-title">
