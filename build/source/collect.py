@@ -5,7 +5,7 @@ cfg_version = 1
 script_dir = os.path.dirname(__file__)
 cfg_title = open(os.path.join(script_dir, "title.cfg")).read().strip()
 
-def collect(body, pageroot="index.html", styleroot="style.css"):
+def collect(body, pageroot, styleroot):
     final = ""
 
     script_dir = os.path.dirname(__file__)
