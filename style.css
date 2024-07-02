@@ -5,6 +5,7 @@
 
 	--content-color: #A0B0C0;
 	--header-color: #A0A0C0;
+	--code-color: #A0C0A0;
 	--link-color: #A0C0B0;
 	--bold-color: #D0A070;
 }
@@ -192,4 +193,10 @@ hr {
 
 ul li {
 	list-style-type: "- ";
+}
+
+pre.code {
+	background-color: var(--background-color);
+	color: var(--code-color);
+	padding: 10px;
 }
