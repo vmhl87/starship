@@ -16,7 +16,7 @@ if not page.endswith(".html"):
 
 try:
     reader = open(page)
-    draft = draft(reader, 0)
+    draft = draft(reader, 0, "../")
     reader.close()
 except Exception as e:
     print(e)
@@ -24,7 +24,7 @@ except Exception as e:
 
 try:
     content = draft[1] + "\n<div class=\"post-spacer\"></div>\n" + draft[2]
-    final = collect(content, ".preview.html", "../style.css")
+    final = collect(content, "../")
 
     writer = open(".preview.html", "w")
     writer.write(final)

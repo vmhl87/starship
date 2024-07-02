@@ -30,7 +30,7 @@ def handle(page):
     # parse draft
     try:
         reader = open(page)
-        draft = Draft(reader, pid)
+        draft = Draft(reader, pid, "")
         reader.close()
     except Exception as e:
         print(e)
@@ -69,8 +69,17 @@ def handle(page):
                 ostr.write(str(oid))
                 ostr.close()
 
+                nextcont = open(".artifacts/old.html").read()
+                if oid > 1:
+                    nextcont += f"""<div class="post-spacer"></div>
+<div style="margin: 0 auto; text-align: center">
+    <a id="older-posts" href="{oid-1}.html">Older Posts</a>
+</div>
+"""
+                formcont = collect(nextcont, "../")
+
                 xfer = open(f"../old/{oid}.html", "w")
-                xfer.write(open(".artifacts/old.html").read())
+                xfer.write(formcont)
                 xfer.close()
 
             xfer = open(".artifacts/old.html", "w")
@@ -95,13 +104,13 @@ def handle(page):
 </div>
 """
        
-        final = collect(content, "index.html", "style.css")
+        final = collect(content, "")
 
         index = open("../index.html", "w")
         index.write(final)
         index.close()
 
-        standalone = collect(draft[2], "../index.html", "../style.css")
+        standalone = collect(draft[2], "../")
         post = open(f"../pages/{draft[3]}.html", "w")
         post.write(standalone)
         post.close()
