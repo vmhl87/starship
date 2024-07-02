@@ -1,6 +1,6 @@
 import os
 
-cfg_version = 2
+cfg_version = 1
 
 script_dir = os.path.dirname(__file__)
 cfg_title = open(os.path.join(script_dir, "title.cfg")).read().strip()
