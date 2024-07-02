@@ -1,32 +1,118 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="style.css">
-		<title>Blog</title>
+<!-- css -->
+<link rel="stylesheet" href="style.css"><!--------->
+<!-- title -->
+<title>Blog</title>
+<!----------->
 	</head>
 	<body>
-		<div id="starship">Powered by Starship v1<div id="grabber">️🔥</div></div>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1<div id="grabber">🔥</div></div>
+<!------------->
 		<div id="flex-stack">
 			<div id="title-outer">
 				<div id="title-inner">
-					<a href="index.html">Hello World</a>
+<!-- name -->
+<a href="index.html">Blog</a>
+<!---------->
 				</div>
 			</div>
 			<div id="posts-outer">
 				<div id="posts-inner">
-					<div class="post">
-						<div class="content">
-							<div class="post-title">
-								<a class="post-title-name">Nothing to see here</a>
-								<div class="post-title-date">---&nbsp;-&nbsp;----<br>-:--&nbsp;--</div>
-							</div>
-							<p>Add posts with <b>publish.py</b>!</p>
-						</div>
-					</div>
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/6_previews.html">Previews!</a>
+    <div class="post-title-date">Jul&nbsp;2&nbsp;2024<br>10:38&nbsp;AM</div>
+</div>
+<!--
+	:title Previews!
+	:date Jul&nbsp;2&nbsp;2024<br>10:38&nbsp;AM
+-->
+<p><b>Starship v1</b> is nearing completion. I've decided on a consistent
+format for drafts:</p>
+<p>Drafts will be packaged as html snippets. Meta-information like title,
+tags, date, etc. are contained in a single html comment at the top of the
+draft file. For example:</p>
+...
+<p><a class="readmore" href="pages/6_previews.html">read more</a></p>
+</div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/5_wishful-thinking.html">Wishful thinking</a>
+    <div class="post-title-date">Jul&nbsp;1&nbsp;2024<br>10:24&nbsp;PM</div>
+</div>
+<!--
+	:title Wishful thinking
+	:date Jul&nbsp;1&nbsp;2024<br>10:24&nbsp;PM
+-->
+<p>Man, if only I could import remote html with a <b>text/html</b> script element. Would make this so much easier.</p>
+</div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/4_one-wonders.html">One wonders...</a>
+    <div class="post-title-date">Jul&nbsp;1&nbsp;2024<br>9:53&nbsp;PM</div>
+</div>
+<!--
+	:title One wonders...
+	:date Jul&nbsp;1&nbsp;2024<br>9:53&nbsp;PM
+-->
+<p>If it is possible to import html directly through a script tag, and have it interact normally with the rest of the page, copying CSS styling and all that...</p>
+</div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/3_foss-is-cool.html">FOSS is cool</a>
+    <div class="post-title-date">Jul&nbsp;1&nbsp;2024<br>7:36&nbsp;PM</div>
+</div>
+<!--
+	:title FOSS is cool
+	:date Jul&nbsp;1&nbsp;2024<br>7:36&nbsp;PM
+-->
+<p>Starship source <a href="https://github.com/vmhl87/starship">here</a></p>
+</div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/2_thoughts.html">Thoughts</a>
+    <div class="post-title-date">Jul&nbsp;1&nbsp;2024<br>5:03&nbsp;PM</div>
+</div>
+<!--
+	:title Thoughts
+	:date Jul&nbsp;1&nbsp;2024<br>5:03&nbsp;PM
+-->
+<p>In an ideal world, Starship would run in C.</p>
+<p>However, compatibility is important. The current build system
+uses a collection of primarily Python scripts to collate static
+blog content.</p>
+<p><b>Starship v1</b> is completely static. However, this won't scale
+well long-term, so...
+<p><a class="readmore" href="pages/2_thoughts.html">read more</a></p>
+</div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="pages/1_hello-world.html">Hello World</a>
+    <div class="post-title-date">Jul&nbsp;1&nbsp;2024<br>4:43&nbsp;PM</div>
+</div>
+<!--
+	:title Hello World
+	:date Jul 1 2024<br>4:43 PM
+-->
+<p>Styling finished. Everything looks good! 🔥</p>
+</div></div>
+<div class="post-spacer"></div>
+<!----------->
 				</div>
 			</div>
 		</div>
