@@ -20,7 +20,7 @@ def handle(page):
     pid = int(open("../pages/state").read().strip()) + 1
 
     # current fragment size
-    fsz = int(open(".artifact/state").read().strip()) + 1
+    fsz = int(open(".artifacts/state").read().strip()) + 1
 
     # current oldpage ID
     oid = int(open("../old/state").read().strip())
