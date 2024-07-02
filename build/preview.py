@@ -11,7 +11,7 @@ if len(sys.argv) == 1:
 page = sys.argv[1]
 
 if not page.endswith(".html"):
-    print("Invalid page format - must be `A.html`")
+    print("Draft must be .html")
     exit()
 
 try:

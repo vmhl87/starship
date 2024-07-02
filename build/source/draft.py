@@ -9,12 +9,13 @@ Reads in raw content and returns:
 
 def draft(content, pageid):
     title, summary, full = "", "", ""
-    cutoff, header = False, True
+    cutoff, header, had_header = False, False, False
 
     form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
 
     for line in content:
         if "<!--" in line:
+            had_header = True
             header = True
 
         if header:
@@ -33,12 +34,20 @@ def draft(content, pageid):
 
         if not cutoff and "[[ENDSUM]]" in line:
             summary += line.split("[[ENDSUM]]")[0] + "...\n"
+            full += line.replace("[[ENDSUM]]", "")
             cutoff = True
 
         elif not cutoff:
             summary += line
+            full += line
 
-        full += line
+        else: full += line
+
+    if not had_header:
+        raise Exception("Draft does not have a header")
+
+    if len(title) == 0:
+        raise Exception("Draft does not have a title")
 
     pubname = title.lower().replace(' ', '-')
     if len(pubname) > 32: pubname = pubname[:32]
