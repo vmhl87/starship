@@ -42,7 +42,8 @@ def handle(page):
 
     # extend artifact & update
     try:
-        content = draft[1] + "\n<div class=\"post-spacer\"></div>\n"
+        content = draft[1]
+        if pid != 1: content += "\n<div class=\"post-spacer\"></div>\n"
         artifact = open(".artifacts/index.html")
         content += artifact.read()
         artifact.close()
