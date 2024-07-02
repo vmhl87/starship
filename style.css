@@ -9,12 +9,14 @@
 	--bold-color: #D0A070;
 }
 
+/* force overflow to post-outer only */
 html, body {
 	height: 100%;
 	width: 100%;
 	margin: 0;
 }
 
+/* global font */
 body {
 	background-color: var(--background-color);
 
@@ -26,6 +28,7 @@ body {
 	font-size: 14px;
 }
 
+/* main content, centered, does not exceed specified width */
 div#flex-stack {
 	flex-direction: column;
 	vertical-align: middle;
@@ -36,6 +39,7 @@ div#flex-stack {
 	margin: auto;
 }
 
+/* floating title bar */
 div#title-outer {
 	padding: 20px;
 }
@@ -46,6 +50,7 @@ div#title-inner {
 	padding: 3px;
 }
 
+/* title is a hyperlink but inherits style of h2 */
 div#title-inner > a {
 	text-decoration: none;
 	display: block;
@@ -57,12 +62,13 @@ div#title-inner > a {
 	font-size: 1.5em;
 }
 
+/* contain overflow entirely within posts-outer */
 div#posts-outer {
 	position: relative;
 	overflow-y: auto;
 }
 
-
+/* custom scrollbars */
 @-moz-document url-prefix() {
 	div#posts-outer {
 		scrollbar-color: var(--highlight-color) var(--background-color);
@@ -82,6 +88,7 @@ div#posts-outer::-webkit-scrollbar-thumb {
 	background-color: var(--highlight-color);
 }
 
+/* padding & etc */
 div#posts-inner {
 	padding-bottom: 20px;
 	padding-right: 20px;
@@ -103,6 +110,7 @@ div.content {
 	margin-left: 10px;
 }
 
+/* horizontal flexbox title - name & timestamp */
 div.post-title {
 	flex-direction: row;
 	display: flex;
@@ -128,6 +136,7 @@ div.post-title-date {
 	width: auto;
 }
 
+/* globally color links */
 a {
 	color: var(--link-color);
 }
@@ -168,6 +177,7 @@ div#grabber {
 	width: 18px;
 }
 
+/* various other colors & styles */
 b {
 	color: var(--bold-color);
 }
