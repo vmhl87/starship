@@ -1,41 +1,32 @@
+from source.files import *
 import os
 
-cfg_version = 1
+starship_version = 1.3
 
-script_dir = os.path.dirname(__file__)
-cfg_title = open(os.path.join(script_dir, "title.cfg")).read().strip()
-
-def collect(body, pageroot):
+def collect(body, index, styleroot):
     final = ""
 
-    script_dir = os.path.dirname(__file__)
-    filepath = os.path.join(script_dir, "template.html")
-    template = open(filepath)
+    template = open("source/template.html")
+    page_title = readfrom("../name.txt")
 
     for line in template:
         final += line
 
         if line.startswith("<!--"):
             if "head" in line:
-                filepath = os.path.join(script_dir, "head.html")
-                head = open(filepath)
-                final += head.read()
-                head.close()
+                final += readfrom("source/head.html")
 
             elif "css" in line:
-                final += f"<link rel=\"stylesheet\" href=\"{pageroot}style.css\">"
+                final += f"<link rel=\"stylesheet\" href=\"{styleroot}\">"
 
             elif "title" in line:
-                title = cfg_title
-                final += f"<title>{title}</title>\n"
+                final += f"<title>{page_title}</title>\n"
 
             elif "grabber" in line:
-                version = cfg_version
-                final += f"<div id=\"starship\">Powered by Starship v{version}<div id=\"grabber\">🔥</div></div>\n"
+                final += f"<div id=\"starship\">Powered by Starship v{starship_version}<div id=\"grabber\">🔥</div></div>\n"
 
             elif "name" in line:
-                title = cfg_title
-                final += f"<a href=\"{pageroot}index.html\">{title}</a>\n"
+                final += f"<a href=\"{index}\">{page_title}</a>\n"
 
             elif "posts" in line:
                 final += body

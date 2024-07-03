@@ -8,13 +8,15 @@ Reads in raw content and returns:
     pubname - pagename in URL
 """
 
-def draft(content, pageid, pageroot):
+def draft(content, pageid):
     title, summary, full = "", "", ""
     cutoff, header, had_header = False, False, False
 
+    tags = set()
+
     form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
 
-    for line in content:
+    for line in content.split('\n'):
         if len(line.strip()) == 0: continue
 
         if "<!--" in line and not had_header:
@@ -33,7 +35,10 @@ def draft(content, pageid, pageroot):
             elif ls.startswith(":date "):
                 form_date = ls[6:].replace(' ', '&nbsp;')
 
-            # IMPLEMENT TAGS HERE LATER
+            elif ls.startswith(":tag "):
+                for tag in ls[5:].split(' '):
+                    if tag not in tags:
+                        tags.add(tag)
 
         if not cutoff and "[[ENDSUM]]" in line:
             summary += line.split("[[ENDSUM]]")[0] + "...\n"
@@ -60,20 +65,29 @@ def draft(content, pageid, pageroot):
     if len(pubname) > 16: pubname = pubname[:16]
     pubname = str(pageid) + '_' + pubname
 
+    if len(tags) != 0:
+        summary += "<p class=\"tag-container\">tags: "
+        full += "<p class=\"tag-container\">tags: "
+        for tag in tags:
+            summary += f"<a href=\"../{tag}/index.html\">{tag}</a> "
+            full += f"<a href=\"../content/{tag}/index.html\">{tag}</a> "
+        summary += "</p>"
+        full += "</p>"
+
     summary = f"""<div class="post"><div class="content">
 <div class="post-title">
-    <a class="post-title-name" href="{pageroot}pages/{pubname}.html">{title}</a>
+    <a class="post-title-name" href="../../pages/{pubname}.html">{title}</a>
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + summary
     if cutoff:
-        summary += f"""<p><a class="readmore" href="{pageroot}pages/{pubname}.html">read more</a></p>\n"""
+        summary += f"""<p><a class="readmore" href="../../pages/{pubname}.html">read more</a></p>\n"""
     summary += "</div></div>"
 
     full = f"""<div class="post"><div class="content">
 <div class="post-title">
-    <a class="post-title-name" href="{pageroot}{pubname}.html">{title}</a>
+    <a class="post-title-name" href="../../{pubname}.html">{title}</a>
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + full
     full += "</div></div>"
 
-    return (title, summary, full, pubname)
+    return (tags, summary, full, pubname)

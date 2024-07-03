@@ -147,6 +147,10 @@ a.readmore {
 	font-size: 12px;
 }
 
+p.tag-container {
+	font-size: 12px;
+}
+
 div#starship {
 	position: fixed;
 	display: block;
@@ -209,4 +213,9 @@ pre.code {
 	color: var(--code-color);
 	white-space: pre-wrap;
 	padding: 10px;
+}
+
+div.oldposts {
+	margin: 0 auto;
+	text-align: center;
 }

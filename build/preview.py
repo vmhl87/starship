@@ -1,8 +1,13 @@
 from source.collect import collect
 from source.draft import draft
+from source.files import *
 
 import sys
 import os
+
+if os.path.dirname(os.path.realpath(__file__)) != os.getcwd():
+    print("Please run `preview.py` from build dir!")
+    exit()
 
 if len(sys.argv) == 1:
     print("Usage: `preview.py <draft.html>`")
@@ -15,20 +20,16 @@ if not page.endswith(".html"):
     exit()
 
 try:
-    reader = open(page)
-    draft = draft(reader, 0, "../")
-    reader.close()
+    d = draft(readfrom(page), 0)
 except Exception as e:
     print(e)
     exit()
 
 try:
-    content = draft[1] + "\n<div class=\"post-spacer\"></div>\n" + draft[2]
-    final = collect(content, "../")
+    content = d[1] + getspacer() + d[2]
+    final = collect(content, ".preview.html", "../style.css")
 
-    writer = open(".preview.html", "w")
-    writer.write(final)
-    writer.close()
+    writeto(".preview.html", final)
 except Exception as e:
     print(e)
     exit()
