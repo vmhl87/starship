@@ -61,7 +61,7 @@ def handle(page):
             chunk(draft_f[1], f"../content/{tag}/")
         
         standalone = collect(draft_f[2], "../content/main/index.html", "../style.css")
-        writeto(f"../pages/{draft[3]}.html", standalone)
+        writeto(f"../pages/{draft_f[3]}.html", standalone)
 
         writeto("../pages/state", str(pid))
 
@@ -71,7 +71,7 @@ def handle(page):
 
         appendto(".artifacts/state", draft_f[3] + ".html\n")
 
-        writeto(f".artifacts/{draft[3]}.html", draft_f[1])
+        writeto(f".artifacts/{draft_f[3]}.html", draft_f[1])
     except Exception as e:
         print(e)
         return
