@@ -2,7 +2,7 @@ from source.collect import collect
 from source.draft import draft
 from source.files import *
 
-import source.chunk as chunk
+from source.chunk import chunk
 
 import sys
 import os
