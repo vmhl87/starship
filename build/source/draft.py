@@ -16,7 +16,9 @@ def draft(content, pageid):
 
     form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
 
-    for line in content.split('\n'):
+    for ln in content.split('\n'):
+        line = ln + '\n'
+
         if len(line.strip()) == 0: continue
 
         if "<!--" in line and not had_header:
@@ -65,6 +67,20 @@ def draft(content, pageid):
     if len(pubname) > 16: pubname = pubname[:16]
     pubname = str(pageid) + '_' + pubname
 
+    summary = f"""<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="../../pages/{pubname}.html">{title}</a>
+    <div class="post-title-date">{form_date}</div>
+</div>\n""" + summary
+    if cutoff:
+        summary += f"""<p><a class="readmore" href="../../pages/{pubname}.html">read more</a></p>\n"""
+
+    full = f"""<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="../../{pubname}.html">{title}</a>
+    <div class="post-title-date">{form_date}</div>
+</div>\n""" + full
+
     if len(tags) != 0:
         summary += "<p class=\"tag-container\">tags: "
         full += "<p class=\"tag-container\">tags: "
@@ -74,20 +90,7 @@ def draft(content, pageid):
         summary += "</p>"
         full += "</p>"
 
-    summary = f"""<div class="post"><div class="content">
-<div class="post-title">
-    <a class="post-title-name" href="../../pages/{pubname}.html">{title}</a>
-    <div class="post-title-date">{form_date}</div>
-</div>\n""" + summary
-    if cutoff:
-        summary += f"""<p><a class="readmore" href="../../pages/{pubname}.html">read more</a></p>\n"""
     summary += "</div></div>"
-
-    full = f"""<div class="post"><div class="content">
-<div class="post-title">
-    <a class="post-title-name" href="../../{pubname}.html">{title}</a>
-    <div class="post-title-date">{form_date}</div>
-</div>\n""" + full
     full += "</div></div>"
 
     return (tags, summary, full, pubname)

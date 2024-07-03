@@ -5,6 +5,8 @@ JS-free, customizable blog.
 
 ## Usage
 
+### Of course, fork the repo so you can make changes
+
 Set the name of the blog in `name.txt`. Because the blog
 is statically generated, you won't easily be able to change
 its name later.
@@ -15,7 +17,7 @@ comment at the top of the file and simply write the rest of
 the body in plain html. For example:
 
 `build/drafts/example.html`
-```
+```html
 <!--
 	:title Nothing to see here (yet)
 	:tag example help test
