@@ -20,7 +20,7 @@ def getspacer():
 def oldsec(sec):
     return f"""<div class="post-spacer"></div>
 <div class="oldposts">
-    <a id="older-posts" href={sec}.html">Older Posts</a>
+    <a id="older-posts" href="{sec}.html">Older Posts</a>
 </div>
 """
 

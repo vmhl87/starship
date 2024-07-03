@@ -26,10 +26,10 @@ def chunk(draft, loc, head=""):
                 writeto(f"{loc}chunk", str(chunk))
 
                 nextcont = readfrom(f"{loc}old.html")
-                if oid > 1: nextcont += oldsec(oid-1)
+                if chunk > 1: nextcont += oldsec(chunk-1)
                 formcont = collect(head + nextcont, "index.html", "../../style.css")
 
-                writeto(f"{loc}{oid}.html", formcont)
+                writeto(f"{loc}{chunk}.html", formcont)
 
             writeto(f"{loc}old.html", readfrom(f"{loc}new.html"))
             writeto(f"{loc}new.html", "")
@@ -39,10 +39,10 @@ def chunk(draft, loc, head=""):
         content = readfrom(f"{loc}new.html")
 
         if os.path.isfile(f"{loc}old.html"):
-            content += getspacer()
+            if state != 0: content += getspacer()
             content += readfrom(f"{loc}old.html")
 
-        if chunk > 0: content += oldsec(oid)
+        if chunk > 0: content += oldsec(chunk)
        
         final = collect(head + content, "index.html", "../../style.css")
 
