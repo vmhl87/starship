@@ -53,7 +53,6 @@ div#title-inner {
 
 /* title is a hyperlink but inherits style of h2 */
 div#title-inner > a {
-	text-decoration: none;
 	display: block;
 
 	color: var(--header-color);
@@ -139,12 +138,21 @@ div.post-title-date {
 
 /* globally color links */
 a {
+	text-decoration: none;
 	color: var(--link-color);
+}
+
+a:link:hover {
+	text-decoration: underline;
 }
 
 a.readmore {
 	text-decoration: none;
 	font-size: 12px;
+}
+
+a.readmore:hover {
+	text-decoration: none;
 }
 
 p.tag-container {
