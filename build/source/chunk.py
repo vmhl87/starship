@@ -27,10 +27,12 @@ def chunk(draft, loc, head=""):
 
                 nextcont = readfrom(f"{loc}old.html")
                 if oid > 1: nextcont += oldsec(oid-1)
-
                 formcont = collect(head + nextcont, "index.html", "../../style.css")
 
                 writeto(f"{loc}{oid}.html", formcont)
+
+            writeto(f"{loc}old.html", readfrom(f"{loc}new.html"))
+            writeto(f"{loc}new.html", "")
 
             state = 0
         
