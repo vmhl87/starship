@@ -7,7 +7,7 @@ def collect(body, index, styleroot):
     final = ""
 
     template = open("source/template.html")
-    page_title = readfrom("../name.txt").strip()
+    page_title = readfrom("../name.txt")
 
     for line in template:
         final += line

@@ -59,8 +59,8 @@ def handle(page):
                 writeto(f"../content/{tag}/state", "0")
                 writeto(f"../content/{tag}/chunk", "0")
             chunk(draft_f[1], f"../content/{tag}/")
-
-        standalone = collect(draft[2], "../content/main/index.html", "../style.css")
+        
+        standalone = collect(draft_f[2], "../content/main/index.html", "../style.css")
         writeto(f"../pages/{draft[3]}.html", standalone)
 
         writeto("../pages/state", str(pid))
@@ -69,9 +69,9 @@ def handle(page):
             os.mkdir(".artifacts/")
             writeto(".artifacts/state", "")
 
-        appendto(".artifacts/state", draft[3] + ".html\n")
+        appendto(".artifacts/state", draft_f[3] + ".html\n")
 
-        writeto(f".artifacts/{draft[3]}.html", draft[1])
+        writeto(f".artifacts/{draft[3]}.html", draft_f[1])
     except Exception as e:
         print(e)
         return
