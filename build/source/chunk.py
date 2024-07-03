@@ -1,6 +1,5 @@
-from collect import collect
-
-from files import *
+from source.collect import collect
+from source.files import *
 
 # Takes in draft as preformatted HTML and location to push.
 # Handles new/old/state and advances queue.
