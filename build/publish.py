@@ -2,6 +2,8 @@ from source.collect import collect
 from source.draft import draft
 from source.files import *
 
+import source.chunk as chunk
+
 import sys
 import os
 
