@@ -17,15 +17,21 @@ def handle(page):
         return
 
     # obtain new page id
-    pid = int(open(".artifacts/state").read().strip()) + 1
+    pid = int(open("../pages/state").read().strip()) + 1
+
+    # current fragment size
+    fsz = int(open(".artifacts/state").read().strip()) + 1
+
+    # current oldpage ID
+    oid = int(open("../old/state").read().strip())
 
     draft = None
+    o_draft = None
 
     # parse draft
     try:
-        reader = open(page)
-        draft = Draft(reader, pid)
-        reader.close()
+        draft = Draft(open(page), pid, "")
+        o_draft = Draft(open(page), pid, "../")
     except Exception as e:
         print(e)
         return
@@ -44,29 +50,91 @@ def handle(page):
     try:
         content = draft[1]
         if pid != 1: content += "\n<div class=\"post-spacer\"></div>\n"
-        artifact = open(".artifacts/index.html")
-        content += artifact.read()
-        artifact.close()
+        content += open(".artifacts/index.html").read()
 
-        final = collect(content, "index.html", "style.css")
+        o_content = o_draft[1]
+        if pid != 1: o_content += "\n<div class=\"post-spacer\"></div>\n"
+        o_content += open(".artifacts/o_index.html").read()
 
         if conf("You are updating main. Proceed?"): return
 
         artifact = open(".artifacts/index.html", "w")
         artifact.write(content)
         artifact.close()
+ 
+        artifact = open(".artifacts/o_index.html", "w")
+        artifact.write(o_content)
+        artifact.close()
+ 
+        if fsz == 40:
+            # rotate index, old
+            # also do smth with oid
+            if os.path.isfile(".artifacts/o_old.html"):
+                oid += 1
+                ostr = open("../old/state", "w")
+                ostr.write(str(oid))
+                ostr.close()
+
+                nextcont = open(".artifacts/o_old.html").read()
+                if oid > 1:
+                    nextcont += f"""<div class="post-spacer"></div>
+<div style="margin: 0 auto; text-align: center">
+    <a id="older-posts" href="{oid-1}.html">Older Posts</a>
+</div>
+"""
+                formcont = collect(nextcont, "../")
+
+                xfer = open(f"../old/{oid}.html", "w")
+                xfer.write(formcont)
+                xfer.close()
+
+            xfer = open(".artifacts/old.html", "w")
+            xfer.write(content)
+            xfer.close()
+
+            xfer = open(".artifacts/index.html", "w")
+            xfer.write("<!-- op 0 -->")
+            xfer.close()
+
+            xfer = open(".artifacts/o_old.html", "w")
+            xfer.write(o_content)
+            xfer.close()
+
+            xfer = open(".artifacts/o_index.html", "w")
+            xfer.write("<!-- op 0 -->")
+            xfer.close()
+
+            fsz = 0
+        
+        content = open(".artifacts/index.html").read()
+
+        if os.path.isfile(".artifacts/old.html"):
+            content += open(".artifacts/old.html").read()
+
+        if oid > 0:
+            content += f"""<div class="post-spacer"></div>
+<div style="margin: 0 auto; text-align: center">
+    <a id="older-posts" href="old/{oid}.html">Older Posts</a>
+</div>
+"""
+       
+        final = collect(content, "")
 
         index = open("../index.html", "w")
         index.write(final)
         index.close()
 
-        standalone = collect(draft[2], "../index.html", "../style.css")
+        standalone = collect(draft[2], "../")
         post = open(f"../pages/{draft[3]}.html", "w")
         post.write(standalone)
         post.close()
 
-        state = open(".artifacts/state", "w")
+        state = open("../pages/state", "w")
         state.write(str(pid))
+        state.close()
+
+        state = open(".artifacts/state", "w")
+        state.write(str(fsz))
         state.close()
 
         state = open(".artifacts/part/state", "a")

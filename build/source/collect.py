@@ -5,7 +5,7 @@ cfg_version = 1
 script_dir = os.path.dirname(__file__)
 cfg_title = open(os.path.join(script_dir, "title.cfg")).read().strip()
 
-def collect(body, pageroot="index.html", styleroot="style.css"):
+def collect(body, pageroot):
     final = ""
 
     script_dir = os.path.dirname(__file__)
@@ -23,7 +23,7 @@ def collect(body, pageroot="index.html", styleroot="style.css"):
                 head.close()
 
             elif "css" in line:
-                final += f"<link rel=\"stylesheet\" href=\"{styleroot}\">"
+                final += f"<link rel=\"stylesheet\" href=\"{pageroot}style.css\">"
 
             elif "title" in line:
                 title = cfg_title
@@ -35,7 +35,7 @@ def collect(body, pageroot="index.html", styleroot="style.css"):
 
             elif "name" in line:
                 title = cfg_title
-                final += f"<a href=\"{pageroot}\">{title}</a>\n"
+                final += f"<a href=\"{pageroot}index.html\">{title}</a>\n"
 
             elif "posts" in line:
                 final += body

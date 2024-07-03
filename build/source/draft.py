@@ -8,7 +8,7 @@ Reads in raw content and returns:
     pubname - pagename in URL
 """
 
-def draft(content, pageid):
+def draft(content, pageid, pageroot):
     title, summary, full = "", "", ""
     cutoff, header, had_header = False, False, False
 
@@ -62,16 +62,16 @@ def draft(content, pageid):
 
     summary = f"""<div class="post"><div class="content">
 <div class="post-title">
-    <a class="post-title-name" href="pages/{pubname}.html">{title}</a>
+    <a class="post-title-name" href="{pageroot}pages/{pubname}.html">{title}</a>
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + summary
     if cutoff:
-        summary += f"""<p><a class="readmore" href="pages/{pubname}.html">read more</a></p>\n"""
+        summary += f"""<p><a class="readmore" href="{pageroot}pages/{pubname}.html">read more</a></p>\n"""
     summary += "</div></div>"
 
     full = f"""<div class="post"><div class="content">
 <div class="post-title">
-    <a class="post-title-name" href="{pubname}.html">{title}</a>
+    <a class="post-title-name" href="{pageroot}{pubname}.html">{title}</a>
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + full
     full += "</div></div>"
