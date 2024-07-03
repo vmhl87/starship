@@ -1,6 +1,6 @@
 from source.collect import collect
 from source.draft import draft
-from source.utils import *
+from source.files import *
 
 import sys
 import os
