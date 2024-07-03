@@ -157,6 +157,13 @@ div#starship {
 	background: #303030;
 	font-size: 13px;
 	color: #D0A070;
+	
+	font-family: "Noto Sans Mono", monospace;
+	font-variation-settings: "wdth" 100;
+	font-optical-sizing: auto;
+	font-weight: <weight>;
+	font-style: normal;
+	font-size: 14px;
 
 	padding-bottom: 4px;
 	padding-right: 4px;
