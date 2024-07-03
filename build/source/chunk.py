@@ -1,6 +1,8 @@
 from source.collect import collect
 from source.files import *
 
+import os
+
 # Takes in draft as preformatted HTML and location to push.
 # Handles new/old/state and advances queue.
 # Assumes location is already init.
