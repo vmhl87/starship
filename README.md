@@ -31,9 +31,9 @@ is up to date before publishing a new page.
 
 ## Customization
 
-Set the blog name in `build/source/title.cfg`. (Due to the static
-nature of Starship, changing the blog name is a pretty difficult
-process.)
+Set the blog name with setup.py, or manually in `build/source/title.cfg`.
+(Due to the static nature of Starship, changing the blog name globally
+is a pretty difficult process, but it's still possible.)
 
 For theme modifications edit `style.css`, and if you need to
 import extra stylesheets for google fonts or the like, do so
