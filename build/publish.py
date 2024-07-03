@@ -58,7 +58,7 @@ def handle(page):
                 os.mkdir(f"../content/{tag}/")
                 writeto(f"../content/{tag}/state", "0")
                 writeto(f"../content/{tag}/chunk", "0")
-            chunk(draft_f[1], f"../content/{tag}/")
+            chunk(draft_f[1], f"../content/{tag}/", gentag(tag))
         
         standalone = collect(draft_f[2], "../content/main/index.html", "../style.css")
         writeto(f"../pages/{draft_f[3]}.html", standalone)

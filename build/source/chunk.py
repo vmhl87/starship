@@ -6,7 +6,7 @@ import os
 # Takes in draft as preformatted HTML and location to push.
 # Handles new/old/state and advances queue.
 # Assumes location is already init.
-def chunk(draft, loc):
+def chunk(draft, loc, head=""):
     try:
         state = int(readfrom(f"{loc}state")) + 1
 
@@ -28,7 +28,7 @@ def chunk(draft, loc):
                 nextcont = readfrom(f"{loc}old.html")
                 if oid > 1: nextcont += oldsec(oid-1)
 
-                formcont = collect(nextcont, "index.html", "../../style.css")
+                formcont = collect(head + nextcont, "index.html", "../../style.css")
 
                 writeto(f"{loc}{oid}.html", formcont)
 
@@ -42,7 +42,7 @@ def chunk(draft, loc):
 
         if chunk > 0: content += oldsec(oid)
        
-        final = collect(content, "index.html", "../../style.css")
+        final = collect(head + content, "index.html", "../../style.css")
 
         writeto(f"{loc}index.html", final)
 

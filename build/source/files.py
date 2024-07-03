@@ -23,3 +23,11 @@ def oldsec(sec):
     <a id="older-posts" href={sec}.html">Older Posts</a>
 </div>
 """
+
+def gentag(tag):
+    return f"""<div class="post"><div class="content"><div class="post-title">
+    <h3>Tag: {tag}</h3>
+    <a style="margin-left: auto; margin-right: 10px; margin-top: auto; margin-bottom: auto;" href="../main/index.html">main page</a>
+</div></div></div>
+<div class="post-spacer"></div>
+"""
