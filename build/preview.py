@@ -5,6 +5,10 @@ from source.files import *
 import sys
 import os
 
+if os.path.dirname(os.path.realpath(__file__)) != os.getcwd():
+    print("Please run `preview.py` from build dir!")
+    exit()
+
 if len(sys.argv) == 1:
     print("Usage: `preview.py <draft.html>`")
     exit()

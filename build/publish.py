@@ -7,6 +7,10 @@ from source.chunk import chunk
 import sys
 import os
 
+if os.path.dirname(os.path.realpath(__file__)) != os.getcwd():
+    print("Please run `publish.py` from build dir!")
+    exit()
+
 # sanity checks
 if len(sys.argv) == 1:
     print("Usage: `publish.py <draft.html>`")
