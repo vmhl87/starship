@@ -74,8 +74,7 @@ def handle(page):
             writeto(".artifacts/state", "")
 
         appendto(".artifacts/state", draft_f[3] + '\n')
-        writeto(f".artifacts/{draft_f[3]}.html", draft_f[1])
-        writeto(f".artifacts/{draft_f[3]}.tags", '\n'.join(draft_f[0]))
+        writeto(f".artifacts/{draft_f[3]}.html", draft_f[4])
     except Exception as e:
         print(e)
         return
