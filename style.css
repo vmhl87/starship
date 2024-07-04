@@ -36,7 +36,7 @@ div#flex-stack {
 	display: flex;
 
 	max-width: 900px;
-	height: 100vh;
+	height: 100%;
 	margin: auto;
 }
 
