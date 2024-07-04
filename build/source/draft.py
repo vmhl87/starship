@@ -77,7 +77,7 @@ def draft(content, pageid):
 
     full = f"""<div class="post"><div class="content">
 <div class="post-title">
-    <a class="post-title-name" href="../../{pubname}.html">{title}</a>
+    <a class="post-title-name" href="{pubname}.html">{title}</a>
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + full
 
