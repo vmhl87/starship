@@ -27,6 +27,9 @@ body {
 	font-weight: <weight>;
 	font-style: normal;
 	font-size: 14px;
+
+	scroll-padding-top: constant(safe-area-inset-top);
+	scroll-padding-top: env(safe-area-inset-top);
 }
 
 /* main content, centered, does not exceed specified width */
@@ -139,12 +142,21 @@ div.post-title-date {
 
 /* globally color links */
 a {
+	text-decoration: none;
 	color: var(--link-color);
+}
+
+a:link:hover {
+	text-decoration: underline;
 }
 
 a.readmore {
 	text-decoration: none;
 	font-size: 12px;
+}
+
+a.readmore:hover {
+	text-decoration: none;
 }
 
 p.tag-container {
@@ -202,17 +214,6 @@ hr {
 	border-top: 1px solid var(--highlight-color);
 	border-color: var(--highlight-color);
 	color: var(--highlight-color);
-}
-
-ul li {
-	list-style-type: "- ";
-}
-
-pre.code {
-	background-color: var(--background-color);
-	color: var(--code-color);
-	white-space: pre-wrap;
-	padding: 10px;
 }
 
 div.oldposts {
