@@ -55,6 +55,8 @@ def handle(page):
         print(e)
         return
 
+defer = "-y" in sys.argv
+
 def conf(p):
     if defer: return
     while True:

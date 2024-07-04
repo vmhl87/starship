@@ -66,7 +66,7 @@ def draft(content, pageid):
         raise Exception("Draft does not have a title")
 
     if not re_date:
-        re_head += f'    :date {datetime.datetime.now().strftime("%b %-d %Y<br>%-I:%M %p")}\n'
+        re_head += f'\t:date {datetime.datetime.now().strftime("%b %-d %Y<br>%-I:%M %p")}\n'
 
     pubname = ""
     for x in title.lower():
