@@ -130,11 +130,11 @@ a.post-title-name {
 }
 
 div.post-title-date {
-	margin-bottom: 0px;
+	margin-bottom: auto;
 	text-align: right;
 	margin-right: 0px;
 	margin-left: auto;
-	margin-top: auto;
+	margin-top: 10px;
 	font-size: 12px;
 	width: auto;
 }
