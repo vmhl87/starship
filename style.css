@@ -22,8 +22,6 @@ body {
 	background-color: var(--background-color);
 
 	font-family: "Noto Sans Mono", monospace;
-	font-variation-settings: "wdth" 100;
-	font-optical-sizing: auto;
 	font-weight: <weight>;
 	font-style: normal;
 	font-size: 14px;
