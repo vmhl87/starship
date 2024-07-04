@@ -17,6 +17,10 @@ html, body {
 	margin: 0;
 }
 
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
 /* global font */
 body {
 	background-color: var(--background-color);
