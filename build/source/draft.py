@@ -2,15 +2,16 @@ import datetime
 
 """
 Reads in raw content and returns:
-    title - article title
+    tags - article tags, deduplicated
     summary - cut & interlinked summary block
     full - entire standalone page
     pubname - pagename in URL
+    repacked - repacked draft with timestamp
 """
 
 def draft(content, pageid):
-    title, summary, full = "", "", ""
-    cutoff, header, had_header = False, False, False
+    title, summary, full, re_head, re_tail = "", "", "", "", ""
+    cutoff, header, had_header, re_swap, re_date = False, False, False, False, False
 
     tags = set()
 
@@ -36,8 +37,10 @@ def draft(content, pageid):
 
             elif ls.startswith(":date "):
                 form_date = ls[6:].replace(' ', '&nbsp;')
+                re_date = True
 
             elif ls.startswith(":tag "):
+                re_swap = True
                 for tag in ls[5:].split(' '):
                     if tag not in tags:
                         tags.add(tag)
@@ -53,11 +56,20 @@ def draft(content, pageid):
 
         else: full += line
 
+        if re_swap: re_tail += line
+        else: re_head += line
+
     if not had_header:
         raise Exception("Draft does not have a header")
 
     if len(title) == 0:
         raise Exception("Draft does not have a title")
+
+    if not re_date:
+        re_head += f'\t:date {datetime.datetime.now().strftime("%b %-d %Y<br>%-I:%M %p")}\n'
+
+    if "main" in tags:
+        tags.remove("main")
 
     pubname = ""
     for x in title.lower():
@@ -93,4 +105,4 @@ def draft(content, pageid):
     summary += "</div></div>"
     full += "</div></div>"
 
-    return (tags, summary, full, pubname)
+    return (tags, summary, full, pubname, re_head+re_tail)
