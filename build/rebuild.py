@@ -77,6 +77,8 @@ if os.path.isdir("../content/"):
 artlist = open(".artifacts/state")
 
 for art in artlist:
-    handle(f".artifacts/{art}.html")
+    handle(f".artifacts/{art.strip()}.html")
 
 artlist.close()
+
+print("done")
