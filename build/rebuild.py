@@ -9,7 +9,7 @@ import sys
 import os
 
 if os.path.dirname(os.path.realpath(__file__)) != os.getcwd():
-    print("Please run `publish.py` from build dir!")
+    print("Please run `rebuild.py` from build dir!")
     exit()
 
 # I recognize that this is indeed mostly identical to
@@ -74,10 +74,10 @@ if os.path.isdir("../content/"):
     shutil.rmtree("../content/")
 
 # add back from repacked
-artlist = open(".artifacts/state")
+artlist = open("artifacts/state")
 
 for art in artlist:
-    handle(f".artifacts/{art.strip()}.html")
+    handle(f"artifacts/{art.strip()}.html")
 
 artlist.close()
 

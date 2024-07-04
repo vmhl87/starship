@@ -49,13 +49,14 @@ def handle(page):
     if conf("Are your artifacts synced?"): return
 
     try:
-        if not os.path.exists("../content/"):
-            os.mkdir("../content/")
-        if not os.path.exists("../content/main/"):
-            os.mkdir("../content/main/")
-            writeto("../content/main/state", "0")
-            writeto("../content/main/chunk", "0")
-        chunk(draft_f[1], "../content/main/")
+        if not "hidden" in draft_f[0]:
+            if not os.path.exists("../content/"):
+                os.mkdir("../content/")
+            if not os.path.exists("../content/main/"):
+                os.mkdir("../content/main/")
+                writeto("../content/main/state", "0")
+                writeto("../content/main/chunk", "0")
+            chunk(draft_f[1], "../content/main/")
 
         for tag in draft_f[0]:
             if not os.path.exists(f"../content/{tag}/"):
@@ -69,20 +70,19 @@ def handle(page):
 
         writeto("../pages/state", str(pid))
 
-        if not os.path.exists(".artifacts/"):
-            os.mkdir(".artifacts/")
-            writeto(".artifacts/state", "")
+        if not os.path.exists("artifacts/"):
+            os.mkdir("artifacts/")
+            writeto("artifacts/state", "")
 
-        appendto(".artifacts/state", draft_f[3] + '\n')
-        writeto(f".artifacts/{draft_f[3]}.html", draft_f[4])
+        appendto("artifacts/state", draft_f[3] + '\n')
+        writeto(f"artifacts/{draft_f[3]}.html", draft_f[4])
     except Exception as e:
         print(e)
         return
 
-    # try delete file
+    # delete draft
     try:
-        if not conf("Delete draft?"):
-            os.remove(page)
+        os.remove(page)
     except Exception as e:
         print(e)
         return

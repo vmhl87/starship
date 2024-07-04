@@ -7,9 +7,9 @@ JS-free, customizable blog.
 
 ### Of course, fork the repo so you can make changes
 
-Set the name of the blog in `name.txt`. Because the blog
-is statically generated, you won't easily be able to change
-its name later.
+Set the name of the blog in `name.txt`. Starting from
+Starship release v1.3.2, you can easily change the
+name/template/style of past content easily, so don't stress!
 
 Starship uses HTML snippets to store blog drafts/entries.
 Put meta-information like title, date, tags, etc. in an html
@@ -38,14 +38,29 @@ Preview a draft with `preview.py <draft>`, or publish it with
 `publish.py <draft>`. (These scripts are located in the `build`
 dir, and you should run them from there.)
 
-**As it is currently very difficult to edit or delete past posts,
-make sure that your draft is as you want it before publishing.
-If you aren't sure, use the preview script!**
-
 Because the generated blog is static, Starship stores build
 artifacts to efficiently build content. It is **very important**
 to check that your artifacts are up to date before publishing a
-new page - it's like merge conflicts, but worse!
+new page, or else page order could get *very* messed up
+- it's like merge conflicts, but worse!
+
+Artifacts are stored in `build/artifacts` and contain repackaged
+past drafts. Editing posts is pretty easy - just edit the draft
+as you would edit a normal one, and then run `rebuild.py` to
+propagate changes. You can even use `preview.py` on these drafts,
+too!
+
+Post order is stored in `build/artifacts/state`. It is quite
+literally just a text list of all posts created in order. If you
+want to swap the order of posts, do so there.
+
+To delete a post add the tag `hidden` to its draft and rebuild.
+It'll hide from main content. Don't actually delete the file or
+remove it from page order or it could potentially cause naming
+conflicts in the future. (A future update might fix this.)
+
+Also, don't change the filenames of anything in the artifacts
+directory; it could definitely mess things up.
 
 ## Customization
 
@@ -57,6 +72,9 @@ Messing around with the html layout is somewhat difficult as
 the collections script reads both from `build/source/template.html`
 and also input from `draft.py` and `collect.py` to generate the
 final pages. Hopefully the code isn't *too* terrible to edit, though!
+
+To apply name/template/head changes to past content, run `rebuild.py`
+in `build`.
 
 I would prefer that you leave the Starship grabber as-is, but
 you can really do what you want :)

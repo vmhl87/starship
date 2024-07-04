@@ -68,6 +68,9 @@ def draft(content, pageid):
     if not re_date:
         re_head += f'\t:date {datetime.datetime.now().strftime("%b %-d %Y<br>%-I:%M %p")}\n'
 
+    if "main" in tags:
+        tags.remove("main")
+
     pubname = ""
     for x in title.lower():
         if x == ' ' or (ord(x) >= ord('a') and ord(x) <= ord('z')):
