@@ -34,9 +34,13 @@ summary, and show the whole post in a standalone page.
 You can store these in `build/drafts/`, or really wherever
 you want.
 
-Render a draft with `preview.py <draft>`, or publish it with
+Preview a draft with `preview.py <draft>`, or publish it with
 `publish.py <draft>`. (These scripts are located in the `build`
 dir, and you should run them from there.)
+
+**As it is currently very difficult to edit or delete past posts,
+make sure that your draft is as you want it before publishing.
+If you aren't sure, use the preview script!**
 
 Because the generated blog is static, Starship stores build
 artifacts to efficiently build content. It is **very important**
