@@ -32,15 +32,18 @@ def handle(page):
         return
 
     try:
-        if not os.path.exists("../content/"):
-            os.mkdir("../content/")
-        if not os.path.exists("../content/main/"):
-            os.mkdir("../content/main/")
-            writeto("../content/main/state", "0")
-            writeto("../content/main/chunk", "0")
-        chunk(draft_f[1], "../content/main/")
+        if not "hidden" in draft_f[0]:
+            if not os.path.exists("../content/"):
+                os.mkdir("../content/")
+            if not os.path.exists("../content/main/"):
+                os.mkdir("../content/main/")
+                writeto("../content/main/state", "0")
+                writeto("../content/main/chunk", "0")
+            chunk(draft_f[1], "../content/main/")
 
         for tag in draft_f[0]:
+            if not os.path.exists("../content/"):
+                os.mkdir("../content/")
             if not os.path.exists(f"../content/{tag}/"):
                 os.mkdir(f"../content/{tag}/")
                 writeto(f"../content/{tag}/state", "0")
@@ -78,7 +81,6 @@ artlist = open("artifacts/state")
 
 for art in artlist:
     handle(f"artifacts/{art.strip()}.html")
+    print(f"Handling {art.strip()}... done")
 
 artlist.close()
-
-print("done")
