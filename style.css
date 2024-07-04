@@ -12,6 +12,7 @@
 
 /* force overflow to post-outer only */
 html, body {
+	height: 100%;
 	width: 100%;
 	margin: 0;
 }
@@ -26,6 +27,9 @@ body {
 	font-weight: <weight>;
 	font-style: normal;
 	font-size: 14px;
+
+	scroll-padding-top: constant(safe-area-inset-top);
+	scroll-padding-top: env(safe-area-inset-top);
 }
 
 /* main content, centered, does not exceed specified width */
