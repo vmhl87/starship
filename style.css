@@ -219,10 +219,17 @@ hr {
 
 ul {
 	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul li {
+	padding-left: 20px;
 }
 
 ul li::before {
 	content: "- ";
+	padding-left: 0px;
 }
 
 pre.code {
