@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="5_on-multidimensio.html">On multidimensional tic-tac-toe</a>
+    <div class="post-title-date">Jul&nbsp;5&nbsp;2024<br>1:26&nbsp;PM</div>
+</div>
+<!--
+	:title On multidimensional tic-tac-toe
+	:tag math
+-->
+<p>I was shown this puzzle by <b>@hy3na_xyz</b>, a member of the Rutgers
+Competitive Programming discord server. Credit goes to him!<p>
+<b style="display:inline-block; margin:1em; font-weight: normal;">Given an
+N-dimensional tic-tac-toe board of side length L, how many winning
+paths are there? A winning path is a sequence of L cells that
+follow a linear path through the N-dimensional hypercube of the
+game board.</b>
+
+<p>My first idea was to fix one endpoint of the path and count the
+number of possible other endpoints that could match with it.</p>
+<p>Unfortunately, the number of matching endpoints is not invariant -
+in a standard 3x3 2d tic-tac-toe board, each corner has 3 possible
+matching endpoints, whereas the middles of the sides only have 1.</p>
+<p>In higher dimensions, there are even more cases: A 3x3x3 3d tic-tac-toe
+board has separate cases for the corners, middles of edges, and
+centers of faces, and each has a different number of possible endpoints.</p>
+<br>
+<p>Instead, I redefined what it meant for a path to be a winning path:
+If a sequence of L points forms a line in the game hypercube, then its
+points must form an arithmetic sequence in order.</p>
+<p>This also means that if we consider each dimension separately, the L
+points coordinates in such dimension must similarly form an arithmetic
+sequence.</p>
+<p>Consider the following 3x3 board:</p>
+<pre class="code">
+3| <b>a b c</b>
+2| <b>d e f</b>
+1| <b>g h i</b>
+ +------
+   1 2 3
+</pre>
+<p>The sequence <b>abc</b> has coordinates <b>(1, 3) (2, 3) (3, 3)</b>.
+Its x and y coordinate sequences are themselves arithmetic sequences.</p>
+<p>How can we use this to count the total number of sequences?</p>
+<p>First, let's temporarily consider the sequences as ordered, and then
+divide by two later on. This makes the computation easier.</p>
+<p>Define the X component of a winning path as the sequence created by
+extracting the X coordinates of all of the points in the path. In our
+3x3 example, there are 5 possible X component sequences:</p>
+<ul>
+	<li><b>1, 1, 1</b></li>
+	<li><b>2, 2, 2</b></li>
+	<li><b>3, 3, 3</b></li>
+	<br>
+	<li><b>1, 2, 3</b></li>
+	<li><b>3, 2, 1</b></li>
+</ul>
+<p>We can generalize this: In a hypercube of size <b>L</b>, there are
+<b>L+2</b> possible sequences for each dimension.</p>
+<p>From this, it looks like our answer is <b>[(L+2)^N]/2</b> sequences.
+This is <i>almost</i> correct.</p>
+<p>Firstly, it is immediately obvious that <b>(L+2)^N</b> is not always
+even, so this formula will not always be integral. Recall why we are
+dividing by 2: we were considering out sequences to be ordered.</p>
+<p><b>(L+2)^N</b> does not exclude sequences such as <b>(1, 2, 3)
+	(1, 2, 3) (1, 2, 3)</b> which consist of <b>L</b> identical points.
+These are sequences that by nature do not have two endpoints, and so
+do not have two ordered copies. To fix this, we subtract <b>L^N</b>
+before dividing by two, as each board point represents one such sequence.</p>
+<p>So, our formula is <b>[(L+2)^N - L^N]/2</b>!</p>
+<hr>
+<p><b>@hy3na_xyz</b> had an incredibly elegant visual proof.</p>
+<p>Consider the standard 3x3 tic-tac-toe board. Nest it inside a 5x5 board
+like so:</p>
+<pre class="code">
+<b>a b c d e</b>
+<b>f</b> x x x <b>f</b>
+<b>g</b> x x x <b>g</b>
+<b>h</b> x x x <b>h</b>
+<b>e b c d a</b>
+</pre>
+<p>For any given winning path in the 3x3 board, extend its endpoints out into the
+5x5. These two cells that it extends outward to correspond uniquely to that winning
+path.</p>
+<pre class="code">
+a <b>b</b> c d e
+f <b>x</b> x x f
+g <b>x</b> x x g
+h <b>x</b> x x h
+e <b>b</b> c d a
+</pre>
+<p>We can prove this constructively: For any point in the 5x5 board but not in the
+central 3x3, its paired point must have x and y offsets of either 0 or 4. Because
+of the size of the board, there will always be only one possible paired point.</p>
+<pre class="code">
+<b>a</b> b c d e
+f <b>x</b> x x f
+g x <b>x</b> x g
+h x x <b>x</b> h
+e b c d <b>a</b>
+</pre>
+<p>This generalizes to higher dimensions and larger boards: Nest the board inside
+an N-dimensional hypercube of side length <b>L+2</b>. Each winning path will
+correspond to a pair of two points inside the outer shell.</p>
+<p>Note that this formula doesn't hold for <b>L = 1</b>.</p>
+<hr>
+<p>Thanks again to <b>@hy3na_xyz</b> for this really cool problem & visual proof!</p>
+<p>Signing off for now.</p>
+<p class="tag-container">tags: <a href="../content/math/index.html">math</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
