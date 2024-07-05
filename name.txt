@@ -1,1 +1,1 @@
-Subterranean Lunacy
+O(sin(x))
