@@ -217,8 +217,8 @@ hr {
 	color: var(--highlight-color);
 }
 
-ul li {
-	list-style-type: "- ";
+ul {
+	list-style: "- ";
 }
 
 pre.code {
