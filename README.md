@@ -41,8 +41,8 @@ dir, and you should run them from there.)
 Because the generated blog is static, Starship stores build
 artifacts to efficiently build content. It is **very important**
 to check that your artifacts are up to date before publishing a
-new page, or else page order could get *very* messed up
-- it's like merge conflicts, but worse!
+new page, or else page order could get *very* messed up - it's
+like merge conflicts, but worse!
 
 Artifacts are stored in `build/artifacts` and contain repackaged
 past drafts. Editing posts is pretty easy - just edit the draft
