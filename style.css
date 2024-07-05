@@ -218,7 +218,11 @@ hr {
 }
 
 ul {
-	list-style: "- ";
+	list-style: none;
+}
+
+ul li::before {
+	content: "- ";
 }
 
 pre.code {
