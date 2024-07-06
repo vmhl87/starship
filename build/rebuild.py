@@ -42,13 +42,14 @@ def handle(page):
             chunk(draft_f[1], "../content/main/")
 
         for tag in draft_f[0]:
-            if not os.path.exists("../content/"):
-                os.mkdir("../content/")
-            if not os.path.exists(f"../content/{tag}/"):
-                os.mkdir(f"../content/{tag}/")
-                writeto(f"../content/{tag}/state", "0")
-                writeto(f"../content/{tag}/chunk", "0")
-            chunk(draft_f[1], f"../content/{tag}/", gentag(tag))
+            if tag != "hidden":
+                if not os.path.exists("../content/"):
+                    os.mkdir("../content/")
+                if not os.path.exists(f"../content/{tag}/"):
+                    os.mkdir(f"../content/{tag}/")
+                    writeto(f"../content/{tag}/state", "0")
+                    writeto(f"../content/{tag}/chunk", "0")
+                chunk(draft_f[1], f"../content/{tag}/", gentag(tag))
         
         standalone = collect(draft_f[2], "../content/main/index.html", "../style.css")
         writeto(f"../pages/{draft_f[3]}.html", standalone)
