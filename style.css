@@ -232,14 +232,49 @@ ul li::before {
 	padding-left: 0px;
 }
 
+div.oldposts {
+	margin: 0 auto;
+	text-align: center;
+}
+
 pre.code {
 	background-color: var(--background-color);
 	color: var(--code-color);
 	white-space: pre-wrap;
 	padding: 10px;
+
+	font-family: "Noto Sans Mono", monospace;
+	font-weight: <weight>;
+	font-style: normal;
+	font-size: 14px;
 }
 
-div.oldposts {
-	margin: 0 auto;
-	text-align: center;
+/* code color classes */
+
+pre.code-color {
+	background-color: var(--background-color);
+	color: #B0B0B0;
+	white-space: pre-wrap;
+	padding: 10px;
+
+	font-family: "Noto Sans Mono", monospace;
+	font-weight: <weight>;
+	font-style: normal;
+	font-size: 14px;
+}
+
+pre.code-color > span.g {
+	color: #90B090;
+}
+
+pre.code-color > span.b {
+	color: #90B0C0;
+}
+
+pre.code-color > span.y {
+	color: #C09060;
+}
+
+pre.code-color > span.r {
+	color: #707070;
 }

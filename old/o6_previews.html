@@ -43,23 +43,23 @@ format for drafts:</p>
 tags, date, etc. are contained in a single html comment at the top of the
 draft file. For example:</p>
 
-<pre class="code">
-&lt;!--
+<pre class="code-color">
+<span class="r">&lt;!--
     :title Hello, World!
     :tag pre-release
     :tag updates
---&gt;<br>
-&lt;p&gt;Testing out Starship draft previews!&lt;/p&gt;
+--&gt;</span><br>
+<span class="b">&lt;</span><span class="y">p</span><span class="b">&gt;</span>Testing out Starship draft previews!<span class="b">&lt;</span><span class="y">/p</span><span class="b">&gt;</span>
 </pre>
 <p>Draft body content is pretty much exactly as it would appear embedded
 into the final pages. This packaging form also helps with summary generation;
 summary cutoff is noted with an <b>[[ENDSUM]]</b> object. Dots and readmore
 link are automatically generated.</p>
 <p>For example, this draft:</p>
-<pre class="code">
-...draft file. For example:&lt;/p&gt;
+<pre class="code-color">
+...draft file. For example:<span class="b">&lt;</span><span class="y">/p</span><span class="b">&gt;</span>
 <b>[[ENDSUM]]</b>
-&lt;pre class="code"&gt;...
+<span class="b">&lt;</span><span class="y">pre</span> <span class="g">class</span><span class="b">=</span><span class="y">"code"</span><span class="b">&gt;</span>...
 </pre>
 <p>Unfortunately, because of this, draft files can't be individually rendered
 raw. <b>preview.py</b> parses a draft file, outputting a page with both the
