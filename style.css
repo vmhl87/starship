@@ -232,6 +232,16 @@ ul li::before {
 	padding-left: 0px;
 }
 
+video {
+	display: block;
+
+	margin-right: auto;
+	margin-left: auto;
+
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
 div.oldposts {
 	margin: 0 auto;
 	text-align: center;

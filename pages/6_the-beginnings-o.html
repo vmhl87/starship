@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="6_the-beginnings-o.html">The beginnings of a 2d physics engine</a>
+    <div class="post-title-date">Jul&nbsp;7&nbsp;2024<br>1:40&nbsp;PM</div>
+</div>
+<!--
+	:title The beginnings of a 2d physics engine
+	:date Jul 7 2024<br>1:40 PM
+	:tag programming
+-->
+<p>In this blog post, we'll be covering the basics of how
+iteration-based physics works,and then implementing a
+very simple proto-engine in C.</p>
+<hr>
+<p>Let's start with some background on iterative simulations
+as a whole.</p>
+<p>Essentially all computer animations are done iteratively.
+Computer displays have a finite refresh speed, and
+so continuous motion can't be rendered conventionally, but
+instead as a sequence of fixed frames. The same is true for
+the vast majority of numerical simulations. Infinite precision
+is essentially impossible to achieve, and so physics engines
+keep track of the positions, velocities, etc. of objects and
+then simulate their behavior over a discrete timestep.</p>
+<p>We can start by simulating the simplest shape we can: a
+point. It has only two quantities we need to store: a position
+and a velocity, each which we can store with a pair of floats.</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">point</span> {
+  <span class="r">// px &amp; py store position; vx &amp; vy velocity</span>
+  <span class="g">float</span> px, py, vx, vy;
+};</span>
+</pre>
+<p>Iterating such a simple point is very easy. In each timestep,
+the engine just has to add the velocity of the point to its
+position - we're ignoring external forces for now.</p>
+<pre class="code-color">
+<span class="g">void</span> <span class="b">iterate</span> (<span class="g">struct</span> <span class="b">point</span> *p) {
+  p -&gt; px += p -&gt; vx;
+  p -&gt; py += p -&gt; vy;
+}
+</pre>
+<p>Let's animate! I'm using <a href="https://github.com/vmhl87/blib">blib</a>,
+a system I created to easily create braille-based diagrams and animations.</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">point</span> p;<br>
+<span class="r">// the point starts halfway down the left edge</span>
+p.px = <span class="y">0.0</span>;
+p.py = <span class="g">height</span>/<span class="y">2</span>;<br>
+<span class="r">// moving directly right</span>
+p.vx = <span class="y">1.0</span>;
+p.vy = <span class="y">0.0</span>;<br>
+<span class="y">while</span> (<span class="y">true</span>) {
+  <span class="r">// simulate movement</span>
+  <span class="b">iterate</span>(&amp;p);<br>
+  <span class="r">// to render, erase the whole screen and then draw the new position of p</span>
+  <span class="b">clear</span>();
+  <span class="b">point</span>((<span class="g">int</span>) p.px, (<span class="g">int</span>) p.py, <span class="y">1</span>);
+  <span class="b">draw</span>();<br>
+  <span class="r">// approximate 50fps refresh with delay</span>
+  <span class="b">sleepms</span>(<span class="y">20</span>);
+}
+</pre>
+<p>Wow, we have a moving point!</p>
+<video controls>
+	<source src="/assets/6_physics-point.mp4" type="video/mp4">
+video demo of single moving point
+</video>
+<p>What if we want the point to elastically bounce off of the walls?</p>
+<p>Conceptually, when a point mass hits an immovable wall, it applies
+some force <b>F</b> to the wall, proportionally to its mass. By Newton's
+third law, the same force <b>F</b> is applied by the wall to the point mass.
+(If the wall wasn't immovable, this wouldn't be the case, though.)</p>
+<p>To simulate this, we invert the velocity vector of our mass along the
+vector perpendicular to the wall. Because our walls are vertical and
+horizontal only, we can simply invert the x or y component of the point's
+velocity anytime it hits a vertical or horizontal wall.</p>
+<pre class="code-color">
+<span class="r">// left border</span>
+<span class="y">if</span> (p.px &lt; <span class="y">0.0</span>) {
+  p.px = <span class="y">0.0</span>;
+  p.vx *= <span class="y">-1.0</span>;
+}<br>
+<span class="r">// top border</span>
+<span class="y">if</span> (p.py &lt; <span class="y">0.0</span>) {
+  p.py = <span class="y">0.0</span>;
+  p.vy *= <span class="y">-1.0</span>;
+}<br>
+<span class="r">// right border (coords range from 0 to width-1)</span>
+<span class="y">if</span> (p.px &gt; <span class="g">width</span>-<span class="y">1.0</span>) {
+  p.px = <span class="g">width</span>-<span class="y">1.0</span>;
+  p.vx *= <span class="y">-1.0</span>;
+}<br>
+<span class="r">// bottom border</span>
+<span class="y">if</span> (p.py &gt; <span class="g">height</span>-<span class="y">1.0</span>) {
+  p.py = <span class="g">height</span>-<span class="y">1.0</span>;
+  p.vy *= <span class="y">-1.0</span>;
+}
+</pre>
+<p>It's just like the DVD bouce effect. :)</p>
+<video controls>
+	<source src="/assets/6_physics-point-bounce.mp4" type="video/mp4">
+video demo of diagonally bouncing point
+</video>
+<p>What if we want inelastic collisions?</p>
+<p>To do so, we simply need to reduce the restoring force <b>F</b> that
+the wall applies back to the point. We can do this by multiplying some
+factor like <b>0.8</b> to the inverted component of the velocity.</p>
+<pre class="code-color">
+<span class="r">// left border</span>
+<span class="y">if</span> (p.px &lt; <span class="y">0.0</span>) {
+  p.px = <span class="y">0.0</span>;
+  p.vx *= <span class="y">-0.8</span>;
+}<br>
+<span class="r">...</span>
+</pre>
+<video controls>
+	<source src="/assets/6_physics-point-bounce-inelastic.mp4" type="video/mp4">
+video demo of inelastic point
+</video>
+<p>Notice an interesting behavior - because of the dimensions of my
+terminal, the point bounces more often off of the top and bottom surfaces,
+so its y velocity decays faster than its x.</p>
+<p>What other forces can we apply to the point? Let's add gravity!</p>
+<p>We can approximate gravity as a constant force that is applied to
+our point. In the real world, most objects won't be moving fast enough
+that they experience noticeable change in the magnitude and direction
+of gravity, so this is fine.</p>
+<pre class="code-color">
+p.vy += <span class="y">0.1</span>;
+</pre>
+<p>I also added a bit of "friction" to the bottom wall by multiplying
+<b>0.8</b> to the x velocity upon contact.</p>
+<video controls>
+	<source src="/assets/6_physics-point-bounce-gravity.mp4" type="video/mp4">
+video demo of point bouncing with gravity
+</video>
+<p>This is great, but it's very limited. It's simulating a point mass
+with no size or rotation. More complex colliders will require our engine
+to keep track of angular velocity and apply it properly.</p>
+<hr>
+<p>This is all for part 1. Expect part 2 in a few hours!</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
