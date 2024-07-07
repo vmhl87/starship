@@ -29,6 +29,13 @@ and a velocity, each which we can store with a pair of floats.</p>
 <p>Iterating such a simple point is very easy. In each timestep,
 the engine just has to add the velocity of the point to its
 position - we're ignoring external forces for now.</p>
+<p>You might be wondering why we don't store acceleration.
+Newton's laws state that an object in motion will stay in
+motion along its trajectory. In other words, if we don't
+apply any forces to our point, it will mantain its velocity.
+Because of this we need to store velocity, but not necessarily
+acceleration. Instead, we apply acceleration by changing
+the velocity of the particle.</p>
 <pre class="code-color">
 <span class="g">void</span> <span class="b">iterate</span> (<span class="g">struct</span> <span class="b">point</span> *p) {
   p -&gt; px += p -&gt; vx;
@@ -122,6 +129,9 @@ so its y velocity decays faster than its x.</p>
 our point. In the real world, most objects won't be moving fast enough
 that they experience noticeable change in the magnitude and direction
 of gravity, so this is fine.</p>
+<p>Because the y axis goes downward (the top of the screen is y = 0
+and the bottom of the screen is y = height-1) we increase velocity's
+y component to accelerate the point downward. It's a little unintuitive.</p>
 <pre class="code-color">
 p.vy += <span class="y">0.1</span>;
 </pre>
