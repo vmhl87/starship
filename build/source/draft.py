@@ -22,6 +22,9 @@ def draft(content, pageid):
 
         if len(line.strip()) == 0: continue
 
+        if re_swap: re_tail += line
+        else: re_head += line
+
         if "<!--" in line and not had_header:
             had_header = True
             header = True
@@ -34,13 +37,13 @@ def draft(content, pageid):
 
             if ls.startswith(":title "):
                 title = ls[7:]
+                re_swap = True
 
             elif ls.startswith(":date "):
                 form_date = ls[6:].replace(' ', '&nbsp;')
                 re_date = True
 
             elif ls.startswith(":tag "):
-                re_swap = True
                 for tag in ls[5:].split(' '):
                     if tag not in tags:
                         tags.add(tag)
@@ -55,9 +58,6 @@ def draft(content, pageid):
             full += line
 
         else: full += line
-
-        if re_swap: re_tail += line
-        else: re_head += line
 
     if not had_header:
         raise Exception("Draft does not have a header")
