@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="8_a-rigidbody-d-ph.html">A rigid-body 2d physics engine!</a>
+    <div class="post-title-date">Jul&nbsp;8&nbsp;2024<br>9:03&nbsp;PM</div>
+</div>
+<!--
+	:title A rigid-body 2d physics engine!
+	:date Jul 8 2024<br>9:03 PM
+	:tag programming
+-->
+<p>Continuation of <a target="_blank" href="https://vmhl87.github.io/starship/pages/6_the-beginnings-o.html">this post</a></p>
+<hr>
+<p>Previously, we created a basic particle-based physics engine.
+Each point was stored as simply a position and velocity, and
+iterated to produce natural-looking motion.</p>
+<p>How can we extend this to more complex shapes?</p>
+<p>Before we even try to simulate such shapes, we'll need a
+way to store them. A simple point can be represented fully with
+a position and velocity, as it has no defined rotation.
+To represent rotation and angular velocity, we just have to add
+two more fields to our collider struct:</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">collider</span> {
+  <span class="g">float</span> px, py, vx, vy;
+  <span class="r">// rotation = angular velocity</span>
+  <span class="g">float</span> angle, rotation;
+};
+</pre>
+<p>It turns out that we'll be doing a lot of transformations on
+the position and velocity fields, and it'll be convenient to
+represent them as 2d vectors. We'll make a simple <b>vec2</b>
+struct wrapping two floats.</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">vec2</span> {
+  <span class="g">float</span> x, y;
+};<br>
+<span class="g">struct</span> <span class="b">collider</span> {
+  <span class="g">struct</span> <span class="b">vec2</span> position, velocity;
+  <span class="g">float</span> angle, rotation;
+};
+</pre>
+<p>In order to use angle and rotation properly, we increment each
+collider's angle by its rotation in iterate(). Also, we can use
+some helper vector math functions instead of manually adding
+velocity to position.</p>
+<pre class="code-color">
+<span class="g">void</span> <span class="b">iterate</span> (<span class="g">struct</span> <span class="b">collider</span> *c) {
+  <span class="r">// vadd(a, b) returns the sum of two vectors</span>
+  c -&gt; position = <span class="b">vadd</span>(c -&gt; position, c -&gt; velocity);
+  c -&gt; angle += c -&gt; rotation;
+}
+</pre>
+<p>But wait, this isn't everything! Now that we're working with
+arbitrarily shaped colliders instead of points, each collider can
+have a different shape, and that will affect its behavior. So, we
+need to represent the collider's shape in the struct.</p>
+<p>I chose to define the shape of a collider by representing it
+as a collection of vertices. This isn't technically accurate for
+friction computations, but will do for now.</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">collider</span> {
+  <span class="g">size_t</span> vertex_count;
+  <span class="g">struct</span> <span class="b">vec2</span> *vertices;<br>
+  <span class="g">struct</span> <span class="b">vec2</span> position, velocity;
+  <span class="g">float</span> angle, rotation;
+};
+</pre>
+<p>Ok, looks good now. Let's make a simple demo of a rotating square
+moving across the screen. We'll ignore collisions with the wall or any of
+that for now.</p>
+<p>We don't actually have to change much from our previous point demo:
+iterate() is updated to work with rotation, so all we have to make is
+a helper function to display() our collider.</p>
+<p>To make this simple, let's just connect all adjacent vertices with lines,
+and draw a point in the center to show the center of mass.</p>
+<p>It'll also be convenient here to write a helper function screen_position(),
+which determines the screen-space position of any vertex. It will be useful
+for collision detection later.</p>
+<pre class=code-color>
+<span class=g>struct</span> <span class=b>vec2</span> <span class=b>screen_position</span> (<span class=g>struct</span> collider *c, <span class=g>size_t</span> index) {
+  <span class=r>// vrotate() does what it looks like - rotates a vector</span>
+  <span class=y>return</span> <span class=b>vadd</span>(c -&gt; p, <span class=b>vrotate</span>(c -&gt; vertices<span class=b>[</span>index<span class=b>]</span>, c -&gt; angle));
+}<br>
+<span class=g>void</span> <span class=b>display</span> (<span class=g>struct</span> <span class=b>collider</span> *c) {
+  <span class=r>// assume collider to be properly centered around center of mass</span>
+  <span class=b>point</span>((<span class=g>int</span>) c -&gt; position.x, (<span class=g>int</span>) c -&gt; position.y, <span class=y>1</span>);<br>
+  <span class=r>// simply iterate through vertices and draw line to next one in sequence</span>
+  <span class=y>for</span> (<span class=g>size_t</span> vertex = <span class=y>0</span>; vertex &lt; c -&gt; vertex_count; ++vertex) {
+    <span class=g>size_t</span> next = vertex + <span class=y>1</span>;
+    <span class=y>if</span> (next == c -&gt; vertex_count) next = <span class=y>0</span>;<br>
+    <span class=g>struct</span> <span class=b>vec2</span> p1 = <span class=b>screen_position</span>(c, vertex),
+                p2 = <span class=b>screen_position</span>(c, next);<br>
+    <span class=b>line</span>((<span class=g>int</span>) p1.x, (<span class=g>int</span>) p1.y, (<span class=g>int</span>) p2.x, (<span class=g>int</span></span>) p2.y);
+  }
+}
+</pre>
+<pre class=code-color>
+<span class=g>struct</span> <span class=b>collider</span> square;<br>
+square.vertex_count = <span class=y>4</span>;
+square.vertices = <span class=y>malloc</span>(<span class=b>sizeof</span>(<span class=g>struct</span> <span class=b>vec2</span>) * <span class=y>4</span>);<br>
+<span class=r>// nvec2() constructs a new vec2</span>
+square.vertices<span class=b>[</span><span class=y>0</span><span class=b>]</span> = <span class=b>nvec2</span>(<span class=y>-10.0</span>, <span class=y>-10.0</span>);
+square.vertices<span class=b>[</span><span class=y>1</span><span class=b>]</span> = <span class=b>nvec2</span>(<span class=y>-10.0</span>, <span class=y>10.0</span>);
+square.vertices<span class=b>[</span><span class=y>2</span><span class=b>]</span> = <span class=b>nvec2</span>(<span class=y>10.0</span>, <span class=y>10.0</span>);
+square.vertices<span class=b>[</span><span class=y>3</span><span class=b>]</span> = <span class=b>nvec2</span>(<span class=y>10.0</span>, <span class=y>-10.0</span>);<br>
+square.position = <span class=b>nvec2</span>(<span class=y>50.0</span>, <span class=g>height</span>/<span class=y>2.0</span>);
+square.velocity = <span class=b>nvec2</span>(<span class=y>0.2</span>, <span class=y>0.0</span>);<br>
+square.angle = <span class=y>0.0</span>;
+square.rotation = <span class=y>0.03</span>;<br>
+<span class=y>while</span> (<span class=y>true</span>) {
+  <span class=b>iterate</span>(&amp;square);<br>
+  <span class=b>clear</span>();
+  <span class=b>display</span>(&amp;square);
+  <span class=b>draw</span>();<br>
+  <span class=b>sleepms</span>(<span class=y>20</span>);
+}
+</pre>
+<video controls>
+	<source src="https://vmhl87.github.io/starship/assets/8_rigid-animate-test.mp4" type="video/mp4">
+animated rotating square
+</video>
+<p>Let's add collisions.</p>
+<p>Conceptually the same logic applies as in the point simulation.
+When any vertex of the collider hits a wall, it exerts a force on
+the wall, and the same force is applied back to the collider.</p>
+<p>To find the amount of force exerted, we multiply the collider's
+mass with the <b>relative velocity</b> between the colliding vertex
+and the wall. This is important if the collider is rotating. The
+location where force is applied matters, too, because it will change
+the rotation of the body.</p>
+<p>Acceleration can be calculated with F = ma. Torque is calculated
+as the cross product of the force and offset, and rotational acceleration
+is torque divide moment of inertia.</p>
+<p>Let's add two more fields to our collider struct to hold mass
+and radius (average distance from center of mass), and write a helper
+function apply_force() to keep things neat.</p>
+<pre class="code-color">
+<span class="g">struct</span> <span class="b">collider</span> {
+  <span class="g">size_t</span> vertex_count;
+  <span class="g">struct</span> <span class="b">vec2</span> *vertices;<br>
+  <span class="g">float</span> mass, radius;</br>
+  <span class="g">struct</span> <span class="b">vec2</span> position, velocity;
+  <span class="g">float</span> angle, rotation;
+};
+</pre>
+<pre class=code-color>
+<span class=r>// damping is to correct for units mismatch</span>
+<span class=g>float</span> damping = <span class=y>100.0</span>;<br>
+<span class=g>void</span> <span class=b>apply_force</span> (<span class=g>struct</span> collider *c, <span class=g>struct</span> <span class=b>vec2</span> force, <span class=g>struct</span> <span class=b>vec2</span> offset) {
+  <span class=g>struct</span> <span class=b>vec2</span> acceleration = <span class=b>vmult</span>(force, <span class=y>1.0</span> / c -&gt; mass);<br>
+  <span class=g>float</span> torque = offset.x*force.y - offset.y*force.x,
+        moment = c -&gt; mass * c -&gt; radius;<br>
+  c -&gt; v = <span class=b>vadd</span>(c -&gt; v, acceleration);
+  c -&gt; rotation += torque / moment / damping;
+}
+</pre>
+<p>Now, update iterate() to check and handle collisions. We
+essentially need to loop through all of the collider's vertices
+and check if they are contacting a wall. If so, compute the
+relative velocity, and call apply_force().</p>
+<p>We already have a utility to find the screen-position of each
+vertex. Let's do the same, but for screen-velocity instead.</p>
+<pre class=code-color>
+<span class=g>struct</span> <span class=b>vec2 screen_velocity</span> (<span class=g>struct</span> <span class=b>collider</span> *c, <span class=g>size_t</span> index) {
+  <span class=r>// velocity contributed by rotation is perpendicular
+  // the vector from the center to vertex</span>
+  <span class=g>struct</span> <span class=b>vec2</span> perpendicular = <span class=b>vrotate</span>(c -&gt; points<span class=b>[</span>i<span class=b>]</span>, c -&gt; angle + <span class=y>PI</span>/<span class=y>2.0</span>);
+  <span class=y>return</span> <span class=b>vadd</span>(c -&gt; velocity, <span class=b>vmult</span>(perpendicular, c -&gt; rotation));
+}
+</pre>
+<p>We then add the following to iterate():</p>
+<pre class=code-color>
+<span class=y>for</span> (<span class=g>size_t</span> vertex = 0; vertex &lt; c -&gt; vertex_count; ++vertex) {
+  <span class=g>struct</span> <span class=b>vec2</span> pos = <span class=b>screen_position</span>(c, vertex),
+              vel = <span class=b>screen_velocity</span>(c, vertex);<br>
+  <span class=r>// test for collision with walls</span>
+  <span class=y>if</span> (p.x &lt; <span class=y>0.5</span> &amp;&amp; v.x &lt; <span class=y>0.0</span>) {
+    <span class=g>struct</span> <span class=b>vec2</span> force = <span class=b>nvec2</span>(-v.x * c -&gt; mass, <span class=y>0.0</span>),
+                offset = <span class=b>vsub</span>(pos, c -&gt; position);<br>
+    <span class=b>apply_force</span>(c, force, offset);
+  }<br>
+  <span class=r>...</span>
+}
+</pre>
+<video controls>
+	<source src="https://vmhl87.github.io/starship/assets/8_rigid-collision-test.mp4" type="video/mp4">
+collision test
+</video>
+<p>Looks good! Let's try adding gravity. We can do the same
+as what we did in the particle engine - apply a constant force
+every frame.</p>
+<video controls>
+	<source src="https://vmhl87.github.io/starship/assets/8_rigid-collision-gravity-fail.mp4" type="video/mp4">
+gravity fail!
+</video>
+<p>Ah, that isn't good. Why does it happen?</p>
+<p>Let's look at the code which calculates collisions with the bottom wall.</p>
+<pre class=code-color>
+<span class=y>if</span> (p.y &gt; <span class=g>height</span> - <span class=y>0.5</span> &amp;&amp; v.y &gt; <span class=y>0.0</span>) {
+  <span class=g>struct</span> <span class=b>vec2</span> force = <span class=b>nvec2</span>(<span class=y>0.0</span>, -v.y * c -&gt; mass),
+              offset = <span class=b>vsub</span>(pos, c -&gt; position);<br>
+  <span class=b>apply_force</span>(c, force, offset);
+}<br>
+</pre>
+<p>The restoring force is calculated as directly proportional to
+relative velocity. This causes zero restoring force to be applied
+if there is no relative motion. This works fine in a system with
+no external forces, but breaks when we add gravity.</p>
+<p>In the real world, if an object is resting on a table or other
+surface, the surface exerts an upwards force on the object to
+counteract gravity. We can do the same here, by inserting a check
+into iterate():</p>
+<pre class=code-color>
+<span class=y>if</span> (p.y &gt; <span class=g>height</span> - <span class=y>0.5</span>) {
+  <span class=g>struct</span> <span class=b>vec2</span> force = <span class=b>nvec2</span>(<span class=y>0.0</span>, <span class=y>-0.07</span> * c -&gt; mass),
+              offset = <span class=b>vsub</span>(pos, c -&gt; position);<br>
+  <span class=b>apply_force</span>(c, force, offset);
+}
+</pre>
+<video controls>
+	<source src="https://vmhl87.github.io/starship/assets/8_rigid-collision-nofric.mp4" type="video/mp4">
+no friction
+</video>
+<p>This fixes the clipping problem! However, we can see a few
+issues. Firstly, the box behaves as if there isn't any friction,
+and secondly, we see a bit of jitter.</p>
+<p>We can add friction by modifying the collision handler -
+rather than only applying force directly perpendicular to the
+wall, also apply a small amount of force parallel to the wall,
+proportional to the relative horizontal velocity.</p>
+<pre class=code-color>
+<span class=y>if</span> (p.y &gt; <span class=g>height</span> - <span class=y>0.5</span> &amp;&amp; v.y &gt; <span class=y>0.0</span>) {
+  <span class=g>struct</span> <span class=b>vec2</span> force = <span class=b>nvec2</span>(-v.x * <span class=y>0.3</span> * c -&gt; mass, -v.y * c -&gt; mass),
+              offset = <span class=b>vsub</span>(<span class=r>...</span>
+</pre>
+<p>I'm using <b>0.3</b> as the coefficient of friction, but any
+value between <b>0</b> and <b>1</b> should work.</p>
+<p>To increase stability we need to reduce numerical error. Generally,
+to mitigate the error of a newton iteration-based simulation, we reduce
+the step size. To do this, we can run iterate() multiple times per frame,
+and in each iteration, apply only a fraction of the collider's velocity
+to its position.</p>
+<p>Let's add another parameter to iterate(): <b>dt</b>, the fraction
+of a full frame that each iteration simulates.</p>
+<pre class=code-color>
+<span class=g>void</span> <span class=b>iterate</span> (<span class=g>struct</span> <span class=b>collider</span> *c, <span class=g>float</span> dt) {
+  c -&gt; position = <span class=b>vadd</span>(c -&gt; position, <span class=b>vmult</span>(c -&gt; velocity, dt));
+  c -&gt; angle += c -&gt; rotation * dt;
+  <span class=r>...</span>
+</pre>
+<pre class=code-color>
+<span class=y>while</span> (<span class=y>true</span>) {
+  <span class=y>for</span> (<span class=g>size_t</span> i = <span class=y>0</span>; i &lt; <span class=y>20</span>; ++i) {
+    <span class=b>iterate</span>(&amp;square, <span class=y>0.05</span>);
+  }
+  <span class=r>...</span>
+</pre>
+<p>20 iterations is fine for our purposes, but more divisions
+will result in better stability.</p>
+<video controls>
+	<source src="https://vmhl87.github.io/starship/assets/8_rigid-collision-stable.mp4" type="video/mp4">
+stable square collider
+</video>
+<p>Very nice.</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
