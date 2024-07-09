@@ -139,8 +139,8 @@ function apply_force() to keep things neat.</p>
 };
 </pre>
 <pre class=code-color>
-<span class=r>// damping is to correct for units mismatch</span>
-<span class=g>float</span> damping = <span class=y>100.0</span>;<br>
+<span class=r>// correct for units - velocity measured in pixels/frame, not pixels/second</span>
+<span class=g>float</span> damping = <span class=y>60.0</span>; <span class=r>// assume 60fps</span><br>
 <span class=g>void</span> <span class=b>apply_force</span> (<span class=g>struct</span> collider *c, <span class=g>struct</span> <span class=b>vec2</span> force, <span class=g>struct</span> <span class=b>vec2</span> offset) {
   <span class=g>struct</span> <span class=b>vec2</span> acceleration = <span class=b>vmult</span>(force, <span class=y>1.0</span> / c -&gt; mass);<br>
   <span class=g>float</span> torque = offset.x*force.y - offset.y*force.x,
