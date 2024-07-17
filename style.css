@@ -218,18 +218,8 @@ hr {
 }
 
 ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-ul li {
+	list-style: "- ";
 	padding-left: 20px;
-}
-
-ul li::before {
-	content: "- ";
-	padding-left: 0px;
 }
 
 video {
