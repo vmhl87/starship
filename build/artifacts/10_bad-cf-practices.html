@@ -1,0 +1,30 @@
+<!--
+	:title Bad CF Practices
+	:date Jul 18 2024<br>12:06 PM
+	:tag programming oly
+-->
+<p>So today I was working on <a href="https://dmoj.ca/problem/dmpg18s4" target="_blank">this problem</a> on DMOJ.</p>
+<p>First, some observations:</p>
+<ul>
+	<li>We're dealing with a tree of max size <b>2e5</b></li>
+	<li>Result is the count of some type of paths</li>
+	<li>DP contained-subtree etc etc</li>
+</ul>
+<p>Constraint analysis: Result is bounded by something
+on the order of <b>4e10</b>, higher than the 32-bit limit.</p>
+<p>This is where my bad CF habits kick in[[ENDSUM]].</p>
+<p>Surely, I think, the statement asks me to mod the answer
+by <b>1e9+7</b>. (I don't bother checking; it's part of the
+CF speedforces risk-optimizing mentality.)</p>
+<p>So, I find the DP, implement, etc.. Then I test; initial <b>WA</b>
+due to an issue with how DP states are propagated (parity violation
+isn't checked for all propagations, etc..) which I identify
+pretty quickly - then another <b>WA</b>, 80% or so into the TC.</p>
+<p>At this point my speedforces brain thinks: "Hey, I probably
+forgot to mod some of the terms, and am overflowing!" I try this,
+no improvement.</p>
+<p>About 15 minutes later I go back and reread the problem statement.
+(Why didn't I do this earlier?) Guess what? the problem
+<i>doesn't ask for mod.</i> I remove the mod statements and
+everything works perfectly <b>-_-</b></p>
+<p>So yes... CF encourages bad practices indeed...</p>
