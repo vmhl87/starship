@@ -1,0 +1,49 @@
+<!--
+	:title Bad CF Practices, part 2
+	:date Jul 19 2024<br>11:43 AM
+	:tag programming oly
+-->
+<p>Today I was working through another simulated CCC contest
+and noticed how codeforces/speedforces has shaped my problem
+triage process - as CF doesn't award partials, my brain has
+gotten used to this decision tree:</p>
+[[ENDSUM]]
+<ul>
+	<li>
+		read problem
+		<ul>
+			<li>approach - categorize into dp/greed/math</li>
+			<li>constraints - what complexity will pass?</li>
+			<li>consider <a href="https://vmhl87.github.io/starship/pages/10_bad-cf-practices.html" target="_blank">answer format</a></li>
+		</ul>
+	</li><br>
+	<li>
+		spam ideas
+		<ul>
+			<li>possibility of implementation: can I write this
+				up + debug in reasonable time</li>
+			<li>validity: does this hinge on an assumed greedy to hold?</li>
+			<li>optional: write up bruteforce to find hidden observations</li>
+		</ul>
+	</li><br>
+	<li>
+		can I solve this?
+		<ul>
+			<li>yes: ok, write up implementation as fast as possible</li>
+			<li>no: move on to next question</li>
+		</ul>
+	</li>
+</ul><br>
+<p>This is mostly fine for CF - but overly prioritizes time. In contests
+like USACO / CCC, time to solve doesn't strictly matter, and unlike CF, there
+are no penalties for incorrect submission. <i>Also,</i> this decision tree
+at no step considers partials.</p>
+<p>Specifically, I was bashing out some problem using a graph traversal pass
+and then a query processor with a segtree - all of which were pretty complex
+and prone to error. A better approach would be to start with the traversal
+alone, and use a slow <b>n^2</b> to process queries, and this would've passed
+at least the first few subtasks, but codeforces brain instead jumped for the
+potentially-full-points solution that came also with high risk / debug cost.</p>
+<p>Seeing that the majority of contests award points for partials / subtasks,
+as well as sometimes different timing constraints, adopting CF speedforces
+everywhere isn't good. :P</p>

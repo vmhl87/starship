@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="11_bad-cf-practices.html">Bad CF Practices, part 2</a>
+    <div class="post-title-date">Jul&nbsp;19&nbsp;2024<br>11:43&nbsp;AM</div>
+</div>
+<!--
+	:title Bad CF Practices, part 2
+	:tag programming oly
+-->
+<p>Today I was working through another simulated CCC contest
+and noticed how codeforces/speedforces has shaped my problem
+triage process - as CF doesn't award partials, my brain has
+gotten used to this decision tree:</p>
+
+<ul>
+	<li>
+		read problem
+		<ul>
+			<li>approach - categorize into dp/greed/math</li>
+			<li>constraints - what complexity will pass?</li>
+			<li>consider <a href="https://vmhl87.github.io/starship/pages/10_bad-cf-practices.html" target="_blank">answer format</a></li>
+		</ul>
+	</li><br>
+	<li>
+		spam ideas
+		<ul>
+			<li>possibility of implementation: can I write this
+				up + debug in reasonable time</li>
+			<li>validity: does this hinge on an assumed greedy to hold?</li>
+			<li>optional: write up bruteforce to find hidden observations</li>
+		</ul>
+	</li><br>
+	<li>
+		can I solve this?
+		<ul>
+			<li>yes: ok, write up implementation as fast as possible</li>
+			<li>no: move on to next question</li>
+		</ul>
+	</li>
+</ul><br>
+<p>This is mostly fine for CF - but overly prioritizes time. In contests
+like USACO / CCC, time to solve doesn't strictly matter, and unlike CF, there
+are no penalties for incorrect submission. <i>Also,</i> this decision tree
+at no step considers partials.</p>
+<p>Specifically, I was bashing out some problem using a graph traversal pass
+and then a query processor with a segtree - all of which were pretty complex
+and prone to error. A better approach would be to start with the traversal
+alone, and use a slow <b>n^2</b> to process queries, and this would've passed
+at least the first few subtasks, but codeforces brain instead jumped for the
+potentially-full-points solution that came also with high risk / debug cost.</p>
+<p>Seeing that the majority of contests award points for partials / subtasks,
+as well as sometimes different timing constraints, adopting CF speedforces
+everywhere isn't good. :P</p>
+<p class="tag-container">tags: <a href="../content/oly/index.html">oly</a> <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
