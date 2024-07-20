@@ -48,6 +48,8 @@ def draft(content, pageid):
                     if tag not in tags:
                         tags.add(tag)
 
+            continue
+
         if not cutoff and "[[ENDSUM]]" in line:
             summary += line.split("[[ENDSUM]]")[0] + "...\n"
             full += line.replace("[[ENDSUM]]", "")
