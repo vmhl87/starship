@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="12_the-m-in-logn-st.html">The m in logn stands for magic</a>
+    <div class="post-title-date">Jul&nbsp;19&nbsp;2024<br>10:22&nbsp;PM</div>
+</div>
+<!--
+    :title The m in logn stands for magic
+    :tag programming oly math
+-->
+<p>I swear binary exponentiation on matrices is actually magic.</p>
+<p>While explaining <a href="https://cses.fi/problemset/task/2413/"
+                       target="_blank">this CSES problem</a> to a
+friend, it occured to me that I could improve my <b>O(n)</b> solution,
+which used state machine DP, into a <b>O(log n)</b> one, by using
+matrix exp.</p>
+<p>But even though I've used it quite a few times before, I'm convinced
+mat exp is magic. Skeptical? Take this task for example:</p>
+
+<p class="quote" style="max-width: 250px;">Efficiently compute the nth fibonacci number mod 1000.</p>
+<br>
+<p>Sounds easy, right? It should be a simple constructive DP: keep
+track of the last 2 fibonacci numbers, and iterate <b>n</b> times...</p>
+<pre class=code-color>
+<span class=y>def</span> <span class=b>fibonacci</span>(n):
+    pre = <span class=b>[</span><span class=y>0</span>, <span class=y>1</span><span class=b>]</span><br>
+    <span class=y>for</span> i <span class=y>in</span> <span class=g>range</span>(n):
+        pre = <span class=b>[</span>
+            pre<span class=b>[</span><span class=y>1</span><span class=b>]</span>,
+            (pre<span class=b>[</span><span class=y>0</span><span class=b>]</span> + pre<span class=b>[</span><span class=y>1</span><span class=b>]</span>) % <span class=y>1000</span>
+        <span class=b>]</span><br>
+    <span class=y>return</span> pre<span class=b>[</span><span class=y>0</span><span class=b>]</span>
+</pre>
+<p>This works fine, though we can do better.</p>
+<br>
+<p>To accelerate our solution with matrix multiplication, the first
+step we have to do is use a matrix to represent transitions between
+DP states rather than doing so explicitly:</p>
+<pre class=code-color>
+<span class=y>def</span> <span class=b>vmul</span>(v, m):  <span class=r># multiply vector by matrix</span>
+    ret = <span class=b>[</span>
+        m<span class=b>[</span>0<span class=b>]</span><span class=b>[</span>0<span class=b>]</span>*v<span class=b>[</span>0<span class=b>]</span> + m<span class=b>[</span>0<span class=b>]</span><span class=b>[</span>1<span class=b>]</span>*v<span class=b>[</span>1<span class=b>]</span>,
+        m<span class=b>[</span>1<span class=b>]</span><span class=b>[</span>0<span class=b>]</span>*v<span class=b>[</span>0<span class=b>]</span> + m<span class=b>[</span>1<span class=b>]</span><span class=b>[</span>1<span class=b>]</span>*v<span class=b>[</span>1<span class=b>]</span>
+    <span class=b>]</span><br>
+    <span class=y>return</span> <span class=b>[</span>i % <span class=y>1000 for</span> i <span class=y>in</span> ret<span class=b>]</span>
+</pre>
+<pre class=code-color>
+<span class=y>def</span> <span class=b>fibonacci</span>(n):
+    pre, transform = <span class=b>[</span><span class=y>0</span>, <span class=y>1</span><span class=b>]</span>, <span class=b>[[</span><span class=y>0</span>, <span class=y>1</span><span class=b>]</span>, <span class=b>[</span><span class=y>1</span>, <span class=y>1</span><span class=b>]]</span><br>
+    <span class=y>for</span> i <span class=y>in</span> <span class=g>range</span>(n):
+        pre = <span class=b>vmul</span>(pre, transform)<br>
+    return pre<span class=b>[</span><span class=y>0</span><span class=b>]</span>
+</pre>
+<p>If this doesn't quite make sense, consider:<p>
+<pre class=code-color>
+[<span class=y>0</span>] x [<span class=y>0</span> <span class=y>1</span>]  =  [<span class=y>1</span>]
+[<span class=y>1</span>]   [<span class=y>1</span> <span class=y>1</span>]     [<span class=y>2</span>]<br>
+[<span class=y>2</span>] x [<span class=y>0</span> <span class=y>1</span>]  =  [<span class=y>3</span>]
+[<span class=y>3</span>]   [<span class=y>1</span> <span class=y>1</span>]     [<span class=y>5</span>]<br>
+[<span class=y>2</span>] x [<span class=y>0</span> <span class=y>1</span>] x [<span class=y>0</span> <span class=y>1</span>]  =  [<span class=y>5</span>]
+[<span class=y>3</span>]   [<span class=y>1</span> <span class=y>1</span>]   [<span class=y>1</span> <span class=y>1</span>]     [<span class=y>8</span>]<br>
+...
+</pre>
+<p>Each multiplication of the matrix converts the vector of terms <b>i</b>,
+<b>i+1</b> into the vector of terms <b>i+1</b>, <b>i+2</b>, and matrix
+multiplication is associative.</p>
+<br>
+<p>Now for the magic..</p>
+<pre class=code-color>
+<span class=y>def</span> <span class=b>mmul</span>(m1, m2):  <span class=r># multiply matrix by matrix</span>
+    ret = <span class=b>[[</span><span class=y>0</span>, <span class=y>0</span><span class=b>]</span>, <span class=b>[</span><span class=y>0</span>, <span class=y>0</span><span class=b>]]</span><br>
+    <span class=y>for</span> i <span class=y>in</span> <span class=g>range</span>(<span class=y>2</span>):
+        <span class=y>for</span> j <span class=y>in</span> <span class=g>range</span>(<span class=y>2</span>):
+            <span class=y>for</span> k <span class=y>in</span> <span class=g>range</span>(<span class=y>2</span>):
+                ret<span class=b>[</span>i<span class=b>][</span>j<span class=b>]</span> = (ret<span class=b>[</span>i<span class=b>][</span>j<span class=b>]</span> + m1<span class=b>[</span>i<span class=b>][</span>k<span class=b>]</span>*m2<span class=b>[</span>k<span class=b>][</span>j<span class=b>]</span>) % <span class=y>1000</span><br>
+    <span class=y>return</span> ret
+</pre>
+<pre class=code-color>
+<span class=y>def</span> <span class=b>fibonacci</span>(n):
+    pre, transform = <span class=b>[</span><span class=y>0</span>, <span class=y>1</span><span class=b>]</span>, <span class=b>[[</span><span class=y>0</span>, <span class=y>1</span><span class=b>]</span>, <span class=b>[</span><span class=y>1</span>, <span class=y>1</span><span class=b>]]</span><br>
+    <span class=y>while</span> n:  <span class=r># binary exponentiation!</span>
+        <span class=y>if</span> n % <span class=y>2</span>: pre = <span class=b>vmul</span>(pre, transform)
+        transform = <span class=b>mmul</span>(transform, transform)
+        n //= <span class=y>2</span><br>
+    <span class=y>return</span> pre<span class=b>[</span><span class=y>0</span><span class=b>]</span>
+</pre>
+<p>Now, we can find fibonacci number <b>n</b> in <b>O(log n)</b> steps.. but <i>how?</i></p>
+<br>
+<p>Most other <b>log n</b> speedups make immediate sense - like, for example,
+binary search: Knowing that the array or other ordered structure is sorted,
+it is obvious that we can skip over the majority of entries. Other divide-and-conquer
+algorithms physically skip over or divide the search space, so it makes sense
+there.. but how are we able to just skip over so many fibonacci numbers like that?</p>
+<p>I suppose it's easier to see when looking at how the transformation matrix compounds
+upon itself, chaining jumps of <b>1</b> to jumps of <b>2</b>, then <b>4</b>, and so on,
+but for more complex matrix exp problems, especially ones that count paths through
+graphs, the transformation matrix just.. feels like cheating? Like, how does one pack
+so much information into such a small structure without any problematic overlaps?</p>
+<p>Definitely magic.</p>
+<p class="tag-container">tags: <a href="../content/math/index.html">math</a> <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

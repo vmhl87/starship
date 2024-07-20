@@ -279,3 +279,13 @@ pre.code-color > span.y {
 pre.code-color > span.r {
 	color: #707070;
 }
+
+/* quote blocks */
+
+p.quote {
+	background-color: #151515;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: 15px;
+}
