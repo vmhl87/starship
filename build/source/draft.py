@@ -13,7 +13,7 @@ def draft(content, pageid):
     title, summary, full, re_head, re_tail = "", "", "", "", ""
     cutoff, header, had_header, re_swap, re_date = False, False, False, False, False
 
-    tags = set()
+    tags = []
 
     form_date = datetime.datetime.now().strftime("%b&nbsp;%-d&nbsp;%Y<br>%-I:%M&nbsp;%p")
 
@@ -46,7 +46,7 @@ def draft(content, pageid):
             elif ls.startswith(":tag "):
                 for tag in ls[5:].split(' '):
                     if tag not in tags:
-                        tags.add(tag)
+                        tags.append(tag)
 
             continue
 
@@ -70,7 +70,7 @@ def draft(content, pageid):
     if not re_date:
         re_head += f'\t:date {datetime.datetime.now().strftime("%b %-d %Y<br>%-I:%M %p")}\n'
 
-    if "main" in tags:
+    while "main" in tags:
         tags.remove("main")
 
     pubname = ""
