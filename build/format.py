@@ -10,18 +10,40 @@ while True:
 code = code.replace('\t', '    ').split('\n')
 
 tokens = ['']
-splits = [' ', '*', '&', '[', ']', '(', ')', '{', '}', ';', ',', '.', '>', '<', '=', '-', '+', '/']
+splits = [
+        ' ', '*', '&', '[', ']', '(', ')', '{', '}', ';',
+        ',', '.', '>', '<', '=', '-', '+', '/', '?', ':'
+    ]
 
 for line in code:
     if line.strip().startswith('//'):
-        if len(tokens[-1]): tokens.append(f'<span class=r>{line}</span>')
-        else: tokens[-1] = f'<span class=r>{line}</span>'
+        if len(tokens[-1]): tokens.append(line)
+        else: tokens[-1] = line
 
     else:
         if len(tokens[-1]): tokens.append('')
 
+        instring, escape = False, False
+
         for c in line:
-            if c in splits:
+            if instring:
+                if c == instring and not escape:
+                    tokens[-1] += c
+                    tokens.append('')
+                    instring = False
+
+                else:
+                    tokens[-1] += c
+
+                    if c == '\\': escape = True
+                    else: escape = False
+
+            elif c in ['"', "'"]:
+                instring = c
+                if len(tokens[-1]): tokens.append(c)
+                else: tokens[-1] = c
+
+            elif c in splits:
                 if len(tokens[-1]): tokens.append(c)
                 else: tokens[-1] = c
                 tokens.append('')
@@ -33,6 +55,15 @@ for line in code:
 
 if not len(tokens[-1]): tokens.pop()
 while len(tokens) and tokens[-1] == '\n': tokens.pop()
+
+escape = [['&', '&amp;'], ['<', '&lt;'], ['>', '&gt;']]
+
+for i in range(len(tokens)):
+    for e in escape:
+        tokens[i] = tokens[i].replace(e[0], e[1])
+
+    if i and tokens[i] == '\n' and tokens[i-1] in ['\n', '<br>']:
+        tokens[i-1] = '<br>'
 
 reserved = {
         'struct': 'g', 'union': 'g', 'enum': 'g', 'static': 'g', 'inline': 'g',
@@ -48,6 +79,9 @@ reserved = {
 
 out = ''
 
+def iscom(i):
+    return i.strip().startswith('//')
+
 def isnum(i):
     if tokens[i] == '-':
         if i == len(tokens)-1: return False
@@ -61,6 +95,9 @@ def isnum(i):
         return isonly(tokens[i][2:], '0123456789abcdef')
 
     return isonly(tokens[i], '0123456789e')
+
+def isstr(i):
+    return len(i) > 2 and i[0] in ["'", '"'] and i[-1] == i[0]
 
 def isonly(s, allowed):
     val = 0
@@ -88,12 +125,12 @@ def isfunc(i):
     if tokens[i] == ' ': return False
 
     if i == len(tokens)-1: return False
-    if tokens[i+1] == '(': return True
+    if tokens[i+1] == '(': return isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789')
 
     if tokens[i+1] == ' ':
         if i == len(tokens)-2: return False
         
-        return tokens[i+2] == '('
+        return tokens[i+2] == '(' and isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789')
     
     return False
 
@@ -101,16 +138,19 @@ def isdef(i):
     return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#define'
 
 def isinc(i):
-    if tokens[i] == '<': return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#include'
-    if tokens[i] == '>': return i > 3 and isinc(i-1)
-    return i > 2 and tokens[i-1] == '<' and tokens[i+1] == '>' and isinc(i-1)
+    if tokens[i] == '&lt;': return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#include'
+    if tokens[i] == '&gt;': return i > 3 and isinc(i-1)
+    return i > 2 and tokens[i-1] == '&lt;' and tokens[i+1] == '&gt;' and isinc(i-1)
 
 for i in range(len(tokens)):
     if tokens[i] in reserved:
         out += f'<span class={reserved[tokens[i]]}>{tokens[i]}</span>'
 
     else:
-        if isnum(i) or islbl(tokens[i]):
+        if iscom(tokens[i]):
+            out += f'<span class=r>{tokens[i]}</span>'
+
+        elif isnum(i) or islbl(tokens[i]) or isstr(tokens[i]):
             out += f'<span class=y>{tokens[i]}</span>'
 
         elif tokens[i].startswith('#'):

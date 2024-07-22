@@ -1,0 +1,26 @@
+<!--
+    :title No more manual code formatting!
+	:date Jul 22 2024<br>12:59 PM
+    :tag starship-dev programming
+-->
+<p>For c-like languages, that is :P</p>
+<p>Anyway, I got tired of adding in hundreds of <b>&lt;span&gt;</b>
+elements anytime I wanted to put up pretty code on my posts, so I wrote
+<a href="https://github.com/vmhl87/starship/blob/personal/build/format.py" target=_blank>this</a>
+script. It works pretty well!</p>
+<p>Example formatting of one of my various half-finished CSES solutions:</p>
+[[ENDSUM]]
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
+<span class=g>constexpr</span> <span class=g>int</span> M = <span class=y>1e9</span> + <span class=y>7</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    LL n; std::cin &gt;&gt; n;<br>
+    LL res = <span class=y>0</span>;<br>
+    <span class=y>for</span>(LL f = <span class=y>1</span>; f &lt;= n; ++f) res = (res + f * (n / f) % M) % M;<br>
+    std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;
+}<br>
+<span class=r>// note to self: sqrt algorithm - loop f -&gt; sqrtn</span>
+<span class=r>// and then process divisor count of f, n/f (if applic)</span>
+</pre>
+<p>(pretty standard; style 4 op 3)</p>
