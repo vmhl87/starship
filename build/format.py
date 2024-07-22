@@ -73,7 +73,7 @@ reserved = {
         'true': 'y', 'false': 'y', 'null': 'y',
         'malloc': 'y', 'free': 'y', 'assert': 'y', 'using': 'y', 'typedef': 'y',
         'break': 'y', 'continue': 'y', 'return': 'y', 'goto': 'y',
-        'while': 'y', 'if': 'y', 'for': 'y', 'do': 'y', 'else': 'y',
+        'while': 'y', 'if': 'y', 'for': 'y', 'do': 'y', 'else': 'y', 'switch': 'y', 'case': 'y',
         '[': 'b', ']': 'b'
     }
 
@@ -85,11 +85,11 @@ def iscom(i):
 def isnum(i):
     if tokens[i] == '-':
         if i == len(tokens)-1: return False
-        return isdig(tokens[i+1])
+        return isonly(tokens[i+1], '0123456789e')
 
     if tokens[i] in '.':
         if i == len(tokens)-1 or i == 0: return False
-        return isdig(tokens[i-1]) and isdig(tokens[i+1])
+        return isonly(tokens[i-1], '0123456789e') and isonly(tokens[i+1], '0123456789e')
 
     if len(tokens[i]) > 1 and tokens[i][0] == '0' and tokens[i][1] == 'x':
         return isonly(tokens[i][2:], '0123456789abcdef')
