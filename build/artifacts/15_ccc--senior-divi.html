@@ -1,0 +1,339 @@
+<!--
+    :title CCC 2018 Senior Division
+	:date Jul 22 2024<br>8:23 PM
+    :tag programming oly
+-->
+<p>Not much, just my solutions and some comments from
+my practice contest today :)</p>
+<p>Spoiler warning; contains full solutions!</p>
+[[ENDSUM]]
+<br>
+<a href="https://dmoj.ca/problem/ccc18s1" target=_blank>P1: Voronoi Villages</a>
+<p>Not much to say about this one; the solution speaks
+for itself:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>algorithm</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=g>int</span> v<span class=b>[</span><span class=y>100</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; v<span class=b>[</span>i<span class=b>]</span>;
+    std::<span class=b>sort</span>(v, v+n);<br>
+    <span class=g>int</span> best = <span class=y>2e9</span>;<br>
+<span class=r>    // edge villages are infinite size so no point in processing</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;n<span class=y>-</span><span class=y>1</span>; ++i){
+        <span class=g>int</span> current = v<span class=b>[</span>i+<span class=y>1</span><span class=b>]</span> - v<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
+        <span class=y>if</span>(current &lt; best) best = current;
+    }<br>
+<span class=r>    // imagine using floating point</span>
+    std::cout &lt;&lt; best/<span class=y>2</span> &lt;&lt; <span class=y>'.'</span> &lt;&lt; (best&amp;<span class=y>1</span> ? <span class=y>'5'</span> : <span class=y>'0'</span>) &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<br>
+<a href="https://dmoj.ca/problem/ccc18s2" target=_blank>P2: Sunflowers</a>
+<p>Another instasolve.. Just needed some specific observations..</p>
+<pre class=code-color>
+<span class=r>// Key observation here is that an arrangement of</span>
+<span class=r>// data is only valid if it is sorted in order both</span>
+<span class=r>// left -&gt; right and top -&gt; bottom, so we can just</span>
+<span class=r>// check the four corners</span><br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=g>int</span> data<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>, next<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>, n;<br>
+<span class=g>bool</span> <span class=b>check</span>(){
+    <span class=y>return</span> data<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> &lt; data<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span> &amp;&amp; data<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> &lt; data<span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> &amp;&amp;
+        data<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span> &lt; data<span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span> &amp;&amp; data<span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> &lt; data<span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>n<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
+}<br>
+<span class=g>void</span> <span class=b>rotate</span>(){
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j)
+        next<span class=b>[</span>j<span class=b>]</span><span class=b>[</span>n<span class=y>-</span><span class=y>1</span>-i<span class=b>]</span> = data<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j)
+        data<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = next<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    std::cin &gt;&gt; n;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j) std::cin &gt;&gt; data<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>4</span>; ++i){
+        <span class=y>if</span>(<span class=b>check</span>()){
+<span class=r>            // silly io (im lazy)</span>
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j)
+                std::cout &lt;&lt; data<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> &lt;&lt; <span class=y>" \n"</span><span class=b>[</span>j==n<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
+            <span class=y>break</span>;
+        }
+        <span class=b>rotate</span>();
+    }
+}
+</pre>
+<br>
+<a href="https://dmoj.ca/problem/ccc18s3" target=_blank>P3: RoboThieves</a>
+<p>Still a very implementation-focused problem.</p>
+<pre class=code-color>
+<span class=r>// BFS spam starting from source, essentially</span><br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=r>// is square watched by camera?</span>
+<span class=g>bool</span> cam<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>;
+<span class=g>char</span> board<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>;
+<span class=r>// length of shortest path</span>
+<span class=g>int</span> best<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>,
+<span class=r>    // best bfs method trust</span>
+    bfs<span class=b>[</span><span class=y>10000</span><span class=b>]</span>, *l, *r;<br>
+<span class=r>// cycle detection in conveyor loops - consider()</span>
+<span class=r>// takes in a cell and figures out if it has a valid</span>
+<span class=r>// unvisited endpoint. If so, adds to BFS "queue".</span><br>
+<span class=r>// seen[][] is used while traverse to find cycle</span>
+<span class=g>bool</span> seen<span class=b>[</span><span class=y>100</span><span class=b>]</span><span class=b>[</span><span class=y>100</span><span class=b>]</span>;
+<span class=r>// return value indicates whether or not hit cycle</span>
+<span class=g>bool</span> <span class=b>consider</span>(<span class=g>int</span> i, <span class=g>int</span> j, <span class=g>int</span> d){
+<span class=r>    // already processed, do nothing</span>
+    <span class=y>if</span>(best<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>) <span class=y>return</span> <span class=y>1</span>;<br>
+<span class=r>    // cycle hit; for efficiency we just make the</span>
+<span class=r>    // whole trail a wall to avoid future processing</span>
+    <span class=y>if</span>(seen<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>){
+        board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>'W'</span>;
+        <span class=y>return</span> <span class=y>1</span>;
+    }<br>
+<span class=r>    // untravelable square</span>
+    <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'W'</span> || cam<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>) <span class=y>return</span> <span class=y>1</span>;<br>
+<span class=r>    // follow conveyors until hit cycle or valid cell</span>
+    seen<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>1</span>;
+    <span class=y>switch</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>){
+        <span class=y>case</span> <span class=y>'L'</span>:
+            <span class=y>if</span>(<span class=b>consider</span>(i, j<span class=y>-</span><span class=y>1</span>, d)) board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>'W'</span>;
+            <span class=y>break</span>;
+        <span class=y>case</span> <span class=y>'R'</span>:
+            <span class=y>if</span>(<span class=b>consider</span>(i, j+<span class=y>1</span>, d)) board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>'W'</span>;
+            <span class=y>break</span>;
+        <span class=y>case</span> <span class=y>'U'</span>:
+            <span class=y>if</span>(<span class=b>consider</span>(i<span class=y>-</span><span class=y>1</span>, j, d)) board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>'W'</span>;
+            <span class=y>break</span>;
+        <span class=y>case</span> <span class=y>'D'</span>:
+            <span class=y>if</span>(<span class=b>consider</span>(i+<span class=y>1</span>, j, d)) board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>'W'</span>;
+            <span class=y>break</span>;
+    }
+    seen<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>0</span>;<br>
+<span class=r>    // hit valid square; return and add to queue</span>
+    <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'.'</span>) best<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = d, *r = i*<span class=y>100</span> + j, ++r;<br>
+    <span class=y>return</span> <span class=y>0</span>;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m; std::cin &gt;&gt; n &gt;&gt; m;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;m; ++j)
+        std::cin &gt;&gt; board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;<br>
+<span class=r>    // pointer magic</span>
+    l = bfs, r = bfs;<br>
+<span class=r>    // compute influence of cameras</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;m; ++j) <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'C'</span>){
+        <span class=y>for</span>(<span class=g>int</span> a=<span class=y>0</span>; a&lt;<span class=y>100</span>; ++a){
+            <span class=y>if</span>(board<span class=b>[</span>i+a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'W'</span>) <span class=y>break</span>;
+            <span class=y>if</span>(board<span class=b>[</span>i+a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'.'</span> || board<span class=b>[</span>i+a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'S'</span>) cam<span class=b>[</span>i+a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>1</span>;
+        }
+        <span class=y>for</span>(<span class=g>int</span> a=<span class=y>0</span>; a&lt;<span class=y>100</span>; ++a){
+            <span class=y>if</span>(board<span class=b>[</span>i-a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'W'</span>) <span class=y>break</span>;
+            <span class=y>if</span>(board<span class=b>[</span>i-a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'.'</span> || board<span class=b>[</span>i-a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'S'</span>) cam<span class=b>[</span>i-a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>1</span>;
+        }
+        <span class=y>for</span>(<span class=g>int</span> a=<span class=y>0</span>; a&lt;<span class=y>100</span>; ++a){
+            <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j+a<span class=b>]</span> == <span class=y>'W'</span>) <span class=y>break</span>;
+            <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j+a<span class=b>]</span> == <span class=y>'.'</span> || board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j+a<span class=b>]</span> == <span class=y>'S'</span>) cam<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j+a<span class=b>]</span> = <span class=y>1</span>;
+        }
+        <span class=y>for</span>(<span class=g>int</span> a=<span class=y>0</span>; a&lt;<span class=y>100</span>; ++a){
+            <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j-a<span class=b>]</span> == <span class=y>'W'</span>) <span class=y>break</span>;
+            <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j-a<span class=b>]</span> == <span class=y>'.'</span> || board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j-a<span class=b>]</span> == <span class=y>'S'</span>) cam<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j-a<span class=b>]</span> = <span class=y>1</span>;
+        }
+    }<br>
+<span class=r>    // find starting position and push on bfs queue</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;m; ++j) <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'S'</span>)
+        <span class=y>if</span>(!cam<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>) best<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>1</span>, *r = i*<span class=y>100</span> + j, ++r;<br>
+<span class=r>    // do the BFS</span>
+    <span class=y>while</span>(l != r){
+        <span class=g>int</span> i = (*l) / <span class=y>100</span>, j = (*l) % <span class=y>100</span>, d = best<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>+<span class=y>1</span>; ++l;
+        <span class=b>consider</span>(i+<span class=y>1</span>, j, d), <span class=b>consider</span>(i<span class=y>-</span><span class=y>1</span>, j, d),
+            <span class=b>consider</span>(i, j+<span class=y>1</span>, d), <span class=b>consider</span>(i, j<span class=y>-</span><span class=y>1</span>, d);
+    }<br>
+<span class=r>    // array initializes with all zeroes and i was too lazy to reinit so</span>
+<span class=r>    // just set start node with depth 1 and decrement distances - also</span>
+<span class=r>    // removes need for visited array</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;m; ++j) <span class=y>if</span>(board<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> == <span class=y>'.'</span>)
+        std::cout &lt;&lt; best<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span><span class=y>-</span><span class=y>1</span> &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>Little edge case regarding camera watching start position, but nothing
+really out of the blue.</p>
+<br>
+<a href="https://dmoj.ca/problem/ccc18s4" target=_blank>P4: Balanced Trees</a>
+<p>This one was actually very interesting - immediately saw
+the DP but couldn't find a good speedup besides sqrt decomp.
+Ended up moving on to try P5.</p>
+<pre class=code-color>
+<span class=r>// I couldn't find a very good solution in contest,</span>
+<span class=r>// so I just moved on - but scraped a couple partials</span>
+<span class=r>// with a constructive DP approach: compute for each</span>
+<span class=r>// 1 &lt;= i &lt;= n by iterating over all k</span><br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=g>int</span> out<span class=b>[</span><span class=y>1000001</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;<br>
+    out<span class=b>[</span><span class=y>1</span><span class=b>]</span> = <span class=y>1</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>2</span>; i&lt;=n; ++i){
+<span class=r>        // n^2 did not get too far so to steal 2 more</span>
+<span class=r>        // partials I used sqrt decomposition - this is</span>
+<span class=r>        // actually very similar to the CSES problem</span>
+<span class=r>        // "counting divisors" which I did recently</span>
+        <span class=y>for</span>(<span class=g>int</span> k=<span class=y>1</span>; k*k&lt;=i; ++k){
+            <span class=y>if</span>(k<span class=y>-</span><span class=y>1</span>) out<span class=b>[</span>i<span class=b>]</span> += out<span class=b>[</span>i/k<span class=b>]</span>;
+            <span class=g>int</span> l = std::<span class=b>max</span>(k, i/(k+<span class=y>1</span>)), r = i/k;
+            out<span class=b>[</span>i<span class=b>]</span> += out<span class=b>[</span>k<span class=b>]</span> * (r - l);
+        }
+    }<br>
+<span class=r>    // 7 points partials :clown:</span>
+    std::cout &lt;&lt; out<span class=b>[</span>n<span class=b>]</span> &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<br>
+<a href="https://dmoj.ca/problem/ccc18s5" target=_blank>P5: Maximum Strategic Savings</a>
+<p>General approach seemed pretty standard, but working out
+the actual details took a while. Header comment has better
+description:</p>
+<pre class=code-color>
+<span class=r>// CCC '18 S5 Maximum Strategic Savings  -  https://dmoj.ca/problem/ccc18s5</span>
+<span class=r>//</span>
+<span class=r>// This problem reeks of MST :P</span>
+<span class=r>//</span>
+<span class=r>// We have some sort of graph with patterned edges of certain</span>
+<span class=r>// weight, and want to minimize sum of weights. Unfortunately,</span>
+<span class=r>// we can't use literal MST because there are something on</span>
+<span class=r>// the order of 1e10 edges, so we need to exploit the patterning.</span>
+<span class=r>//</span>
+<span class=r>// For the sake of understanding, let's use standard MST, and</span>
+<span class=r>// see what happens. It turns out it'll be simpler to sort edges</span>
+<span class=r>// and then add, kruskal's-style, rather than mantaining a queue.</span>
+<span class=r>//</span>
+<span class=r>// The first thing we can notice is that all edges of the same</span>
+<span class=r>// "type", that being, all flights between same-index cities</span>
+<span class=r>// or all portals between same-index planets will be added all</span>
+<span class=r>// at once. So, it looks like we can significantly optimize by</span>
+<span class=r>// treating all same-type edges as one, and somehow computing</span>
+<span class=r>// how many times they will need to be added.</span>
+<span class=r>//</span>
+<span class=r>// How do we calculate the number of additions? Take for example</span>
+<span class=r>// this setup with 2 planets and 4 cities per planet:</span>
+<span class=r>//</span>
+<span class=r>//   1,1           2,1</span>
+<span class=r>//    |             |</span>
+<span class=r>//   1,2           2,2</span>
+<span class=r>//     </span>
+<span class=r>//   1,3           2,3</span>
+<span class=r>//    |             |</span>
+<span class=r>//   1,4           2,4</span>
+<span class=r>//</span>
+<span class=r>// Say we can add a portal between planets 1 and 2. How many times</span>
+<span class=r>// at minimum do we add this edge?</span>
+<span class=r>//</span>
+<span class=r>// Here it's easy: both planets have the same "structure" of</span>
+<span class=r>// connected components, so we only need to add one portal per</span>
+<span class=r>// component. But what if the planets have different structure?</span>
+<span class=r>// I claim that all planets will *always* have identical structure.</span>
+<span class=r>//</span>
+<span class=r>// What if we're adding a flight instead of a portal? Consider:</span>
+<span class=r>//</span>
+<span class=r>//   1,1 ---- 2,1      3,1</span>
+<span class=r>//</span>
+<span class=r>//   1,2 ---- 2,2      3,2</span>
+<span class=r>//</span>
+<span class=r>// Here we're assuming that the portals are of identical structure,</span>
+<span class=r>// but I claim that this too will always happen. Anyway, we only</span>
+<span class=r>// need to add two edges, as there are only two "connected components"</span>
+<span class=r>// in the graph of the planets.</span>
+<span class=r>//</span>
+<span class=r>// This, if our mirror assumption holds, would be enough to solve the</span>
+<span class=r>// problem. Let's try to prove this:</span>
+<span class=r>//</span>
+<span class=r>// First, why must planets have the same structure? Let's try to prove</span>
+<span class=r>// by contradiction: Under what conditions would we *not* add a flight</span>
+<span class=r>// uniformly to all planets? We've actually seen this in an example</span>
+<span class=r>// before:</span>
+<span class=r>//</span>
+<span class=r>//   1,1 ---- 2,1      3,1</span>
+<span class=r>//    |                 |</span>
+<span class=r>//   1,2 ---- 2,2      3,2</span>
+<span class=r>//</span>
+<span class=r>// Here, we didn't need to add a flight on planet 2 because planets</span>
+<span class=r>// 1 and 2 formed a connected component, and so adding a flight on</span>
+<span class=r>// only planet 1 was sufficient. But now look: If we want to add</span>
+<span class=r>// a portal between planets 2 and 3, the "structure" is still actually</span>
+<span class=r>// the same; both planets have city 1 and 2 in the same connected</span>
+<span class=r>// component.</span>
+<span class=r>//</span>
+<span class=r>// The same logic can be applied to show that adding portals mantains</span>
+<span class=r>// connected component-ness across planets.</span><br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>algorithm</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
+<span class=r>// flights are "internal" and portals are "external"</span>
+std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; in<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, out<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;
+<span class=r>// combine all edge types together and sort</span>
+std::array&lt;<span class=g>int</span>, <span class=y>4</span>&gt; all<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;<br>
+<span class=r>// DSU to store components formed by cities (inroot) as well</span>
+<span class=r>// as components formed by planets (outroot), and also their</span>
+<span class=r>// count of components</span>
+<span class=g>int</span> inroot<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, outroot<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, incomps, outcomps;<br>
+<span class=g>int</span> <span class=b>find</span>(<span class=g>int</span> *root, <span class=g>int</span> i){
+    <span class=y>if</span>(root<span class=b>[</span>i<span class=b>]</span> &lt; <span class=y>0</span>) <span class=y>return</span> i;
+    <span class=y>return</span> root<span class=b>[</span>i<span class=b>]</span> = <span class=b>find</span>(root, root<span class=b>[</span>i<span class=b>]</span>);
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m, p, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; p &gt;&gt; q;<br>
+<span class=r>    // input everything.. so messy</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;p; ++i)
+        std::cin &gt;&gt; in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> &gt;&gt; in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> &gt;&gt; in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, --in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, --in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;q; ++i)
+        std::cin &gt;&gt; out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> &gt;&gt; out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> &gt;&gt; out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, --out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, --out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;p; ++i)
+        all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> = in<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span> = <span class=y>1</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;q; ++i)
+        all<span class=b>[</span>i+p<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, all<span class=b>[</span>i+p<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, all<span class=b>[</span>i+p<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> = out<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>;<br>
+<span class=r>    // init DSU structures (store size in same array)</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) outroot<span class=b>[</span>i<span class=b>]</span> = <span class=y>-</span><span class=y>1</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i) inroot<span class=b>[</span>i<span class=b>]</span> = <span class=y>-</span><span class=y>1</span>;
+    outcomps = n, incomps = m;<br>
+    std::<span class=b>sort</span>(all, all+p+q);<br>
+<span class=r>    // maximum saved - assume everything can be removed, and then add</span>
+<span class=r>    // back the cost of edges we use, multiplied by their occurance</span>
+    LL max = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;p+q; ++i){
+<span class=r>        // edge is a flight</span>
+        <span class=y>if</span>(all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>){
+<span class=r>            // like mentioned before we assume we use this flight</span>
+            max += (LL)all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> * n;<br>
+<span class=r>            // check if these city types are already in the same</span>
+<span class=r>            // component, and if so, do nothing</span>
+            <span class=g>int</span> a = <span class=b>find</span>(inroot, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>), b = <span class=b>find</span>(inroot, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>);
+            <span class=y>if</span>(a == b) <span class=y>continue</span>;<br>
+<span class=r>            // occurances of this flight is precisely equal to</span>
+<span class=r>            // the number of components formed by planets</span>
+            max -= (LL)all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> * outcomps;<br>
+<span class=r>            // update components</span>
+            <span class=y>if</span>(a &lt; b) inroot<span class=b>[</span>a<span class=b>]</span> += inroot<span class=b>[</span>b<span class=b>]</span>, inroot<span class=b>[</span>b<span class=b>]</span> = a;
+            <span class=y>else</span> inroot<span class=b>[</span>b<span class=b>]</span> += inroot<span class=b>[</span>a<span class=b>]</span>, inroot<span class=b>[</span>a<span class=b>]</span> = b;
+            --incomps;
+<span class=r>        // edge is a portal</span>
+        }<span class=y>else</span>{
+<span class=r>            // identical, but with the other variable set</span>
+            max += (LL)all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> * m;<br>
+            <span class=g>int</span> a = <span class=b>find</span>(outroot, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>), b = <span class=b>find</span>(outroot, all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>);
+            <span class=y>if</span>(a == b) <span class=y>continue</span>;<br>
+            max -= (LL)all<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> * incomps;
+            <span class=y>if</span>(a &lt; b) outroot<span class=b>[</span>a<span class=b>]</span> += outroot<span class=b>[</span>b<span class=b>]</span>, outroot<span class=b>[</span>b<span class=b>]</span> = a;
+            <span class=y>else</span> outroot<span class=b>[</span>b<span class=b>]</span> += outroot<span class=b>[</span>a<span class=b>]</span>, outroot<span class=b>[</span>a<span class=b>]</span> = b;
+            --outcomps;
+        }
+    }<br>
+<span class=r>    // it is really that easy</span>
+    std::cout &lt;&lt; max &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>I ended up actually not finishing within my semi-official window,
+submitting a correct solution ~7 minutes after time, but Richard said
+to prioritize solve ability rather than time (another bad CF practice?)</p>
+<br>
+<p>Great contest overall, interesting problems. Also, shoutout
+to my <a href="https://vmhl87.github.io/starship/pages/14_no-more-manual-c.html" target=_blank>code formatting script</a>, which saved me tons of time while writing this post.</p>
