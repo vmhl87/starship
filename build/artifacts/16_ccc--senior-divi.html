@@ -159,35 +159,30 @@ prioritize pipes that are initially on. We can actually just do this
 in our sorting function, by defining a custom comparator, or something
 like that:</p>
 <pre class=code-color>
-<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
-<span class=r>// the obvious bruteforce</span><br>
-<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
-<span class=r>// line grouping + passengers at each stat</span>
-<span class=g>int</span> group<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, at<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;<br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>algorithm</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+std::array&lt;<span class=g>int</span>, <span class=y>4</span>&gt; pipe<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;<br>
+<span class=g>int</span> root<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>find</span>(<span class=g>int</span> i){
+    <span class=y>if</span>(root<span class=b>[</span>i<span class=b>]</span> &lt; <span class=y>0</span>) <span class=y>return</span> i;
+    <span class=y>return</span> root<span class=b>[</span>i<span class=b>]</span> = <span class=b>find</span>(root<span class=b>[</span>i<span class=b>]</span>);
+}<br>
 <span class=g>int</span> <span class=b>main</span>(){
-    <span class=g>int</span> n, m, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>;
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>;<br>
-    <span class=y>while</span>(q--){
-        <span class=g>int</span> t; std::cin &gt;&gt; t;<br>
-<span class=r>        // range query</span>
-        <span class=y>if</span>(t&amp;<span class=y>1</span>){
-            <span class=g>int</span> l, r; std::cin &gt;&gt; l &gt;&gt; r, --l, --r;<br>
-            LL res = <span class=y>0</span>;<br>
-            <span class=y>for</span>(<span class=g>int</span> i=l; i&lt;=r; ++i) res += at<span class=b>[</span>i<span class=b>]</span>;<br>
-            std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;<br>
-<span class=r>        // update query</span>
-        }<span class=y>else</span>{
-            <span class=g>int</span> x; std::cin &gt;&gt; x;<br>
-<span class=r>            // cyclic shift with swaps</span>
-            <span class=g>int</span> first = <span class=y>-</span><span class=y>1</span>, carry = <span class=y>0</span>;<br>
-            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(group<span class=b>[</span>i<span class=b>]</span> == x){
-                <span class=y>if</span>(first == <span class=y>-</span><span class=y>1</span>) first = i;
-                std::<span class=b>swap</span>(carry, at<span class=b>[</span>i<span class=b>]</span>);
-            }<br>
-            at<span class=b>[</span>first<span class=b>]</span> = carry;
-        }
-    }
+    <span class=g>int</span> n, m, d; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; d;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i) std::cin &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span> &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>,
+        --pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>, --pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = i &gt;= n<span class=y>-</span><span class=y>1</span>;<br>
+    std::<span class=b>sort</span>(pipe, pipe+m);<br>
+    <span class=g>int</span> res = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) root<span class=b>[</span>i<span class=b>]</span> = <span class=y>-</span><span class=y>1</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i){
+        <span class=g>int</span> a = <span class=b>find</span>(pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>), b = <span class=b>find</span>(pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>);
+        <span class=y>if</span>(a == b) <span class=y>continue</span>;<br>
+        <span class=y>if</span>(a &lt; b) root<span class=b>[</span>a<span class=b>]</span> += root<span class=b>[</span>b<span class=b>]</span>, root<span class=b>[</span>b<span class=b>]</span> = a;
+        <span class=y>else</span> root<span class=b>[</span>b<span class=b>]</span> += root<span class=b>[</span>a<span class=b>]</span>, root<span class=b>[</span>a<span class=b>]</span> = b;<br>
+        res += pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>;
+    }<br>
+    std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;
 }
 </pre>
 <p>This gets nearly full credit - wow!</p>
@@ -339,52 +334,29 @@ group regions or anything. Tried some prefix/postfix stuff, but those
 just got really complicated to implement, and I kinda wanted to work
 more on the MST problem.</p>
 <pre class=code-color>
-<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
-<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
-<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=r>// stupid bruteforce</span><br>
 <span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
-LL lst<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, rst<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;
-<span class=g>int</span> group<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, at<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, shift<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, pos<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;
-std::vector&lt;LL&gt; line<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;<br>
-LL _range(<span class=g>int</span> i, <span class=g>int</span> l, <span class=g>int</span> r){
-    <span class=y>return</span> line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>r+<span class=y>1</span><span class=b>]</span> - line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>l<span class=b>]</span>;
-}<br>
-LL <span class=b>range</span>(<span class=g>int</span> i, <span class=g>int</span> l, <span class=g>int</span> r){
-    l += shift<span class=b>[</span>i<span class=b>]</span>, r += shift<span class=b>[</span>i<span class=b>]</span>;
-    l %= line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>, r %= line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>;<br>
-    <span class=y>if</span>(l &gt; r) <span class=y>return</span> _range(i, <span class=y>0</span>, r) + _range(i, l, line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>);<br>
-    <span class=y>return</span> _range(i, l, r);
-}<br>
+<span class=g>int</span> group<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, at<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;<br>
 <span class=g>int</span> <span class=b>main</span>(){
     <span class=g>int</span> n, m, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>, --group<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>;
     <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>;<br>
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
-        <span class=y>if</span>(!line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()) line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.push_back(<span class=y>0</span>);
-        line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.push_back(line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>back</span>()+at<span class=b>[</span>i<span class=b>]</span>);
-        pos<span class=b>[</span>i<span class=b>]</span> = line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>() - <span class=y>1</span>;
-    }<br>
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(i){
-        lst<span class=b>[</span>i<span class=b>]</span> = lst<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
-        <span class=y>if</span>(pos<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span> == line<span class=b>[</span>group<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>) lst<span class=b>[</span>i<span class=b>]</span> += line<span class=b>[</span>group<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>]</span>.<span class=b>back</span>();
-    }<br>
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(i){
-        rst<span class=b>[</span>i<span class=b>]</span> = rst<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
-        <span class=y>if</span>(pos<span class=b>[</span>n-i<span class=b>]</span> == <span class=y>1</span>) rst<span class=b>[</span>i<span class=b>]</span> += line<span class=b>[</span>group<span class=b>[</span>n-i<span class=b>]</span><span class=b>]</span>.<span class=b>back</span>();
-    }<br>
-    LL all = <span class=y>0</span>;
-    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) all += at<span class=b>[</span>i<span class=b>]</span>;<br>
     <span class=y>while</span>(q--){
         <span class=g>int</span> t; std::cin &gt;&gt; t;<br>
         <span class=y>if</span>(t&amp;<span class=y>1</span>){
             <span class=g>int</span> l, r; std::cin &gt;&gt; l &gt;&gt; r, --l, --r;<br>
-            LL res = all;<br>
-            <span class=y>if</span>(l) res -= lst<span class=b>[</span>l<span class=y>-</span><span class=y>1</span><span class=b>]</span>, res -= <span class=b>range</span>(group<span class=b>[</span>l<span class=b>]</span>, <span class=y>0</span>, pos<span class=b>[</span>l<span class=b>]</span><span class=y>-</span><span class=y>2</span>);
-            <span class=y>if</span>(r &lt; n<span class=y>-</span><span class=y>1</span>) res -= rst<span class=b>[</span>n<span class=y>-</span><span class=y>2</span>-r<span class=b>]</span>, res -= <span class=b>range</span>(group<span class=b>[</span>r<span class=b>]</span>, pos<span class=b>[</span>r<span class=b>]</span>, line<span class=b>[</span>group<span class=b>[</span>r<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>2</span>);<br>
+            LL res = <span class=y>0</span>;<br>
+            <span class=y>for</span>(<span class=g>int</span> i=l; i&lt;=r; ++i) res += at<span class=b>[</span>i<span class=b>]</span>;<br>
             std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;<br>
         }<span class=y>else</span>{
-            <span class=g>int</span> x; std::cin &gt;&gt; x, --x, --shift<span class=b>[</span>x<span class=b>]</span>;
-            <span class=y>if</span>(shift<span class=b>[</span>x<span class=b>]</span> &lt; <span class=y>0</span>) shift<span class=b>[</span>x<span class=b>]</span> += line<span class=b>[</span>x<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>;
+            <span class=g>int</span> x; std::cin &gt;&gt; x;<br>
+            <span class=g>int</span> first = <span class=y>-</span><span class=y>1</span>, carry = <span class=y>0</span>;<br>
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(group<span class=b>[</span>i<span class=b>]</span> == x){
+                <span class=y>if</span>(first == <span class=y>-</span><span class=y>1</span>) first = i;
+                std::<span class=b>swap</span>(carry, at<span class=b>[</span>i<span class=b>]</span>);
+            }<br>
+            at<span class=b>[</span>first<span class=b>]</span> = carry;
         }
     }
 }
