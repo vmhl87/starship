@@ -20,7 +20,7 @@ for line in code:
         if len(tokens[-1]): tokens.append(line)
         else: tokens[-1] = line
 
-    else if len(line.strip()):
+    elif len(line.strip()):
         if len(tokens[-1]): tokens.append('')
 
         instring, escape = False, False

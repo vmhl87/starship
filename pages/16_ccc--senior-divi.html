@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="16_ccc--senior-divi.html">CCC 2017 Senior Division</a>
+    <div class="post-title-date">Jul&nbsp;23&nbsp;2024<br>2:41&nbsp;PM</div>
+</div>
+<p>Simulated this contest today - here are my notes
+and solutions!</p>
+
+<br>
+<p>I'm experimenting with this writeup style as my previous
+massive-header-comment-bash was admittedly pretty messy, and
+this should hopefully be both cleaner and more easily visible.</p>
+<br>
+<a href="https://dmoj.ca/problem/ccc17s1" target=_blank>P1: Sum Game</a>
+<p>Literally just textbook prefix sums:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=g>int</span> a<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, b<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; a<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; b<span class=b>[</span>i<span class=b>]</span>;<br>
+<span class=r>    // accumulate twin psums</span>
+    <span class=g>int</span> best = <span class=y>0</span>, as = <span class=y>0</span>, bs = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
+        as += a<span class=b>[</span>i<span class=b>]</span>, bs += b<span class=b>[</span>i<span class=b>]</span>;
+        <span class=y>if</span>(as == bs) best = i+<span class=y>1</span>;
+    }<br>
+    std::cout &lt;&lt; best &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<br>
+<a href="https://dmoj.ca/problem/ccc17s2" target=_blank>P2: High Tide, Low Tide</a>
+<p>Notice that the low tides and high tides can be separated: all of the low tides
+live in the lower half of our data, if sorted, and opposite for high tide. Then because
+of the extremes, we can determine the order of tides, too.</p>
+<p>Sorted the array normally and "virtually split it" by starting two pointers at the
+first low and high tides, respectively.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>algorithm</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=g>int</span> m<span class=b>[</span><span class=y>100</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; m<span class=b>[</span>i<span class=b>]</span>;<br>
+    std::<span class=b>sort</span>(m, m+n);<br>
+<span class=r>    // low tide and high tide markers</span>
+    <span class=g>int</span> l = (n<span class=y>-</span><span class=y>1</span>)/<span class=y>2</span>, r = l+<span class=y>1</span>, par = <span class=y>1</span>;<br>
+<span class=r>    // push to extremes</span>
+    <span class=y>while</span>(l+<span class=y>1</span> || r &lt; n){
+        <span class=y>if</span>(par) std::cout &lt;&lt; m<span class=b>[</span>l--<span class=b>]</span> &lt;&lt; <span class=y>' '</span>;
+        <span class=y>else</span> std::cout &lt;&lt; m<span class=b>[</span>r++<span class=b>]</span> &lt;&lt; <span class=y>' '</span>;
+        par ^= <span class=y>1</span>;
+    }<br>
+    std::cout &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<br>
+<a href="https://dmoj.ca/problem/ccc17s3" target=_blank>P3: Nailed It!</a>
+<p>This question was very fun. I looked at the constraints and thought
+<i>'wow, <b>1e6</b>? probably requires nlogn, or something',</i> which I couldn't
+think of a trivial approach for. Instead I decided to troll some partials
+with an <b>n^2</b> approach, selecting all possible pairs of wood and
+combining into boards, then counting how many board existed at each height,
+and etc.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>map</span><span class=b>&gt;</span><br>
+<span class=g>int</span> h<span class=b>[</span><span class=y>1000000</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; h<span class=b>[</span>i<span class=b>]</span>;<br>
+    std::map&lt;<span class=g>int</span>, <span class=g>int</span>&gt; freq;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>for</span>(<span class=g>int</span> j=i+<span class=y>1</span>; j&lt;n; ++j)
+        ++freq<span class=b>[</span>h<span class=b>[</span>i<span class=b>]</span>+h<span class=b>[</span>j<span class=b>]</span><span class=b>]</span>;<br>
+    <span class=g>int</span> best = <span class=y>0</span>, count = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>height, number<span class=b>]</span> : freq)
+        <span class=y>if</span>(number &gt; best) best = number, count = <span class=y>1</span>;
+        <span class=y>else</span> <span class=y>if</span>(number == best) ++count;<br>
+    std::cout &lt;&lt; best &lt;&lt; <span class=y>' '</span> &lt;&lt; count &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>The result: TLE on batches 4 and 5, which were expected.. but WA on
+2+3? These were the subtasks with <b>n &lt;= 1e3</b>!</p>
+<p>A realized after a minute or two that my algorithm was outputting
+<b>3 1</b> for the case <b>2 2 2</b>, where <b>1 1</b> was correct.
+What I had failed to consider was that you couldn't select two boards
+to make a fence if they shared a piece of wood <b>:clown:</b></p>
+<p>Anyway, this was quite easy to fix: use another map to compress
+the pieces of wood into pairs of (height, occurance) and then consider
+the following two cases:
+<ul>
+    <li>create a board with two different-height pieces</li>
+    <li>create one with two same-height pieces</li>
+</ul></p>
+<p>Pretty easy to write up.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>map</span><span class=b>&gt;</span><br>
+<span class=r>// heights of each piece, compressed count of each height</span>
+<span class=g>int</span> h<span class=b>[</span><span class=y>1000000</span><span class=b>]</span>;
+std::array&lt;<span class=g>int</span>, <span class=y>2</span>&gt; comp<span class=b>[</span><span class=y>2001</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; h<span class=b>[</span>i<span class=b>]</span>;<br>
+<span class=r>    // coordinate compress with map</span>
+    std::map&lt;<span class=g>int</span>, <span class=g>int</span>&gt; freq;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) ++freq<span class=b>[</span>h<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>;<br>
+    <span class=g>auto</span> p = comp;
+    <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>num, count<span class=b>]</span> : freq) *(p++) = {num, count};
+    n = p - comp;<br>
+<span class=r>    // determine all possible sizes of boards, and how</span>
+<span class=r>    // many different ones can be built</span>
+    std::map&lt;<span class=g>int</span>, <span class=g>int</span>&gt; board;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
+<span class=r>        // with n planks of size x, floor(n/2) boards of</span>
+<span class=r>        // size x*2 can be made</span>
+        board<span class=b>[</span>comp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>*<span class=y>2</span><span class=b>]</span> += comp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>/<span class=y>2</span>;<br>
+<span class=r>        // with n planks of size x and m planks of size y,</span>
+<span class=r>        // min(n+m) boards of size x+y can construct</span>
+        <span class=y>for</span>(<span class=g>int</span> j=i+<span class=y>1</span>; j&lt;n; ++j)
+            board<span class=b>[</span>comp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>+comp<span class=b>[</span>j<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span> += std::<span class=b>min</span>(comp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, comp<span class=b>[</span>j<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>);
+    }<br>
+<span class=r>    // best length of fence, # of different heights of this best length</span>
+    <span class=g>int</span> len = <span class=y>0</span>, count = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>height, num<span class=b>]</span> : board)
+        <span class=y>if</span>(num &gt; len) len = num, count = <span class=y>1</span>;
+        <span class=y>else</span> <span class=y>if</span>(num == len) ++count;<br>
+    std::cout &lt;&lt; len &lt;&lt; <span class=y>' '</span> &lt;&lt; count &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>As expected, AC on 2+3. But also.. AC on 4+5??</p>
+<p>Turns out that I got trolled by constraints: While n was bounded
+by <b>1e6</b>, the possible heights of each piece was bounded by <b>1e3</b>,
+and so my compression step effectively reduced the n bound.. and then
+quadratic time was fully doable. Definitely watch out for this in the
+future <b>:clown:</b></p>
+<br>
+<a href="https://dmoj.ca/problem/ccc17s4" target=_blank>P4: Minimum Cost FLow</a>
+<p>Just like <a href="https://dmoj.ca/problem/ccc18s5" target=_blank>P5</a> from
+yesterday's contest, I saw MST immediately. Actually, it was almost entirely
+standard MST - only 2 extra constraints:</p>
+<ul>
+    <li>We want to not only find the minimum cost to operate,
+        but also the minimum # of days to obtain such an optimal configuration.</li>
+    <li>We can reduce <b>exactly one</b> edge by a specific value, and the
+        affected edge can't be reduced to negative weight.</li>
+</ul>
+<p>First const was easy to work around: If we ignore the enhancer,
+which should get us the first three subtasks, we can <i>almost</i>
+just use standard MST.</p>
+<p>Here's why: All MSTs can be found by performing Kruskal's on an
+ordered list of edges such that weight/cost is non-decreasing. This
+means that we can swap any number of edges as long as they have
+identical cost, and still obtain an optimal spanning tree. So, to
+find the MST with highest similarity to initial configuration,
+prioritize pipes that are initially on. We can actually just do this
+in our sorting function, by defining a custom comparator, or something
+like that:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span><br>
+<span class=r>// the obvious bruteforce</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
+<span class=r>// line grouping + passengers at each stat</span>
+<span class=g>int</span> group<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, at<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>;<br>
+    <span class=y>while</span>(q--){
+        <span class=g>int</span> t; std::cin &gt;&gt; t;<br>
+<span class=r>        // range query</span>
+        <span class=y>if</span>(t&amp;<span class=y>1</span>){
+            <span class=g>int</span> l, r; std::cin &gt;&gt; l &gt;&gt; r, --l, --r;<br>
+            LL res = <span class=y>0</span>;<br>
+            <span class=y>for</span>(<span class=g>int</span> i=l; i&lt;=r; ++i) res += at<span class=b>[</span>i<span class=b>]</span>;<br>
+            std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;<br>
+<span class=r>        // update query</span>
+        }<span class=y>else</span>{
+            <span class=g>int</span> x; std::cin &gt;&gt; x;<br>
+<span class=r>            // cyclic shift with swaps</span>
+            <span class=g>int</span> first = <span class=y>-</span><span class=y>1</span>, carry = <span class=y>0</span>;<br>
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(group<span class=b>[</span>i<span class=b>]</span> == x){
+                <span class=y>if</span>(first == <span class=y>-</span><span class=y>1</span>) first = i;
+                std::<span class=b>swap</span>(carry, at<span class=b>[</span>i<span class=b>]</span>);
+            }<br>
+            at<span class=b>[</span>first<span class=b>]</span> = carry;
+        }
+    }
+}
+</pre>
+<p>This gets nearly full credit - wow!</p>
+<p>Seeing that I couldn't think of a good way to modify for const 2,
+I moved on to P5. Eventually I gave up on getting more than 2 partials
+on P5 and came back :P</p>
+<p>So, how can we account for the enhanced pipe? What makes this so
+difficult to adapt into is that only one pipe can be enhanced, and different
+pipes can be enhanced by different values, essentially. (If cost of pipe i
+is less than d, there is less "benefit" in enhancing that pipe.)</p>
+<p>After bricking on this for a while (still seemed more doable than p5)
+I decided to use the OP strat of taking a walk around my house until I got
+ideas. Walked around room-where-bad-ideas-come (long story. a little bit of
+an inside joke.) in circles for a few minutes, and ironically came up with
+this idea:</p>
+<p>First use the old approach to find an optimal MST. Then, iterate over all
+pipes, and consider the effect on a) cost and b) time to configure.</p>
+<p>How do we compute delta of cost? It's obvious that if the edge isn't
+already in the MST then its delta will be its own cost (minus whatever
+the enhancer could d) combined with whatever edge in the tree it can replace.</p>
+<p>That's the neat part: The optimal edge to remove is the <i>maximally
+    weighted edge in the path between the newly added edge's endpoints.</i></p>
+<p>We can compute this with binlifting!!!</p>
+<p>Additionally, this approach also computes for us the time to configure,
+as we just have to consider whether or not a) the new edge and b) the replaced
+edge were initially active.</p>
+<p>Code was really messy, though.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>algorithm</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+<span class=r>// all pipes in sorted order. To avoid using a custom comparator,</span>
+<span class=r>// the structure of each pipe is:</span>
+<span class=r>//</span>
+<span class=r>//   0: cost of pipe (this ensures that pipes are sorted in strictly</span>
+<span class=r>//                    increasing cost first, then other attrib)</span>
+<span class=r>//</span>
+<span class=r>//   1: whether or not pipe is already active (0 if so, 1 if not)</span>
+<span class=r>//</span>
+<span class=r>//   2, 3: endpoints of pipe (essentially doesn't matter</span><br>
+std::array&lt;<span class=g>int</span>, <span class=y>4</span>&gt; pipe<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;<br>
+<span class=r>// unite-by-size dsu; mostly standard</span>
+<span class=g>int</span> root<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;
+<span class=g>int</span> <span class=b>find</span>(<span class=g>int</span> i){
+    <span class=y>if</span>(root<span class=b>[</span>i<span class=b>]</span> &lt; <span class=y>0</span>) <span class=y>return</span> i;
+    <span class=y>return</span> root<span class=b>[</span>i<span class=b>]</span> = <span class=b>find</span>(root<span class=b>[</span>i<span class=b>]</span>);
+}<br>
+<span class=r>// binlifting and associated memory for retraversal.</span>
+<span class=r>// edges store three properties:</span>
+<span class=r>//</span>
+<span class=r>//   0: other endpoint</span>
+<span class=r>//</span>
+<span class=r>//   1: cost of this edge</span>
+<span class=r>//</span>
+<span class=r>//   2: reduction (whether or not this pipe was active initially)</span><br>
+std::vector&lt;std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt;&gt; adj<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;<br>
+<span class=r>// jump structure stores essentially the same properties as</span>
+<span class=r>// do edges, but store the *maximum* cost of all edges over path</span>
+<span class=r>// and maximum reduction associated with such a maximum cost</span>
+std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; jump<span class=b>[</span><span class=y>200000</span><span class=b>]</span>, par<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;
+<span class=g>int</span> depth<span class=b>[</span><span class=y>200000</span><span class=b>]</span>;<br>
+<span class=r>// helper function to handle merging of reductions</span>
+std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; <span class=b>merge</span>(std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; a, std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; b){
+    <span class=y>if</span>(a<span class=b>[</span><span class=y>1</span><span class=b>]</span> &gt; b<span class=b>[</span><span class=y>1</span><span class=b>]</span>) <span class=y>return</span> a;
+    <span class=y>if</span>(b<span class=b>[</span><span class=y>1</span><span class=b>]</span> &gt; a<span class=b>[</span><span class=y>1</span><span class=b>]</span>) <span class=y>return</span> b;
+    <span class=y>if</span>(a<span class=b>[</span><span class=y>2</span><span class=b>]</span> &gt; b<span class=b>[</span><span class=y>2</span><span class=b>]</span>) <span class=y>return</span> a;
+    <span class=y>return</span> b;
+}<br>
+<span class=r>// re-traversal recursor which also builds binlift jumps</span>
+<span class=g>void</span> <span class=b>dfs</span>(<span class=g>int</span> i, <span class=g>int</span> p){
+    <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>x, cost, red<span class=b>]</span> : adj<span class=b>[</span>i<span class=b>]</span>) <span class=y>if</span>(x != p){
+        depth<span class=b>[</span>x<span class=b>]</span> = depth<span class=b>[</span>i<span class=b>]</span> + <span class=y>1</span>;<br>
+<span class=r>        // so messy..</span>
+        <span class=y>if</span>(depth<span class=b>[</span>i<span class=b>]</span> + depth<span class=b>[</span>jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span> == depth<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span>*<span class=y>2</span>)
+            jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = std::<span class=b>max</span>(cost,
+                    std::<span class=b>max</span>(jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>)),
+                jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> = <span class=b>merge</span>({<span class=y>0</span>, cost, red}, <span class=b>merge</span>(jump<span class=b>[</span>i<span class=b>]</span>, jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span>))<span class=b>[</span><span class=y>2</span><span class=b>]</span>;
+        <span class=y>else</span> jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = i, jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = cost, jump<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> = red;<br>
+        par<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = i, par<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = cost, par<span class=b>[</span>x<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> = red;<br>
+        <span class=b>dfs</span>(x, i);
+    }
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m, d; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; d;<br>
+<span class=r>    // input and sort pipes</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i) std::cin &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span> &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span> &gt;&gt; pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>,
+        --pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>, --pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = i &gt;= n<span class=y>-</span><span class=y>1</span>;<br>
+    std::<span class=b>sort</span>(pipe, pipe+m);<br>
+<span class=r>    // find MST and record # of days necessary to build this tree in 'first'.</span>
+<span class=r>    // we don't consider enhancer at all here.</span>
+    <span class=g>int</span> first = <span class=y>0</span>;<br>
+<span class=r>    // init dsu etc. very standard</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) root<span class=b>[</span>i<span class=b>]</span> = <span class=y>-</span><span class=y>1</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i){
+        <span class=g>int</span> a = <span class=b>find</span>(pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>), b = <span class=b>find</span>(pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>);
+        <span class=y>if</span>(a == b) <span class=y>continue</span>;<br>
+        <span class=y>if</span>(a &lt; b) root<span class=b>[</span>a<span class=b>]</span> += root<span class=b>[</span>b<span class=b>]</span>, root<span class=b>[</span>b<span class=b>]</span> = a;
+        <span class=y>else</span> root<span class=b>[</span>b<span class=b>]</span> += root<span class=b>[</span>a<span class=b>]</span>, root<span class=b>[</span>a<span class=b>]</span> = b;<br>
+        first += pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>;<br>
+        adj<span class=b>[</span>pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span><span class=b>]</span>.push_back({pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>});
+        adj<span class=b>[</span>pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span><span class=b>]</span>.push_back({pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>});
+    }<br>
+<span class=r>    // re-process tree to build binlifts; we can now efficiently determine</span>
+<span class=r>    // the result of adding back one edge to the tree and removing the</span>
+<span class=r>    // previously largest edge in the path</span>
+    <span class=b>dfs</span>(<span class=y>0</span>, <span class=y>-</span><span class=y>1</span>);<br>
+<span class=r>    // best reduction, best # of days for such reduction</span>
+    <span class=g>int</span> best = <span class=y>0</span>, days = first;<br>
+<span class=r>    // consider all possible edges, even ones that are in MST</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i){
+<span class=r>        // LCA-like algorithm</span>
+        <span class=g>int</span> a = pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>2</span><span class=b>]</span>, b = pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>3</span><span class=b>]</span>;
+        <span class=y>if</span>(depth<span class=b>[</span>a<span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>) std::<span class=b>swap</span>(a, b);<br>
+<span class=r>        // current maximal edge, as well as best reduction on all</span>
+<span class=r>        // edges of that maximal weight</span>
+        <span class=g>int</span> curr = <span class=y>0</span>, red = <span class=y>0</span>;
+        <span class=y>while</span>(depth<span class=b>[</span>a<span class=b>]</span> &gt; depth<span class=b>[</span>b<span class=b>]</span>){
+            <span class=y>if</span>(depth<span class=b>[</span>jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>)
+                red = <span class=b>merge</span>({<span class=y>0</span>, curr, red}, par<span class=b>[</span>a<span class=b>]</span>)<span class=b>[</span><span class=y>2</span><span class=b>]</span>,
+                curr = std::<span class=b>max</span>(curr, par<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>), a = par<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>;
+            <span class=y>else</span> red = <span class=b>merge</span>({<span class=y>0</span>, curr, red}, jump<span class=b>[</span>a<span class=b>]</span>)<span class=b>[</span><span class=y>2</span><span class=b>]</span>,
+                curr = std::<span class=b>max</span>(curr, jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>), a = jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>;
+        }<br>
+        <span class=y>while</span>(a != b){
+            <span class=y>if</span>(jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> == jump<span class=b>[</span>b<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>)
+                 red = <span class=b>merge</span>({<span class=y>0</span>, curr, red}, <span class=b>merge</span>(par<span class=b>[</span>a<span class=b>]</span>, par<span class=b>[</span>b<span class=b>]</span>))<span class=b>[</span><span class=y>2</span><span class=b>]</span>,
+                    curr = std::<span class=b>max</span>(curr, std::<span class=b>max</span>(par<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, par<span class=b>[</span>b<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>)),
+                     a = par<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, b = par<span class=b>[</span>b<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>;
+            <span class=y>else</span> red = <span class=b>merge</span>({<span class=y>0</span>, curr, red}, <span class=b>merge</span>(jump<span class=b>[</span>a<span class=b>]</span>, jump<span class=b>[</span>b<span class=b>]</span>))<span class=b>[</span><span class=y>2</span><span class=b>]</span>,
+                curr = std::<span class=b>max</span>(curr, std::<span class=b>max</span>(jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>, jump<span class=b>[</span>b<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>)),
+                a = jump<span class=b>[</span>a<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>, b = jump<span class=b>[</span>b<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>;
+        }<br>
+<span class=r>        // proposed cost reduction + days necessary to complete</span>
+        <span class=g>int</span> prop = curr - std::<span class=b>max</span>(<span class=y>0</span>, pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> - d), dy = first + pipe<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> - red;<br>
+<span class=r>        // update running bests</span>
+        <span class=y>if</span>(prop &gt; best) best = prop, days = dy;
+        <span class=y>else</span> <span class=y>if</span>(prop == best &amp;&amp; dy &lt; days) days = dy;
+    }<br>
+    std::cout &lt;&lt; days &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>AC :P</p>
+<br>
+<a href="https://dmoj.ca/problem/ccc17s5" target=_blank>P5: RMT</a>
+<p>Seemed hard to segtree cheese, so I was immediately at a disadvantage.</p>
+<p>Wrote up a really simple bruteforce but couldn't find a good way to
+group regions or anything. Tried some prefix/postfix stuff, but those
+just got really complicated to implement, and I kinda wanted to work
+more on the MST problem.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
+LL lst<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, rst<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;
+<span class=g>int</span> group<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, at<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, shift<span class=b>[</span><span class=y>150000</span><span class=b>]</span>, pos<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;
+std::vector&lt;LL&gt; line<span class=b>[</span><span class=y>150000</span><span class=b>]</span>;<br>
+LL _range(<span class=g>int</span> i, <span class=g>int</span> l, <span class=g>int</span> r){
+    <span class=y>return</span> line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>r+<span class=y>1</span><span class=b>]</span> - line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>l<span class=b>]</span>;
+}<br>
+LL <span class=b>range</span>(<span class=g>int</span> i, <span class=g>int</span> l, <span class=g>int</span> r){
+    l += shift<span class=b>[</span>i<span class=b>]</span>, r += shift<span class=b>[</span>i<span class=b>]</span>;
+    l %= line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>, r %= line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>;<br>
+    <span class=y>if</span>(l &gt; r) <span class=y>return</span> _range(i, <span class=y>0</span>, r) + _range(i, l, line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>);<br>
+    <span class=y>return</span> _range(i, l, r);
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>, --group<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
+        <span class=y>if</span>(!line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()) line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.push_back(<span class=y>0</span>);
+        line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.push_back(line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>back</span>()+at<span class=b>[</span>i<span class=b>]</span>);
+        pos<span class=b>[</span>i<span class=b>]</span> = line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>() - <span class=y>1</span>;
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(i){
+        lst<span class=b>[</span>i<span class=b>]</span> = lst<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
+        <span class=y>if</span>(pos<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span> == line<span class=b>[</span>group<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>) lst<span class=b>[</span>i<span class=b>]</span> += line<span class=b>[</span>group<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>]</span>.<span class=b>back</span>();
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(i){
+        rst<span class=b>[</span>i<span class=b>]</span> = rst<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span>;
+        <span class=y>if</span>(pos<span class=b>[</span>n-i<span class=b>]</span> == <span class=y>1</span>) rst<span class=b>[</span>i<span class=b>]</span> += line<span class=b>[</span>group<span class=b>[</span>n-i<span class=b>]</span><span class=b>]</span>.<span class=b>back</span>();
+    }<br>
+    LL all = <span class=y>0</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) all += at<span class=b>[</span>i<span class=b>]</span>;<br>
+    <span class=y>while</span>(q--){
+        <span class=g>int</span> t; std::cin &gt;&gt; t;<br>
+        <span class=y>if</span>(t&amp;<span class=y>1</span>){
+            <span class=g>int</span> l, r; std::cin &gt;&gt; l &gt;&gt; r, --l, --r;<br>
+            LL res = all;<br>
+            <span class=y>if</span>(l) res -= lst<span class=b>[</span>l<span class=y>-</span><span class=y>1</span><span class=b>]</span>, res -= <span class=b>range</span>(group<span class=b>[</span>l<span class=b>]</span>, <span class=y>0</span>, pos<span class=b>[</span>l<span class=b>]</span><span class=y>-</span><span class=y>2</span>);
+            <span class=y>if</span>(r &lt; n<span class=y>-</span><span class=y>1</span>) res -= rst<span class=b>[</span>n<span class=y>-</span><span class=y>2</span>-r<span class=b>]</span>, res -= <span class=b>range</span>(group<span class=b>[</span>r<span class=b>]</span>, pos<span class=b>[</span>r<span class=b>]</span>, line<span class=b>[</span>group<span class=b>[</span>r<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>2</span>);<br>
+            std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;<br>
+        }<span class=y>else</span>{
+            <span class=g>int</span> x; std::cin &gt;&gt; x, --x, --shift<span class=b>[</span>x<span class=b>]</span>;
+            <span class=y>if</span>(shift<span class=b>[</span>x<span class=b>]</span> &lt; <span class=y>0</span>) shift<span class=b>[</span>x<span class=b>]</span> += line<span class=b>[</span>x<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span>;
+        }
+    }
+}
+</pre>
+<p>2 partials, but could be worse.</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
