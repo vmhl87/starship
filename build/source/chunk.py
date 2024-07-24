@@ -44,7 +44,11 @@ def chunk(draft, loc, head=""):
 
         if chunk > 0: content += oldsec(chunk)
        
-        final = collect(head + content, "index.html", "../../style.css")
+        content = head + content
+        if loc.endswith("/main/"):
+            content = getmenubar() + content
+
+        final = collect(content, "index.html", "../../style.css")
 
         writeto(f"{loc}index.html", final)
 

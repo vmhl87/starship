@@ -31,3 +31,11 @@ def gentag(tag):
 </div></div></div>
 <div class="post-spacer"></div>
 """
+
+def getmenubar():
+    return """<div class="post"><div class="content"><h3 style="text-align: center">
+    <a href="https://vmhl87.github.io/starship">Landing Page</a>  -  <a href="https://vmhl87.github.io/starship/tags.html">Categories</a> - <a href="https://github.com/vmhl87/starship/blob/personal/" target="_blank">Source</a>
+</h3></div></div>
+<div class="post-spacer"></div>
+<div class="post-spacer"></div>
+"""
