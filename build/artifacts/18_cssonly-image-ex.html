@@ -8,13 +8,16 @@
 <style>
 img.expand {
     transition: transform 0.25s ease;
+    max-width: 800px;
+    --webkit-transform: scale(1);
+    transform: scale(1);
 }
 img.expand:focus {
     -webkit-transform: scale(2);
     transform: scale(2);
 }
 </style>
-<center><img class="expand" src="https://linuxiac.b-cdn.net/wp-content/uploads/2020/06/archlinux.jpg" tabindex="0" width="300" /></center>
+<center><img class="expand" src="https://linuxiac.b-cdn.net/wp-content/uploads/2020/06/archlinux.jpg" tabindex="-1" width="300" /></center>
 <br>
 <p>Styling is surprisingly simple. Just add a <b>tabindex="0"</b> attribute
 to the element, and then animate its <b>:focus</b> property in CSS:</p>
@@ -23,7 +26,9 @@ to the element, and then animate its <b>:focus</b> property in CSS:</p>
 </pre>
 <pre class=code-color>
 <span class=y>img</span>.<span class=b>expand</span> {
-    <span class=g>transition</span>: <span class=g>transform</span> <span class=y>0.25s ease</span>;
+    <span class=g>transition</span>: <span class=g>transform</span> <span class=y>0.25s ease</span>;<br>
+    <span class=r>-webkit-</span><span class=g>transform</span>: <span class=b>scale</span>(<span class=y>1</span>);
+    <span class=g>transform</span>: <span class=b>scale</span>(<span class=y>1</span>);
 }<br>
 <span class=y>img</span>.<span class=b>expand</span>:<span class=r>focus</span> {
     <span class=r>-webkit-</span><span class=g>transform</span>: <span class=b>scale</span>(<span class=y>2</span>);
