@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="17_binlifting-.html">Binlifting <3</a>
+    <div class="post-title-date">Jul&nbsp;23&nbsp;2024<br>10:13&nbsp;PM</div>
+</div>
+<p>I very recently finished <a href="https://usaco.org/index.php?page=viewproblem2&cpid=970" target=_blank>this USACO gold question</a>, and my friend was interested in my
+(mildly scuffed) binary lifting approach. Here it is, I guess :P</p>
+
+<hr>
+<p>Summarization of the problem:</p>
+<ul>
+    <li>We have a tree of size <b>N &lt;= 1e5</b></li>
+    <li>Each node is colored <b>1 &lt;= c_i &lt;= N</b></li>
+    <li>Answer <b>M &lt;= 1e6</b> queries of the following form:
+        Between two nodes <b>a_i</b>, <b>b_i</b>, does there
+        exist a node of color <b>c_i</b>?</li>
+</ul>
+<p>Now, initially I misread the question, and thought that there
+existed only one node of each color. So, my first approach was
+to find the unique node <b>x_i</b> of color <b>c_i</b>, and then
+check whether or not <b>dist(a_i, a_b) == dist(a_i, x_i) +
+    dist(b_i, x_i)</b>. Because I am mildly obsessed with binlifting,
+I implemented as such:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>fstream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>set</span><span class=b>&gt;</span><br>
+<span class=g>const</span> <span class=g>int</span> MAXN = <span class=y>100000</span>;<br>
+<span class=r>// binlift structures</span>
+<span class=g>int</span> at<span class=b>[</span>MAXN<span class=b>]</span>, depth<span class=b>[</span>MAXN<span class=b>]</span>, par<span class=b>[</span>MAXN<span class=b>]</span>, jump<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+std::vector&lt;<span class=g>int</span>&gt; adj<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+<span class=r>// single pass and accumulate jump structures</span>
+<span class=g>void</span> <span class=b>dfs</span>(<span class=g>int</span> i, <span class=g>int</span> p){
+    <span class=y>for</span>(<span class=g>int</span> x : adj<span class=b>[</span>i<span class=b>]</span>) <span class=y>if</span>(x != p){
+        <span class=y>if</span>(depth<span class=b>[</span>i<span class=b>]</span> + depth<span class=b>[</span>jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span><span class=b>]</span> == depth<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>*<span class=y>2</span>)
+            jump<span class=b>[</span>x<span class=b>]</span> = jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>;
+        <span class=y>else</span> jump<span class=b>[</span>x<span class=b>]</span> = i;<br>
+        depth<span class=b>[</span>x<span class=b>]</span> = depth<span class=b>[</span>i<span class=b>]</span>+<span class=y>1</span>, par<span class=b>[</span>x<span class=b>]</span> = i, <span class=b>dfs</span>(x, i);
+    }
+}<br>
+<span class=r>// determine depth with binlift</span>
+<span class=g>int</span> <span class=b>dist</span>(<span class=g>int</span> a, <span class=g>int</span> b){
+    <span class=y>if</span>(depth<span class=b>[</span>a<span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>) <span class=y>return</span> <span class=b>dist</span>(b, a);<br>
+    <span class=g>int</span> res = depth<span class=b>[</span>a<span class=b>]</span> + depth<span class=b>[</span>b<span class=b>]</span>;<br>
+<span class=r>    // first equalize depth</span>
+    <span class=y>while</span>(depth<span class=b>[</span>a<span class=b>]</span> &gt; depth<span class=b>[</span>b<span class=b>]</span>){
+        <span class=y>if</span>(depth<span class=b>[</span>jump<span class=b>[</span>a<span class=b>]</span><span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>) a = par<span class=b>[</span>a<span class=b>]</span>;
+        <span class=y>else</span> a = jump<span class=b>[</span>a<span class=b>]</span>;
+    }<br>
+<span class=r>    // then move to LCA</span>
+    <span class=y>while</span>(a != b){
+        <span class=y>if</span>(jump<span class=b>[</span>a<span class=b>]</span> == jump<span class=b>[</span>b<span class=b>]</span>) a = par<span class=b>[</span>a<span class=b>]</span>, b = par<span class=b>[</span>b<span class=b>]</span>;
+        <span class=y>else</span> a = jump<span class=b>[</span>a<span class=b>]</span>, b = jump<span class=b>[</span>b<span class=b>]</span>;
+    }<br>
+    <span class=y>return</span> res - depth<span class=b>[</span>a<span class=b>]</span>*<span class=y>2</span>;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){<br>
+<span class=r>// DEFINITELY weirdest I/O ive ever used, and that's saying something</span>
+<span class=y>#define</span> <span class=b>fin</span> std::cin
+<span class=y>#ifndef</span> fin
+    std::ifstream <span class=b>fin</span>(<span class=y>"milkvisits.in"</span>);
+    std::ofstream <span class=b>fout</span>(<span class=y>"milkvisits.out"</span>);
+<span class=y>#else</span>
+<span class=y>#define</span> <span class=b>fout</span> std::cout
+<span class=y>#endif</span><br>
+    <span class=g>int</span> n, m; fin &gt;&gt; n &gt;&gt; m;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
+        <span class=g>int</span> t; fin &gt;&gt; t;
+        at<span class=b>[</span>t<span class=y>-</span><span class=y>1</span><span class=b>]</span> = i;
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;n; ++i)
+        <span class=g>int</span> a, b; fin &gt;&gt; a &gt;&gt; b, --a, --b,
+            adj<span class=b>[</span>a<span class=b>]</span>.push_back(b), adj<span class=b>[</span>b<span class=b>]</span>.push_back(a);<br>
+    <span class=b>dfs</span>(<span class=y>0</span>, <span class=y>-</span><span class=y>1</span>);<br>
+    <span class=y>while</span>(m--){
+        <span class=g>int</span> a, b, c; fin &gt;&gt; a &gt;&gt; b &gt;&gt; c, --a, --b, c = at<span class=b>[</span>c<span class=y>-</span><span class=y>1</span><span class=b>]</span>;<br>
+        fout &lt;&lt; (<span class=b>dist</span>(a, b) == <span class=b>dist</span>(a, c) + <span class=b>dist</span>(b, c));
+    }<br>
+    fout &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>This solution doesn't pass samples, due to my misreading :P</p>
+<p>But can we adapt this solution to multiple nodes of each color?
+With up to <b>n</b> nodes of the same color, checking each node individually
+can potentially blow up to <b>n^2</b> time. We need a different
+approach.</p>
+<p>This is actually where my <a href="https://codeforces.com/blog/entry/74847" target=_blank>weird binary lifting</a> comes in handy: I only have to compute <b>O(n)</b> jumps,
+and the average length of each jump is relatively small. It turns
+out that I was able to get away with storing an <b>std::set</b> of
+colors contained across each jump, and accumulate all within my single
+DFS cycle. Time complexity works out, because each node is encapsulated
+within approximately <b>O(log n)</b> jumps:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>fstream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>set</span><span class=b>&gt;</span><br>
+<span class=g>const</span> <span class=g>int</span> MAXN = <span class=y>100000</span>;<br>
+<span class=r>// binlift structures</span>
+<span class=g>int</span> at<span class=b>[</span>MAXN<span class=b>]</span>, depth<span class=b>[</span>MAXN<span class=b>]</span>, par<span class=b>[</span>MAXN<span class=b>]</span>, jump<span class=b>[</span>MAXN<span class=b>]</span>;
+std::set&lt;<span class=g>int</span>&gt; along<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+std::vector&lt;<span class=g>int</span>&gt; adj<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+<span class=r>// single pass and accumulate not only jump structure locations,</span>
+<span class=r>// but also update sets (somehow this avoids tle?)</span>
+<span class=g>void</span> <span class=b>dfs</span>(<span class=g>int</span> i, <span class=g>int</span> p){
+    <span class=y>for</span>(<span class=g>int</span> x : adj<span class=b>[</span>i<span class=b>]</span>) <span class=y>if</span>(x != p){
+        <span class=y>if</span>(depth<span class=b>[</span>i<span class=b>]</span> + depth<span class=b>[</span>jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span><span class=b>]</span> == depth<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>*<span class=y>2</span>){
+            jump<span class=b>[</span>x<span class=b>]</span> = jump<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>;
+            <span class=y>for</span>(<span class=g>int</span> <span class=y>e</span> : along<span class=b>[</span>jump<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>) along<span class=b>[</span>x<span class=b>]</span>.<span class=b>insert</span>(<span class=y>e</span>);
+            <span class=y>for</span>(<span class=g>int</span> <span class=y>e</span> : along<span class=b>[</span>i<span class=b>]</span>) along<span class=b>[</span>x<span class=b>]</span>.<span class=b>insert</span>(<span class=y>e</span>);
+        }<span class=y>else</span> jump<span class=b>[</span>x<span class=b>]</span> = i;
+        along<span class=b>[</span>x<span class=b>]</span>.<span class=b>insert</span>(at<span class=b>[</span>x<span class=b>]</span>);<br>
+        depth<span class=b>[</span>x<span class=b>]</span> = depth<span class=b>[</span>i<span class=b>]</span>+<span class=y>1</span>, par<span class=b>[</span>x<span class=b>]</span> = i, <span class=b>dfs</span>(x, i);
+    }
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){<br>
+<span class=y>#define</span> <span class=b>fin</span> std::cin
+<span class=y>#ifndef</span> fin
+    std::ifstream <span class=b>fin</span>(<span class=y>"milkvisits.in"</span>);
+    std::ofstream <span class=b>fout</span>(<span class=y>"milkvisits.out"</span>);
+<span class=y>#else</span>
+<span class=y>#define</span> <span class=b>fout</span> std::cout
+<span class=y>#endif</span><br>
+    <span class=g>int</span> n, m; fin &gt;&gt; n &gt;&gt; m;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) fin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>, --at<span class=b>[</span>i<span class=b>]</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;n; ++i)
+        <span class=g>int</span> a, b; fin &gt;&gt; a &gt;&gt; b, --a, --b,
+            adj<span class=b>[</span>a<span class=b>]</span>.push_back(b), adj<span class=b>[</span>b<span class=b>]</span>.push_back(a);<br>
+    <span class=b>dfs</span>(<span class=y>0</span>, <span class=y>-</span><span class=y>1</span>);<br>
+    <span class=y>while</span>(m--){
+        <span class=g>int</span> a, b, c; fin &gt;&gt; a &gt;&gt; b &gt;&gt; c, --a, --b, --c;
+        <span class=g>int</span> out = <span class=y>0</span>;<br>
+<span class=r>        // binlift pass from a, b -&gt; LCA and check all relevant</span>
+<span class=r>        // sets along the pass for type c</span><br>
+        <span class=y>if</span>(depth<span class=b>[</span>a<span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>) std::<span class=b>swap</span>(a, b);<br>
+        out |= (at<span class=b>[</span>a<span class=b>]</span> == c | at<span class=b>[</span>b<span class=b>]</span> == c);<br>
+        <span class=y>while</span>(depth<span class=b>[</span>a<span class=b>]</span> &gt; depth<span class=b>[</span>b<span class=b>]</span>){
+            <span class=y>if</span>(depth<span class=b>[</span>jump<span class=b>[</span>a<span class=b>]</span><span class=b>]</span> &lt; depth<span class=b>[</span>b<span class=b>]</span>) a = par<span class=b>[</span>a<span class=b>]</span>;
+            <span class=y>else</span> out |= along<span class=b>[</span>a<span class=b>]</span>.<span class=b>count</span>(c), a = jump<span class=b>[</span>a<span class=b>]</span>;
+            out |= at<span class=b>[</span>a<span class=b>]</span> == c;
+        }<br>
+        <span class=y>while</span>(a != b){
+            <span class=y>if</span>(jump<span class=b>[</span>a<span class=b>]</span> == jump<span class=b>[</span>b<span class=b>]</span>) a = par<span class=b>[</span>a<span class=b>]</span>, b = par<span class=b>[</span>b<span class=b>]</span>;
+            <span class=y>else</span> out |= along<span class=b>[</span>a<span class=b>]</span>.<span class=b>count</span>(c), out |= along<span class=b>[</span>b<span class=b>]</span>.<span class=b>count</span>(c),
+                a = jump<span class=b>[</span>a<span class=b>]</span>, b = jump<span class=b>[</span>b<span class=b>]</span>;
+            out |= (at<span class=b>[</span>a<span class=b>]</span> == c | at<span class=b>[</span>b<span class=b>]</span> == c);
+        }<br>
+        fout &lt;&lt; out;
+    }<br>
+    fout &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>AC; <b>O(n log^2 n)</b> is barely slower than nlogn :D</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
