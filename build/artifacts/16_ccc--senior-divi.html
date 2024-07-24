@@ -6,11 +6,10 @@
 <p>Simulated this contest today - here are my notes
 and solutions!</p>
 [[ENDSUM]]
-<br>
 <p>I'm experimenting with this writeup style as my previous
 massive-header-comment-bash was admittedly pretty messy, and
 this should hopefully be both cleaner and more easily visible.</p>
-<br>
+<hr>
 <a href="https://dmoj.ca/problem/ccc17s1" target=_blank>P1: Sum Game</a>
 <p>Literally just textbook prefix sums:</p>
 <pre class=code-color>
@@ -29,7 +28,7 @@ this should hopefully be both cleaner and more easily visible.</p>
     std::cout &lt;&lt; best &lt;&lt; <span class=y>'\n'</span>;
 }
 </pre>
-<br>
+<hr>
 <a href="https://dmoj.ca/problem/ccc17s2" target=_blank>P2: High Tide, Low Tide</a>
 <p>Notice that the low tides and high tides can be separated: all of the low tides
 live in the lower half of our data, if sorted, and opposite for high tide. Then because
@@ -55,7 +54,7 @@ first low and high tides, respectively.</p>
     std::cout &lt;&lt; <span class=y>'\n'</span>;
 }
 </pre>
-<br>
+<hr>
 <a href="https://dmoj.ca/problem/ccc17s3" target=_blank>P3: Nailed It!</a>
 <p>This question was very fun. I looked at the constraints and thought
 <i>'wow, <b>1e6</b>? probably requires nlogn, or something',</i> which I couldn't
@@ -136,7 +135,7 @@ by <b>1e6</b>, the possible heights of each piece was bounded by <b>1e3</b>,
 and so my compression step effectively reduced the n bound.. and then
 quadratic time was fully doable. Definitely watch out for this in the
 future <b>:clown:</b></p>
-<br>
+<hr>
 <a href="https://dmoj.ca/problem/ccc17s4" target=_blank>P4: Minimum Cost FLow</a>
 <p>Just like <a href="https://dmoj.ca/problem/ccc18s5" target=_blank>P5</a> from
 yesterday's contest, I saw MST immediately. Actually, it was almost entirely
@@ -326,7 +325,7 @@ std::array&lt;<span class=g>int</span>, <span class=y>3</span>&gt; <span class=b
 }
 </pre>
 <p>AC :P</p>
-<br>
+<hr>
 <a href="https://dmoj.ca/problem/ccc17s5" target=_blank>P5: RMT</a>
 <p>Seemed hard to segtree cheese, so I was immediately at a disadvantage.</p>
 <p>Wrote up a really simple bruteforce but couldn't find a good way to
