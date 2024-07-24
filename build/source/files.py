@@ -37,5 +37,4 @@ def getmenubar():
     <a href="https://vmhl87.github.io/starship">Landing Page</a>  -  <a href="https://vmhl87.github.io/starship/tags.html">Categories</a> - <a href="https://github.com/vmhl87/starship/blob/personal/" target="_blank">Source</a>
 </h3></div></div>
 <div class="post-spacer"></div>
-<div class="post-spacer"></div>
 """
