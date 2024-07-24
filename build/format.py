@@ -135,7 +135,7 @@ def isfunc(i):
     return False
 
 def isdef(i):
-    return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#define'
+    return i > 1 and tokens[i-1] == ' ' and tokens[i-2] in ['#define', '#ifdef', '#ifndef']
 
 def isinc(i):
     if tokens[i] == '&lt;': return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#include'
