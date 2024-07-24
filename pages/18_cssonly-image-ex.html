@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="18_cssonly-image-ex.html">CSS-only image expansion on click</a>
+    <div class="post-title-date">Jul&nbsp;24&nbsp;2024<br>10:54&nbsp;AM</div>
+</div>
+<p>Pretty simple, completely JS free. Demo:</p>
+<br>
+<style>
+img.expand {
+    transition: transform 0.25s ease;
+}
+img.expand:focus {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+}
+</style>
+<center><img class="expand" src="https://linuxiac.b-cdn.net/wp-content/uploads/2020/06/archlinux.jpg" tabindex="0" width="300" /></center>
+<br>
+<p>Styling is surprisingly simple. Simply add an <b>tabindex="0"</b> attribute
+to the image, and then animate its <b>:focus</b> property in CSS:</p>
+<pre class=code-color>
+<span class=b>&lt;</span><span class=y>img</span> <span class=g>class</span><span class=b>=</span><span class=y>"expand"</span> <span class=g>tabindex</span><span class=b>=</span><span class=y>"0"</span> <span class=g>src</span><span class=b>=</span><span class=y>"..."</span> <span class=b>/&gt;</span>
+</pre>
+<pre class=code-color>
+<span class=y>img</span>.<span class=b>expand</span> {
+    <span class=g>transition</span>: <span class=g>transform</span> <span class=y>0.25s ease</span>;
+}<br>
+<span class=y>img</span>.<span class=b>expand</span>:<span class=r>focus</span> {
+    <span class=r>-webkit-</span><span class=g>transform</span>: <span class=b>scale</span>(<span class=y>2</span>);
+    <span class=g>transform</span>: <span class=b>scale</span>(<span class=y>2</span>);
+}
+</pre>
+<p>Easy enough, I hope :)</p>
+<p class="tag-container">tags: <a href="../content/hidden/index.html">hidden</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

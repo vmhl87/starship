@@ -1,0 +1,33 @@
+<!--
+    :title CSS-only image expansion on click
+	:date Jul 24 2024<br>10:54 AM
+    :tag hidden
+-->
+<p>Pretty simple, completely JS free[[ENDSUM]]. Demo:</p>
+<br>
+<style>
+img.expand {
+    transition: transform 0.25s ease;
+}
+img.expand:focus {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+}
+</style>
+<center><img class="expand" src="https://linuxiac.b-cdn.net/wp-content/uploads/2020/06/archlinux.jpg" tabindex="0" width="300" /></center>
+<br>
+<p>Styling is surprisingly simple. Simply add an <b>tabindex="0"</b> attribute
+to the image, and then animate its <b>:focus</b> property in CSS:</p>
+<pre class=code-color>
+<span class=b>&lt;</span><span class=y>img</span> <span class=g>class</span><span class=b>=</span><span class=y>"expand"</span> <span class=g>tabindex</span><span class=b>=</span><span class=y>"0"</span> <span class=g>src</span><span class=b>=</span><span class=y>"..."</span> <span class=b>/&gt;</span>
+</pre>
+<pre class=code-color>
+<span class=y>img</span>.<span class=b>expand</span> {
+    <span class=g>transition</span>: <span class=g>transform</span> <span class=y>0.25s ease</span>;
+}<br>
+<span class=y>img</span>.<span class=b>expand</span>:<span class=r>focus</span> {
+    <span class=r>-webkit-</span><span class=g>transform</span>: <span class=b>scale</span>(<span class=y>2</span>);
+    <span class=g>transform</span>: <span class=b>scale</span>(<span class=y>2</span>);
+}
+</pre>
+<p>Easy enough, I hope :)</p>
