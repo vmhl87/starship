@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber">🔥</div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="19_square-root-deco.html">Square Root Decomposition is underrated</a>
+    <div class="post-title-date">Jul&nbsp;24&nbsp;2024<br>9:01&nbsp;PM</div>
+</div>
+<p>Finished up <a href="https://dmoj.ca/problem/ccc17s5" target=_blank>ccc '17 s5</a>, which I failed to get
+in yesterday's practice contest. Ended up using sqrt
+bucketing, which I've never used before.</p>
+
+<p>Since the problem statement asks to process range
+queries, I initially considered segtree. However, updating
+ranges seemed like it would be a mess - <b>O(n)</b> worst
+case scenario.</p>
+<p>This is where sqrt bucketing helps. In a segtree, there
+are <b>n</b> "endpoint nodes" that can possibly update,
+which provides us our upper bound for update queries.
+Now, what if we instead break up the array into <b>m</b>
+"blocks", and preprocess each one? Each update query will
+pass trains between at most <b>m</b> blocks, and each
+range query will span approximately at most <b>m</b> blocks
+with <b>n/m</b> extra items that "hang off" a block. To
+optimize this, we essentially want to choose an <b>m</b>
+that is close to <b>sqrt(n)</b>.</p>
+<p>I implemented this by computing the sum of trains in each
+bucket, storing that in an array, and also determining which
+trains move across bucket boundaries in the case of a line
+shift. Not very complicated overall.</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>iostream</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>vector</span><span class=b>&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;</span><span class=b>array</span><span class=b>&gt;</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;
+<span class=g>const</span> <span class=g>int</span> MAXN = <span class=y>150000</span>;<br>
+<span class=r>// split station into sqrtn buckets, store sum of each here</span>
+LL bucket<span class=b>[</span><span class=y>400</span><span class=b>]</span>;<br>
+<span class=r>// station ctl</span>
+<span class=g>int</span> group<span class=b>[</span>MAXN<span class=b>]</span>, at<span class=b>[</span>MAXN<span class=b>]</span>, pos<span class=b>[</span>MAXN<span class=b>]</span>, shift<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+<span class=r>// train line ctl</span>
+std::vector&lt;std::array&lt;<span class=g>int</span>, <span class=y>2</span>&gt;&gt; add<span class=b>[</span>MAXN<span class=b>]</span>, del<span class=b>[</span>MAXN<span class=b>]</span>;
+std::vector&lt;<span class=g>int</span>&gt; line<span class=b>[</span>MAXN<span class=b>]</span>;<br>
+<span class=r>// don't actually shift values, too slow</span>
+<span class=g>int</span> <span class=b>get</span>(<span class=g>int</span> i){
+    <span class=g>int</span> p = (pos<span class=b>[</span>i<span class=b>]</span> + shift<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>) % line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>();
+    <span class=y>return</span> at<span class=b>[</span>line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span><span class=b>[</span>p<span class=b>]</span><span class=b>]</span>;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m, q; std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; group<span class=b>[</span>i<span class=b>]</span>, --group<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; at<span class=b>[</span>i<span class=b>]</span>;<br>
+<span class=r>    // build buckets</span>
+    <span class=g>int</span> rn = <span class=y>0</span>; <span class=y>while</span>(rn*rn &lt; n) ++rn;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) bucket<span class=b>[</span>i/rn<span class=b>]</span> += at<span class=b>[</span>i<span class=b>]</span>;<br>
+<span class=r>    // compute each station's position in its train line</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i)
+        pos<span class=b>[</span>i<span class=b>]</span> = line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.<span class=b>size</span>(), line<span class=b>[</span>group<span class=b>[</span>i<span class=b>]</span><span class=b>]</span>.push_back(i);<br>
+<span class=r>    // and determine the bucket shifts per line</span>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;m; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>(); ++j){
+            <span class=g>int</span> a = line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j?j<span class=y>-</span><span class=y>1</span>:line<span class=b>[</span>i<span class=b>]</span>.<span class=b>size</span>()<span class=y>-</span><span class=y>1</span><span class=b>]</span>, b = line<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;<br>
+            <span class=y>if</span>(a/rn != b/rn){
+                add<span class=b>[</span>i<span class=b>]</span>.push_back({a, b/rn});
+                del<span class=b>[</span>i<span class=b>]</span>.push_back({a, a/rn});
+            }
+        }<br>
+    <span class=y>while</span>(q--){
+        <span class=g>int</span> t; std::cin &gt;&gt; t;<br>
+        <span class=y>if</span>(t&amp;<span class=y>1</span>){
+            <span class=g>int</span> l, r; std::cin &gt;&gt; l &gt;&gt; r, --l, --r;<br>
+<span class=r>            // basically just sum up all intermediate buckets +</span>
+<span class=r>            // both ends</span><br>
+            LL res = <span class=y>0</span>;<br>
+            <span class=y>if</span>(l/rn == r/rn) <span class=y>for</span>(<span class=g>int</span> i=l; i&lt;=r; ++i) res += <span class=b>get</span>(i);
+            <span class=y>else</span>{
+                <span class=y>for</span>(<span class=g>int</span> i=l; i&lt;rn*(<span class=y>1</span>+l/rn); ++i) res += <span class=b>get</span>(i);
+                <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>+l/rn; i&lt;r/rn; ++i) res += bucket<span class=b>[</span>i<span class=b>]</span>;
+                <span class=y>for</span>(<span class=g>int</span> i=rn*(r/rn); i&lt;=r; ++i) res += <span class=b>get</span>(i);
+            }<br>
+            std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;<br>
+        }<span class=y>else</span>{
+            <span class=g>int</span> x; std::cin &gt;&gt; x, --x;<br>
+<span class=r>            // process bucket shifts</span><br>
+            <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>p, b<span class=b>]</span> : add<span class=b>[</span>x<span class=b>]</span>) bucket<span class=b>[</span>b<span class=b>]</span> += <span class=b>get</span>(p);
+            <span class=y>for</span>(<span class=g>const</span> <span class=g>auto</span> &amp;<span class=b>[</span>p, b<span class=b>]</span> : del<span class=b>[</span>x<span class=b>]</span>) bucket<span class=b>[</span>b<span class=b>]</span> -= <span class=b>get</span>(p);<br>
+            --shift<span class=b>[</span>x<span class=b>]</span>; <span class=y>if</span>(shift<span class=b>[</span>x<span class=b>]</span> &lt; <span class=y>0</span>) shift<span class=b>[</span>x<span class=b>]</span> += line<span class=b>[</span>x<span class=b>]</span>.<span class=b>size</span>();
+        }
+    }
+}
+</pre>
+<p>Testing my submission was rather amusing, as there are ~400 test
+cases on DMOJ, and my solution wasn't particularly fast, taking around 300s
+to complete.</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
