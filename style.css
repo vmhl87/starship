@@ -222,6 +222,17 @@ ul {
 	padding-left: 20px;
 }
 
+img {
+	display: block;
+	max-width: 100%;
+
+	margin-right: auto;
+	margin-left: auto;
+
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
 video {
 	display: block;
 	max-width: 100%;
