@@ -12,7 +12,7 @@ code = code.replace('\t', '    ').split('\n')
 tokens = ['']
 splits = [
         ' ', '*', '&', '[', ']', '(', ')', '{', '}', ';',
-        ',', '.', '>', '<', '=', '-', '+', '/', '?', ':'
+        ',', '.', '>', '<', '=', '-', '+', '/', '?', ':', '!'
     ]
 
 for line in code:
@@ -20,10 +20,21 @@ for line in code:
         if len(tokens[-1]): tokens.append(line)
         else: tokens[-1] = line
 
+    elif line.strip().startswith('/*') and line.strip().endswith('*/'):
+        if len(tokens[-1]): tokens.append(line)
+        else: tokens[-1] = line
+
+    elif line.strip().startswith('#include'):
+        if len(tokens[-1]): tokens.append('#include')
+        else: tokens[-1] = '#include'
+        tokens.append(' ')
+        tokens.append(line.strip()[9:])
+
     elif len(line.strip()):
         if len(tokens[-1]): tokens.append('')
 
         instring, escape = False, False
+        inangle = False
 
         for c in line:
             if instring:
@@ -80,7 +91,7 @@ reserved = {
 out = ''
 
 def iscom(i):
-    return i.strip().startswith('//')
+    return i.strip().startswith('//') or (i.strip().startswith('/*') and i.strip().endswith('*/'))
 
 def isnum(i):
     if tokens[i] == '-':
@@ -138,9 +149,8 @@ def isdef(i):
     return i > 1 and tokens[i-1] == ' ' and tokens[i-2] in ['#define', '#ifdef', '#ifndef']
 
 def isinc(i):
-    if tokens[i] == '&lt;': return i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#include'
-    if tokens[i] == '&gt;': return i > 3 and isinc(i-1)
-    return i > 2 and tokens[i-1] == '&lt;' and tokens[i+1] == '&gt;' and isinc(i-1)
+    if tokens[i].startswith('&lt;') and tokens[i].endswith('&gt;'): return True
+    return tokens[i][0] == '"' and tokens[i][len(tokens[i])-1] == '"' and i > 1 and tokens[i-1] == ' ' and tokens[i-2] == '#include'
 
 for i in range(len(tokens)):
     if tokens[i] in reserved:
@@ -150,14 +160,14 @@ for i in range(len(tokens)):
         if iscom(tokens[i]):
             out += f'<span class=r>{tokens[i]}</span>'
 
+        elif isstruct(i) or isfunc(i) or isdef(i) or isinc(i):
+            out += f'<span class=b>{tokens[i]}</span>'
+
         elif isnum(i) or islbl(tokens[i]) or isstr(tokens[i]):
             out += f'<span class=y>{tokens[i]}</span>'
 
         elif tokens[i].startswith('#'):
             out += f'<span class=y>{tokens[i]}</span>'
-
-        elif isstruct(i) or isfunc(i) or isdef(i) or isinc(i):
-            out += f'<span class=b>{tokens[i]}</span>'
 
         else: out += tokens[i]
 
