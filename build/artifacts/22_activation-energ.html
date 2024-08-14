@@ -1,0 +1,102 @@
+<!--
+    :title Activation energy
+	:date Aug 14 2024<br>2:03 PM
+    :tag programming life
+-->
+<p>Hey yall. Been a <i>while</i> :P</p>
+<p>My schedule has been kinda strange ever since coming back
+from road trip - firstly I started a project with some friends
+over that trip, SARA, which took up a decent portion of my first
+few days back. Then I had to deal with some school related stuff,
+and got involved with a new project after that... and all in all I
+haven't had had as much time to work on contest recently, or update
+this blog.</p>
+<p>Finally decided to allocate a block of time to updating blog,
+so here we are! (hence the title)</p>
+<p>Also, now that most of the projects I've been working on are at
+reasonably complete stages, I can talk a bit about them here! This is
+a short overview of what I've been up to recently:</p>
+[[ENDSUM]]
+<br>
+<h3>SARA - Spatial Analysis of Router Activity</h3>
+<p>Essentially a script to log router signal strength and GPS location
+and then use collected data to estimate real location of the router.
+This is actually a project I've been thinking about conceptually for
+a log time, but only recently learned the tools to make it happen!</p>
+<p>SARA source code isn't public and probably won't ever be, (also there
+are a couple things about it that I can't say here), but it's essentially
+an objective-c command line script that hooks CoreLocation and MobileWiFi
+(private apple framework) to collect data. It runs on my jailbroken iphone.
+(2016 SE, ios 13.4.1)</p>
+<p>I actually did a little bit of field testing at a local university
+and the geolocation module is accurate to a couple meters. Signal strength
+isn't very fine-grained, but can get a good read from surprisingly far
+away, as utilization of internal apple frameworks let me remove the
+software filters to wifid.</p>
+<p>This project kinda stagnated due to a couple reasons.</p>
+<br>
+<h3>CBAS</h3>
+<p>Recently I discovered <a href="https://codeberg.org/gek/seabass" target=_blank>CBAS</a>,
+a really interesting programming language:</p>
+<p>At the most basic level, it's a low-level language that transpiles to
+C. It's also really portable: the interpreter/compiler is written in C99,
+and emitted C is as well, I believe. It implements object oriented features
+like classes with methods, constructors, destructors, etc.</p>
+<p>But CBAS is way more than just a wrapper on top of C. From the ground
+up it's built with metaprogramming in mind. Similar to Rust's procedural
+macro system, CBAS code (when declared <b>codegen</b>) is able to directly
+manipulate the syntax tree of the interpreter/compiler. This essentially
+means that new features and constructs can be added without touching the
+compiler at all. In fact, the CBAS source is written mostly in CBAS itself,
+and the compiler is very minimal.</p>
+<p>Not only are high level constructs like templating and type deduction
+implemented through metaprogramming, but the standard library has tons of
+metaprogramming structures that build off of each other. Using them, creating
+more powerful constructs is very streamlined.</p>
+<p>Visit the codeberg repo for a better explanation than mine! :P</p>
+<br>
+<p>So, what have I been doing with this?</p>
+<p>Standard CBAS has tons of compile-time utilities, but not a whole lot
+of work on the emitted C side. I decided to implement somewhat of my own
+usermode standard library. I'ts far from complete, but it essentially already
+serves as a complete replacement of C for all of my use cases. <s><i>
+    never touching c again :towers:</i></s></p>
+<p>My standard library is on github <a href="https://github.com/vmhl87/dsl" target=_blank>here</a>.
+Most of what I've worked on is I/O: I implemented my own buffered input reading
+system that not only is safe, respecting buffer sizes, but also uses an
+(although still quite janky) type deduction system that sort of accomplishes
+what c++ <b>std::cin</b> does, without dealing with function overloading at all.
+Furthermore, it's faster than both c and c++ stdio. It's very similar to the
+<b>fgets()</b> based superfastio that you might've seen on chinese contest templates.</p>
+<p>Here's a little demo of what CBAS + my custom DSL looks like:</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=g>&lt;iframe&gt;</span>   <span class=r>// wow, that's me!</span><br>
+<span class=b>@cgmain</span><br>
+<span class=y>fn</span> <span class=g>pub</span> <span class=y>main</span> <span class=b>-&gt;</span> <span class=g>int</span><span class=b>:</span><br>
+    <span class=g>int</span> n<span class=b>;</span>
+    <span class=g>float</span> f<span class=b>;</span>
+    <span class=g>char</span>[<span class=y>10</span>] s<span class=b>;</span>     <span class=r>// @poll will respect buffer size and read at most 9 chars.</span>
+    <span class=g>char</span><span class=b>*</span> p<span class=b>;</span>        <span class=r>// as this isn't an array, @poll will allocate a new buffer
+                    // to store the string. (CBAS stores array len in datatype)</span><br>
+    <span class=b>@poll</span> n f s p<span class=b>;</span>  <span class=r>// reads into the vars, respecting type. it is that easy!</span><br>
+    <span class=b>@fmt</span> f<span class=b>/</span>n s[<span class=y>3</span>]<span class=b>;</span>  <span class=r>// output too :D</span><br>
+    <span class=y>free</span>(p)<span class=b>;</span>        <span class=r>// not strictly necessary as we will exit</span><br>
+<span class=y>end</span>
+</pre>
+<p>(I haven't gotten around to writing a formatting script for this, but it
+should be easy)</p>
+<p>I also have a string datatype similar to c++ <b>std::string</b>, a <b>@poll</b>-like
+construct to read &amp; format from a string instead of stdin, and more!</p>
+<p>In the near future, I'll add template structures like vector, set, etc,
+but even in its current state it is enough to replace C in my normal usage
+situations. Seeing that this transpiles to C, and is faster in terms of I/O,
+I could <i>maybe</i> use this for contest, depending on whether or not it's
+deemed "excessive" for a template <b>:thonk:</b></p>
+<br>
+<h3>Time balancing, though..</h3>
+<p>Tradeoffs had to be made in order to work on all of these projects recently,
+especially CBAS. I didn't end up practicing much contest recently, or updating
+blog. This will become increasingly unsustainable once school starts, and I'll
+probably have to switch to lower-activation-energy task management.</p>
+<p>p.s. jason you can talk to me whenever you want - I'm not actually
+very busy but it's rather an activation energy thing :P</p>
