@@ -1,0 +1,84 @@
+<!--
+    :title On Metaprogramming
+	:date Aug 15 2024<br>1:14 PM
+    :tag hidden
+-->
+<h3>What is metaprogramming?</h3>
+<p>I first came across the concept of metaprogramming in a sci-fi book
+many years ago, which among many things had a supergenius protagonist
+who through the use of brain-altering drugs became aware of his brain's
+own mental state, and so he was able to "metaprogram" his own cognitive
+system to do many things for him.</p>
+<p>However in the real world I hadn't actually done any metaprogramming
+myself or even understood how it applied to current languages until I
+started working with CBAS. I still don't think I have the entire idea
+correct, but here's my understanding as of now:</p>
+<ul>
+    <li>Metaprogramming builds off the concept of abstraction.
+        <p>Similarly to how a CBAS method declaration unwraps into
+        a normal C function by using name mangling, abstraction allows
+        the programmer to streamline a more complex, repeated task into
+        only the important information. For example, CBAS methods don't
+        have to adhere to one specific mangling scheme; all that matters
+        is that there are no name collisions.</p>
+        <p>And almost everything that programmers interact with these
+        days is an abstraction. For example, the python <b>for</b> construct:
+        Unlike C, where for loops pretty clearly abstract into structures
+        in assembly, python does away with this and uses an iterator-based
+        approach that more closely represents the programmer's idea of
+        a for loop.</p>
+    </li>
+    <li>Metaprogramming allows rapid development of abstractions.
+        <p>By allowing abstractions to build upon each other, development
+        can happen much faster. For example, the role of a modern OS is
+        to be an abstraction between the end user and the hardware. By
+        using the OS and kernel and such, programmers don't have to deal
+        with the complicated low level, and consequently build much more
+        efficiently.</p>
+    </li>
+    <li>Furthermore, by using abstractions, we can think more efficiently,
+        and make conclusions that we couldn't make before.
+        <p>This doesn't only apply to programming. In 2007, Apple released
+        the iPhone. It was revolutionary in many ways, one being its software
+        keyboard. By using this abstraction, future developments could be made:
+        A software keyboard is able to switch seamlessly between different
+        layouts, languages, and even support complex behaviors like swipe
+        typing. All of these wouldn't be within the space of consideration
+        if not for the software keyboard.</p>
+    </li>
+</ul>
+<h3>What's the deal with macros?</h3>
+<p>Macros usually operate at the pre-compilation stage. Furthermore, they are
+fundamentally limited by what the compiler can do. If the compiler isn't able
+to write vector instructions, then no macro will be able to, either.</p>
+<p>That's important because in most cases, the code being written isn't very
+representative of the mental construct thought up by the writer. If a macro
+can't change the underlying structure, the programmer will still have to think
+in terms of what the macro expands into when considering side effects, or
+thinking about the program as a whole. This doesn't provide any of the benefits
+of abstraction-building-off-abstraction mentioned above.</p>
+<p>Also, macros are generally "dumb". In most languages they simply perform
+a search and replace, although sometimes with a few parameters, but this isn't
+enough to really add new behavior. An optimizing C compiler is very different
+from a set of macros that converts C syntax 1-1 into assembly, because it
+at the base level understands how assembly works, and registers, and can do
+all sorts of optimizations because of that.</p>
+<p>Macros can't provide that, whithout being able to introspect the compiler
+and modify its behavior.</p>
+<h3>How are DSLs helpful?</h3>
+<p>Well, think about it this way: No sane person would write a frontend site
+in C. Nobody would write a kernel in JavaScript. It's pretty clear that it's
+too complicated to make a single language that fits all. A DSL functions as a
+specialized language to fit a purpose, helping with efficiency.</p>
+<p>It also ties into innovation: In the days before C, it would have been very
+hard to convince programmers that a language with automatic garbage collection
+and mutable types would be useful, because nobody would have even experienced
+a language where automatic heap allocation was a thing.</p>
+<h3>So, where does CBAS fit here?</h3>
+<p>CBAS provides a framework where it's easy to make innovations and use them
+right away. It's also built from the ground up so that CBAS code can hook the
+existing systems all the way down to the interpreter level. Some examples of
+this are the <b>cg_ast</b> available to the CBAS side, which allows for inspection
+of scopes, resolution of datatypes, and more. Other languages in contrast present
+the compiler as a monolithic black-box that takes in a fixed input and gives back
+a fixed output. And this slows down development.</p>

@@ -300,3 +300,8 @@ p.quote {
 	text-align: center;
 	padding: 15px;
 }
+
+p.quote-nocenter {
+	background-color: #151515;
+	padding: 15px;
+}
