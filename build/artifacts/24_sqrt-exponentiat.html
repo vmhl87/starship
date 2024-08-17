@@ -1,0 +1,43 @@
+<!--
+    :title Sqrt Exponentiation
+	:date Aug 17 2024<br>1:17 PM
+    :tag oly programming
+-->
+<p>While helping out a friend on some CSES exponentiation problem,
+I came up with this humorous way to compute fast exponentiate:</p>
+<p>So you see, the standard way to go about this sort of problem is
+to use binary exponentiation. But sometimes when there is a log based
+solution, there is a somewhat similar sqrt solution.</p>
+[[ENDSUM]]
+<p>Binary exponentiation works by breaking up the input <b>i</b> into
+maximally sized powers of two. What if we break up somehow into something
+involving <b>sqrtn</b>? If we precompute all the powers:</p>
+<center><b>p^1</b>, <b>p^2</b>, <b>p^3</b>, ... <b>p^sqrtn</b>,</center>
+<p>and the powers</p>
+<center><b>p^1sqrtn</b>, <b>p^2sqrtn</b>, ... <b>p^n</b>,</center>
+<p>then we can compute any arbitrary exponent in <b>O(1)</b>.</p>
+<br>
+<p>Is this ever useful? Probably not :P</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span><br>
+<span class=y>using</span> LL = <span class=g>long</span> <span class=g>long</span>;<br>
+<span class=g>constexpr</span> <span class=g>int</span> sz = <span class=y>2</span>&lt;&lt;<span class=y>15</span>,
+              m = <span class=y>1e9</span> + <span class=y>7</span>,
+              p = <span class=y>2</span>;<br>
+LL small<span class=b>[</span>sz<span class=b>]</span>, large<span class=b>[</span>sz<span class=b>]</span>;<br>
+<span class=g>void</span> <span class=b>precomp</span>(){
+    small<span class=b>[</span><span class=y>0</span><span class=b>]</span> = <span class=y>1</span>, large<span class=b>[</span><span class=y>0</span><span class=b>]</span> = <span class=y>1</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;sz; ++i) small<span class=b>[</span>i<span class=b>]</span> = small<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span> * p % m;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;sz; ++i) large<span class=b>[</span>i<span class=b>]</span> = large<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span> * small<span class=b>[</span>sz<span class=y>-</span><span class=y>1</span><span class=b>]</span> % m;
+}<br>
+<span class=g>int</span> <span class=b>pow</span>(<span class=g>int</span> i){
+    <span class=y>return</span> small<span class=b>[</span>i &amp; (sz<span class=y>-</span><span class=y>1</span>)<span class=b>]</span> * large<span class=b>[</span>i / sz<span class=b>]</span> % m;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    std::cout &lt;&lt; <span class=b>pow</span>(<span class=y>13</span>) &lt;&lt; <span class=b>pow</span>(<span class=y>3242</span>)
+              &lt;&lt; <span class=b>pow</span>(<span class=y>13426</span>) &lt;&lt; <span class=b>pow</span>(<span class=y>234253234</span>)
+              &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>Also: I believe it's possible to precompute with constexpr.
+This would be pretty funny.</p>
