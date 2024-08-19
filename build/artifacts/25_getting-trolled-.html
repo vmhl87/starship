@@ -1,0 +1,116 @@
+<!--
+    :title Getting trolled by subtasks (again)
+	:date Aug 18 2024<br>10:48 PM
+    :tag programming oly
+-->
+<p>I was attempting some
+<a onclick="this.innerHTML = '<s>afternoon funsies</s> <b>IOI18 day 2</b>'">afternoon funsies</a>
+for most of today, which I basically totally bricked.</p>
+<p>Here is a hopefully not too scuffed breakdown. (would say it has spoilers,
+but I barely solved any of the actually interesting problems so nah)</p>
+[[ENDSUM]]
+<br>
+<h3>0:00 - 0:30</h3>
+<p>Read through questions and concluded that p1 was the only I had a chance
+at full solving..</p>
+<p>The initial reduction was pretty easy to see - each trigger essentially
+had to sequentially output a sequence <b>t_{1..m}</b> upon activations
+<b>1..m</b>. As long as no switches are shared between triggers, they
+behave completely independently, so this held.</p>
+<p>This turned the problem instead into constructing some binary tree
+that could output a specific sequence while also satisfying all the
+necessary properties of the switches.</p>
+<p>I wrote up some initial solution to target first few test cases, where
+each trigger only occured at most four times. Spent too long figuring out
+how the submission format worked oops</p>
+<p>Anyway this got a whole.. 15 points!!!</p>
+<br>
+<h3>0:30 - 1:30</h3>
+<p>Creating the binary tree was complicated because essentially each switch
+had to be activated an even number of times. I thought I could try some
+full-binary-tree stuff to get around this: the trigger outputted into the
+root node of the tree, and its outputs were on the leaves. Due to the nature
+of the switches, each one would be activated an even number of times.</p>
+<p>Of course, not all leaves would have outputs, because output count wasn't
+guaranteed to be a power of two. I decided to use the most basic possible
+fix to this, and have non-endpoint leaves redirect straight to the root of
+the tree.</p>
+<br>
+<p>This was still kinda hard to implement, because the order of leaves
+activated in the tree wouldn't be as simple as just left -&gt; right. After
+drawing stuff out and thinking for probably too long, I saw this cool pattern:</p>
+<p>Consider the behavior of the root node. It essentially moves all even-number
+activations down the left path, and odd-number ones down the right one. (when
+zero-indexing; it made the further observation easier.) What about level-two
+nodes? They did something similar, switching paths based on whether the twos bit
+of the query number was set. Similar with level-three nodes, like so:</p>
+<center><pre class=quote>
++
+/ \
+/     \
+/         \
+/             \
++               +
+/ \             / \
+/     \         /     \
++       +       +       +
+/ \     / \     / \     / \
+000 100 010 110 001 101 011 111
+</pre></center>
+<p>This made the pattern pretty clear: the <b>i</b>'th query, when zero indexed,
+ended up at the leaf with index <b>rev(i)</b>. This made a lot of sense: the
+the root node's effect was basically to set the most significant bit of the leaf,
+and then the level2 nodes set the second most significant, and so on.</p>
+<p>I implemented this approach, and got <b>acceptable</b> on the cases that failed
+before. This solution wasn't very good, because it could potentially use way more
+switches than necessary.</p>
+<br>
+<h3>1:30 - 2:00</h3>
+<p>Continued bricking on p1</p>
+<br>
+<h3>2:00 - 2:45</h3>
+<p>Remembered that other problems existed and went back to them. p2 was kind of
+scary, but p3 looked like I could cheese a couple partials. I wrote up a really
+stupid <b>n^2 logn</b> solution targeting the first two subtasks, which performed
+the obvious divide-and-conquer approach of selecting the tallest mountain in the
+range, and checking which side of it would be optimal to for the meeting.</p>
+<p>This got 19 points.</p>
+<br>
+<p>This is also where I pulled another <a><s>no eyes</s></a> extreme stupidity moment:
+I assumed that constraints in the test cases formed a monotonically increasing
+sequence. Clearly, this wasn't true, because subcase 3 guaranteed <b>h_i &lt;= 2</b>.
+(bruh)</p>
+<br>
+<h3>2:45 - 4:00</h3>
+<p>I basically filled up the nearest available <a><s>college mail</s></a> scrap paper
+with random configurations of binary trees, and tried to find one that would
+be less wasteful. I considered some heap-order configurations, but none of the
+ones I came up with were easily modifiable to satisfy the switch rules or just
+seemed like a massive pain to implement. Around <b>3:30</b> I decided to use
+some scuffed solution that "pushed" all the actual trigger -&gt; trigger paths
+to a contiguous region on the right side of the tree, so that some redundant
+switches could be removed. (Any switch whose paths all mapped back to the root
+could be removed and replaced with just a jump to root.)</p>
+<p>This was kinda really annoying to implement because a) I am dumb and b) the
+paths still had to be unscrambled and such.</p>
+<p>I ended up with a submission that got full on all except the last subtask:
+85 points.</p>
+<br>
+<h3>4:00 - 5:00</h3>
+<p>Around this time richard reminded me that p3 was farmable. (I still hadn't
+realized the relaxed constraints on subtask 3.)</p>
+<p>So I spent basically the rest of the time trying to debug a segtree bash.
+I didn't end up getting any more points, because I suck at implementation
+<b>:dead:</b></p>
+<br>
+<h3>boing</h3>
+<p>I realized after contest that there might be a somewhat easy way to make my
+p1 approach more efficient. Instead of completely isolating each trigger and
+its outputs from one another, I think it might be possible to perform one
+final pass through the switches that got activated an odd number of times,
+instead of trying to resolve each cluster individually.</p>
+<p>Also, richard pointed out that one of the subtasks for p2 guaranteed that the
+graph was a tree, which would make it not impossible - something else I failed
+to see in contest... I'll write these up soon (tm)</p>
+<br>
+<p>Anyway, I'll be doing ioi18d1 tomorrow; it is apparently not entirely impossible..</p>
