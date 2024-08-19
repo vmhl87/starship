@@ -23,7 +23,7 @@ def collect(body, index, styleroot):
                 final += f"<title>{page_title}</title>\n"
 
             elif "grabber" in line:
-                final += f"<div id=\"starship\">Powered by Starship v{starship_version}<div id=\"grabber\">🔥</div></div>\n"
+                final += f"<div id=\"starship\">Powered by Starship v{starship_version}<div id=\"grabber\"><img width=\"14px\" src=\"/starship/assets/fire-emoji.png\"/></div></div>\n"
 
             elif "name" in line:
                 final += f"<a href=\"{index}\">{page_title}</a>\n"
