@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="27_-ioi-day-.html">2018 IOI day 1</a>
+    <div class="post-title-date">Aug&nbsp;20&nbsp;2024<br>12:04&nbsp;AM</div>
+</div>
+<p>Completed the second half of IOI18. Performance was kinda eh,
+but wasn't expecting much <b>:clown:</b></p>
+<br>
+<h3>0:00 - 1:30</h3>
+<p>Solved Combo. Essentially the construction I found was to guess
+the next 2 bits in the sequence over the course of two queries:
+there were <b>3^2 = 9</b> possible arrangements of next bits, and
+each query had three possible return values, which worked out to a
+basically perfect 1:1 mapping between query and bit found.</p>
+<br>
+<h3>1:30 - 2:00</h3>
+<p>Looked around at the other problems - I thought of some bounding
+box stuff for p2 but couldn't think of a good approach. Considered
+a little bit of range query on range query, but it was scuffed. I
+did notice that subtask 5 seemed doable, because it restricted the
+shape of the board to a line, but I moved on because I didn't have
+a solution to this either.</p>
+<p>p3 seemed like I could farm some points on its subtasks
+(guaranteed line graph) so I tried it.</p>
+<br>
+<h3>2:00 - 3:00</h3>
+<p>Essentially the problem reduced to finding the range of cities
+accessible from the start while in human form, and finding the range
+of cities accessible from the end while in wolf form. If these
+overlapped, the answer would be yes, otherwise, no.</p>
+<p>For this I just used some segtrees. First I flattened the line graph
+into an array, and then built an RMQ that kept track of both min and
+max. Answering each query was then just binary searching to the left
+and right of endpoint, using segtree. (I firstly didn't feel like
+writing a segtree walk, and secondly didn't really trust that I would
+implement it correctly. Binary search I was much more confident in.)</p>
+<p>(this got 34 points)</p>
+<br>
+<h3>3:00 - 3:30</h3>
+<p>Messed around with the line case of p2, trying to find a reduction
+that I could make. I thought I saw some hull stuff, which I could implement
+with a segment combination sort of algorithm. This ended up being fundamentally
+flawed, but I would only realize this at the very end of contest.</p>
+<br>
+<h3>3:30 - 4:30</h3>
+<p>I wrote up some
+<a onclick="this.innerHTML = 'sqrt decomp <i style=color:gray>I can stop whenever I want to...</i>'">sqrt decomp</a>
+to compute the segment combination and then tried to submit it. There was some
+sort of issue on the OJ side, because I kept getting RTE. I tried submitting some
+code that just returned 0 for every case, and still got RTE. Richard told me to
+use DMOJ instead. My solution didn't RTE there, but got WA. I realized about here
+that my solution was fundamentally flawed.</p>
+<br>
+<h3>4:30 - 5:00</h3>
+<p>Tried drawing out more configurations, but couldn't really think of one that
+would work. I did end up realizing that I could adapt my segment joining sqrt
+decomp algorithm to solve
+<a href="https://cses.fi/problemset/task/2416" target=_blank">some cses problem</a>
+that I have been stuck on for a while, so we don't fully lose, I guess!</p>
+<br>
+<h3>Final score</h3>
+<p>I ended with <b>134 + 104</b>, missing silver by <b>21</b> points. Overall
+though I think it was alright, and I had lots of oppurtunities yesterday to
+get more points, like the various subtasks on p2 and p3, as well as a better p1.</p>
+<p>I'll try to get through most of my upsolve queue in the next few days - one
+final burst before school starts!</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
