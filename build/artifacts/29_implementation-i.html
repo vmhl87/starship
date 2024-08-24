@@ -1,0 +1,35 @@
+<!--
+    :title implementation implementation implementation
+	:date Aug 24 2024<br>12:28 AM
+    :tag programming oly
+-->
+<p>I finally stopped procrastinating on upsolving
+<a href="https://qoj.ac/contest/419/problem/2743" target=_blank>IOI18 day 1 p2</a>
+today.. lol</p>
+<p>The implementation of this problem was some 2d grid swap
+updates that update a segtree... overall just a massive pain to deal with</p>
+<br>
+<p>I started writing up (for specifically subtask 5, which enforced
+that the grid was a line) my solution this morning, building off of the
+stuff I had from the virtual. Then I kinda got distracted with some cses
+problems and[[ENDSUM]] picked back up a few hours later. This was a pretty big mistake
+because I ended up fighting against WA for at least 45 minutes because
+<a href="javascript:void" onclick="this.style.textDecoration='none';this.innerHTML='I forgot what one of my arrays did <i style=color:gray>I was storing the list of positions in a bijective array, and mistakenly thought that it mapped board position -> index, when in fact it did the opposite...</i>'">I forgot what one of my arrays did</a>
+<b>:skull:</b></p>
+<p>Then after I got AC on 1d case, I adapted for 2d.. which should've been
+easy, right?</p>
+<br>
+<p>Nope <b>:clown:</b></p>
+<p>First I got TLE on some tc that previously passed, which was because my
+weird segtree update was <b>log^2</b>. I rewrote that, but still got WA on
+almost all test cases with the notable exception of subtask 5. (1d case)</p>
+<p>In retrospect, that kinda gave away the problem at hand, but for some reason
+I instead spent collectively another hour or so (got distracted with more cses
+lmao) reading through my code because I thought I had implemented something
+wrong...</p>
+<p>The issue ended up being a specific case in full 2d that I wasn't handling
+properly. Obviously, this explained why subtask 5 repeatedly passed, but I was
+kind of <s>sleep deprived</s> stupid. After adding in that case, my code got AC
+without any further modifications ._.</p>
+<br>
+<p>So, I definitely need to work on implementation.. lmao</p>
