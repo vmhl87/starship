@@ -1,0 +1,50 @@
+<!--
+    :title d1 fumbler (me)
+	:date Aug 31 2024<br>11:39 AM
+    :tag programming oly
+-->
+<p>I did the ABC today: <a href="https://atcoder.jp/contests/abc369" target=_blank>https://atcoder.jp/contests/abc369</a></p>
+<p>The fumbling started on problem A, where I misread the
+fking input format and consequently got 2 WA (please don't
+ask why this caused 2 WA and not 1). Then I did a dumb thing[[ENDSUM]]
+and decided to switch between C, Python, and C++ for the next
+few problems, which obviously resulted in mis-submits...</p>
+<p>Somehow managed to get ABCD within 20 minutes even with
+this nonsense.<br>But I then hit a wall at E/F.</p>
+<br>
+<p>Ironically G actually seemed solvable. Here's the summarized
+problem statement:</p>
+<p class=quote-nocenter>
+Given a tree of size N, Alice and Bob play the following game:<br><br>
+Alice picks K vertices on the tree.<br>
+Then, Bob constructs a walk that begins and ends at vertex 1,
+passing through all vertices chosen by Alice.<br><br>
+The "score" is defined as the length of Bob's walk. Alice wants
+to maximize the score, and Bob wants to minimize it. Determine
+for every K = 1, 2, ... N the score when both players are playing
+optimally.
+</p>
+<p>Firstly, we can trivially show that it is always optimal for Alice
+to pick leaves of the tree.</p>
+<p>We can then prove that the solution for <b>K = i+1 (1 &lt; i)</b> must always
+be the solution for <b>K = i</b> with zero or one leaves added. So, the answers
+can be constructed iteratively by always picking the leaf which maximally
+increases the walk length.</p>
+<p>Using the DFS traversal order, we can find that each leaf adds the
+<i>sum of lengths of unused edges above itself</i> to the walk length,
+scaled by 2.</p>
+<p>Programmatically we can simulate this by mantaining such a sum of edges
+for each leaf. Anytime we choose a leaf, we have to <i>remove all the edges
+    from itself to the root,</i> and update the sum of edges for the other
+leaves.</p>
+<p>Bruteforce for this seems like <b>O(n^3)</b> or something. Can we do better?
+The costly step here is recomputing sum of lengths for each leaf. If we
+use some euler tour + range update stuff, each edge removal can be done
+in <b>O(log n)</b>, and because each edge can only be removed once, this amortizes
+to <b>O(n log n)</b> total. This passes!</p>
+<br>
+<p>Unfortunately, I spent <i>just a little too long</i> debugging and only
+got AC two minutes after contest end... I also kinda wasted a lot of time
+midcontest, getting most of these observations around 00:30 - 00:40 but
+only actually starting implementation at 00:50 or so.</p>
+<p>rly gotta not throw next contest fr</p>
