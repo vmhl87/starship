@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="34_atcoder-beginner.html">Atcoder Beginner Contest 370 (and weird binary search?)</a>
+    <div class="post-title-date">Sep&nbsp;7&nbsp;2024<br>10:48&nbsp;AM</div>
+</div>
+<p>Decent contest. Started 6 min late bc I lost track of time
+while debugging some cses problem :/ but it was fine..</p>
+<p>ABC were basically trivial, C had a pretty simple pattern
+(provable by optimal-choice argument) which I got relatively
+quickly. D was an adventure, though.</p>
+<p>Task essentially asks us to determine in a 2d bitfield the
+first set bit encountered when starting at some cell and moving
+purely up, down, left, or right. For some reason I thought first
+of some binlift-adjacent approach, but that was obviously too much
+work and not really worth it to impl. Spent a while writing up some
+bashy sol that mantained a segment tree for each row and column.
+I spent way too long implementing this AND ALSO got 3 RE because
+I swapped X bound and Y bound in coordinate bounds check. smh.</p>
+<p>E was pretty interesting, but I didn't see the dp. F was another
+dp that I couldn't think of a speedup for, and G was basically
+impossible.</p>
+<br>
+<h3>"binlift search"</h3>
+<p>Because of my semi-attempt at using not exactly binlifting on D,
+my binary search (to find closest unset cell on segment) ended up
+looking somewhat like this:</p>
+<pre class=code-color>
+<span class=g>int</span> i = initial;<br>
+<span class=y>for</span>(<span class=g>int</span> p = <span class=y>20</span>; p; --p)
+    <span class=y>if</span>(<span class=b>works</span>(i + (<span class=y>1</span>&lt;&lt;p))) i += <span class=y>1</span>&lt;&lt;p;<br>
+<span class=r>// to search backwards, replace + with -</span>
+</pre>
+<p>Is this faster than normal binsearch? The operations are probably mostly
+identical, but idk. probably no difference. It actually reminds me a lot of
+<a href="https://codeforces.com/blog/entry/132656" target=_blank>fenwick search</a>,
+but this is simpler surely..</p>
+<p>Additionally, it can be made branchless pretty easily, I think:</p>
+<pre class=code-color>
+<span class=g>int</span> i = initial;<br>
+<span class=y>for</span>(<span class=g>int</span> p = <span class=y>20</span>; p; --p)
+    i += <span class=b>works</span>(i + (<span class=y>1</span>&lt;&lt;p)) &lt;&lt; p;
+</pre>
+<p>idk how well this works with cache and stuff though. Definitely loses
+to <a href="https://en.algorithmica.org/hpc/data-structures/binary-search/" target=_blank>
+    Algorithmica's eytzinger-layout based binary search</a>.<p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
