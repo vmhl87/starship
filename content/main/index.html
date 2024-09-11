@@ -36,6 +36,26 @@
 <div class="post-spacer"></div>
 <div class="post"><div class="content">
 <div class="post-title">
+    <a class="post-title-name" href="../../pages/35_when-wil-calc-bc.html">"When wil calc BC ever be useful to me?"</a>
+    <div class="post-title-date">Sep&nbsp;11&nbsp;2024<br>7:57&nbsp;PM</div>
+</div>
+<p>Today, I was working on some 3d matrix projection stuff
+for some simulation, and needed a simple <b>sin()</b> approximation.
+Because I was writing this in
+<a href="javascript:void" onclick="this.style.textDecoration='none';this.innerHTML='a non-compiletime CBAS segment,<p class=quote-nocenter style=color:var(--content-color)>CBAS by default runs in an interpreter, providing actually surprisingly decent performance, but is also able to be transpiled into C and then compiled into a binary. Compiletime code has access to everything that is part of standard C, but interpreted code can only access external C functions if they are explicitly baked into the interpreter. Currently, only very basic standard functions have been builtin, like malloc, free, fgets, etc.</p>'">a non-compileime CBAS segment,</a>
+I didn't have access to <b>&lt;math.h&gt;</b>, and was too lazy
+to add builtin trig functions. That's when I remembered:
+calc has a pretty simple way to approximate complicated functions
+with polynomials!</p>
+<p>Even better, I didn't need an approximation that would work over
+all input values of theta - only between <b>-pi/2</b> and <b>pi/2</b>,
+so a taylor series to three terms did the trick:</p>
+...
+<p><a class="readmore" href="../../pages/35_when-wil-calc-bc.html">read more</a></p>
+<p class="tag-container">tags: <a href="../programming/index.html">programming</a> </p></div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
     <a class="post-title-name" href="../../pages/34_is-lack-of-memor.html">Is lack of memorability memorable</a>
     <div class="post-title-date">Sep&nbsp;10&nbsp;2024<br>11:18&nbsp;PM</div>
 </div>

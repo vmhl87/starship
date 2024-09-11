@@ -1,0 +1,24 @@
+<!--
+    :title "When wil calc BC ever be useful to me?"
+	:date Sep 11 2024<br>7:57 PM
+    :tag programming
+-->
+<p>Today, I was working on some 3d matrix projection stuff
+for some simulation, and needed a simple <b>sin()</b> approximation.
+Because I was writing this in
+<a href="javascript:void" onclick="this.style.textDecoration='none';this.innerHTML='a non-compiletime CBAS segment,<p class=quote-nocenter style=color:var(--content-color)>CBAS by default runs in an interpreter, providing actually surprisingly decent performance, but is also able to be transpiled into C and then compiled into a binary. Compiletime code has access to everything that is part of standard C, but interpreted code can only access external C functions if they are explicitly baked into the interpreter. Currently, only very basic standard functions have been builtin, like malloc, free, fgets, etc.</p>'">a non-compileime CBAS segment,</a>
+I didn't have access to <b>&lt;math.h&gt;</b>, and was too lazy
+to add builtin trig functions. That's when I remembered:
+calc has a pretty simple way to approximate complicated functions
+with polynomials!</p>
+<p>Even better, I didn't need an approximation that would work over
+all input values of theta - only between <b>-pi/2</b> and <b>pi/2</b>,
+so a taylor series to three terms did the trick:</p>
+[[ENDSUM]]
+<img src="/starship/assets/35_taylor.png" />
+<pre class=code-color style="max-width:370px;margin-left:auto;margin-right:auto">
+<span class=y>fn</span> sin(<span class=g>float</span> x) <span class=b>-</span><span class=b>&gt;</span> <span class=g>float</span><span class=b>:</span>
+    <span class=y>return</span> x <span class=b>-</span> (x<span class=b>*</span>x<span class=b>*</span>x<span class=b>/</span><span class=y>6</span>) <span class=b>+</span> (x<span class=b>*</span>x<span class=b>*</span>x<span class=b>*</span>x<span class=b>*</span>x<span class=b>/</span><span class=y>120</span>)<span class=b>;</span>
+<span class=y>end</span>
+</pre>
+<p>:D</p>

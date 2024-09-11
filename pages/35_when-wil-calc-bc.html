@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="35_when-wil-calc-bc.html">"When wil calc BC ever be useful to me?"</a>
+    <div class="post-title-date">Sep&nbsp;11&nbsp;2024<br>7:57&nbsp;PM</div>
+</div>
+<p>Today, I was working on some 3d matrix projection stuff
+for some simulation, and needed a simple <b>sin()</b> approximation.
+Because I was writing this in
+<a href="javascript:void" onclick="this.style.textDecoration='none';this.innerHTML='a non-compiletime CBAS segment,<p class=quote-nocenter style=color:var(--content-color)>CBAS by default runs in an interpreter, providing actually surprisingly decent performance, but is also able to be transpiled into C and then compiled into a binary. Compiletime code has access to everything that is part of standard C, but interpreted code can only access external C functions if they are explicitly baked into the interpreter. Currently, only very basic standard functions have been builtin, like malloc, free, fgets, etc.</p>'">a non-compileime CBAS segment,</a>
+I didn't have access to <b>&lt;math.h&gt;</b>, and was too lazy
+to add builtin trig functions. That's when I remembered:
+calc has a pretty simple way to approximate complicated functions
+with polynomials!</p>
+<p>Even better, I didn't need an approximation that would work over
+all input values of theta - only between <b>-pi/2</b> and <b>pi/2</b>,
+so a taylor series to three terms did the trick:</p>
+
+<img src="/starship/assets/35_taylor.png" />
+<pre class=code-color style="max-width:370px;margin-left:auto;margin-right:auto">
+<span class=y>fn</span> sin(<span class=g>float</span> x) <span class=b>-</span><span class=b>&gt;</span> <span class=g>float</span><span class=b>:</span>
+    <span class=y>return</span> x <span class=b>-</span> (x<span class=b>*</span>x<span class=b>*</span>x<span class=b>/</span><span class=y>6</span>) <span class=b>+</span> (x<span class=b>*</span>x<span class=b>*</span>x<span class=b>*</span>x<span class=b>*</span>x<span class=b>/</span><span class=y>120</span>)<span class=b>;</span>
+<span class=y>end</span>
+</pre>
+<p>:D</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
