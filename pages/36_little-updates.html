@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="36_little-updates.html">Little updates</a>
+    <div class="post-title-date">Sep&nbsp;15&nbsp;2024<br>10:54&nbsp;PM</div>
+</div>
+<p>Weekend was pretty great. Took the atcoder on Saturday,
+was pretty nice. Had to sort out a bunch of stuff for most
+of the rest of the day, cant say here, kinda confidential.
+Today had ARML practice :D :D then did a pretty quick half
+cycle and kinda bricked on ioi18p5 <b>:skull:</b> oops</p>
+<p>Atcoder breakdown:</p>
+<ul>
+    <li>A - lots of ways to do this one. I just did smth
+        where I treated the arrows as directed edges, and
+        kept counts of indegree/outdegree. Middle number
+        was guaranteed to have both indeg + outdeg 1.</li><br>
+    <li>B - trivial by any sort of fast insert/check
+        structure; I used <b>std::set</b></li><br>
+    <li>C - bash all possible permutations of the graph,
+        efficiently find cost for each. Again just used
+        set. Took way too long debugging a 1 letter typo
+        in my solution (<b>g1</b> instead of <b>g2</b>),
+        and so this took around 20m to implement instead
+        of 10.. so cooked</li><br>
+    <li>D - really standard range query. Coord compress
+        into single array, then do the queries somehow.
+        I know I could've used binary search + psum, but
+        <b>std::lower_bound</b> kinda always trips me up
+        and so I decided to... build a simple recursive
+        segtree over the array and range query it.
+        Overkill? It wasn't actually that bad...</li><br>
+    <li>E - basically just
+        <a href=https://cses.fi/problemset/task/1734 target=_blank>
+            CSES distinct value queries
+        </a> but without queries. Used a really similar
+        idea to my solution to that task, but avoided
+        using a segment tree entirely by noticing that
+        we only need to mantain the total sum of the
+        active segment... code
+        <a href=https://raw.githubusercontent.com/vmhl87/oly/main/contests/atcoder-sep14-24/e.cpp
+           target=_blank>
+            here
+        </a>, pretty clean I think?</li><br>
+    <li>F - realized that transforming each position
+        <b>p_i</b> to <b>p_i - i</b> would make it such
+        that any "adjacent" ranges of people would have
+        equal position. Then it would be some mess of
+        lazy segment tree or something that supports
+        range sum &amp; range set.. Really didn't feel
+        like writing up in contest, will probably upsolve
+        at some later date when I get bored.</li><br>
+    <li>G - messed around with some sort of cycle extraction
+        + minimal cyclic shift solution, seems like it would
+        be even more complicated than that b/c of modulus and
+        gcd and other stuff idk. Might revisit sometime in the
+        relatively far future, but no idea.</li>
+</ul>
+<p>Lowkey the tasks felt very standard, A-E in particular.
+I think last contest was more fun.</p>
+<p>ARML practice was great! Topic was inequalities, ironically
+it seems that though we've covered such no less than five times
+over the past few years, I still don't entirely know how to apply
+anything more complicated than basic AM-GM in a contest setting.
+Usually I end up just calc bashing or something.. not optimal lol</p>
+<p>Worked on ioi18p5 for a decent portion of the afternoon, I
+think I have the tree case figured out (and MAYBE the graph
+case as well) but implementation is not one of my strong points..
+still do not have a bug-free solution to tree case.</p>
+<p>Got most of my schoolwork out of the way
+(<a href=javascript:void onclick="this.style.textDecoration='none';
+this.innerHTML='<i style=color:grey>a substantial amount of the hw I thought I had to do was some reading for chn, but it turns out that I DID IT LAST CLASS BC I THOUGHT IT WAS ASSIGNED LMAO which is cool i think? It was pretty easy. Hopefully am not trolling..</i>'">note</a>)
+and will be able to do virtual contests over the next week,
+planning on either mon+tue or mon+wed, leaning towards tue
+tho because of stuff on thursday. Also, Vivian moves into
+college next weekend, so will be out of town - will miss
+next ARML, sorry andrew</p>
+<p>anyway, I have my chill classes tomorrow. A couple club
+meetings I think? idk. gn pittsburgh!</p>
+</div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
