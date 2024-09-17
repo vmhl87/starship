@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="37_-ioi-day-.html">2014 IOI day 1</a>
+    <div class="post-title-date">Sep&nbsp;17&nbsp;2024<br>9:27&nbsp;AM</div>
+</div>
+<p>Virtualed IOI14d1 yesterday. Due to time (<b>18:30 - 23:30</b>)
+I didn't feel like writing up last night, so I'm just doing this
+while bored at school <b>:p</b></p>
+
+<h3>0:00 - 0:15</h3>
+<p>Mostly just looked through the problems, considered approaches.
+p1 + p3 both interactive, pretty scary. p2 looked like a somewhat
+doable range query - ironically seemed easier than p1? idk. Wrote
+some observations for p1 then started implementing p2.</p>
+<p>My p2 approach was some sort of range combination thing where
+I kept track of min and max values for towers in each range, and
+did some overlay with priority thing to combine. overcomplicated
+probably idk</p>
+<h3>0:15 - 1:30</h3>
+<p>impl speed severely lacking</p>
+<p>I was pretty sketched out by my approach so I decided to write
+with sqrt decomp initially. (easier to debug, also didn't have to
+deal with multiple levels of lazy prop) Even so it took me about
+an hour to write the whole thing..</p>
+<p>First submission at <b>1:15</b>, got WA. Made a couple of edge
+cases, found an issue with my range combiner thing.</p>
+<p>Fixed up and resubmitted at <b>1:28</b>, got 61 pts w/ RTE on
+last subtask. (array + bucket size tuned for small subtasks, so
+overflowed on big) Because my approach was <b>O(k logn)</b> for
+<b>k = 5e5, n = 2e6</b>, I thought that my sqrt wouldn't pass,
+but decided to try just for the heck of it. bucket is usually
+pretty good constant-factor wise.</p>
+<p>Turned out that something on the order of <b>1024 * 2e6</b>
+operations passed, in around <b>2.5</b> seconds, with my not
+even entirely optimized decomp. (redundant push operations,
+bucket rebuilds, etc.) Though this might be an artifact of
+the OJ, and might have TLE in contest. idk.</p>
+<h3>1:30 - 2:00</h3>
+<p>Thought more about approach for p1 and also read p3. Came
+up with somewhat of an idea for p1.</p>
+<p>This targeted subtask 3 and below, because it relied on
+knowing every pairwise distance.</p>
+<p>Initially: determine the closest station to station 0. With
+a little bit of observation we can see that this station must
+1) be a type D station, and 2) be the closest such station to
+the right of station 0.</p>
+<p>Then once we find this station, iteratively perform the
+following:</p>
+<p>Let <i>l, r</i> be the leftmost and rightmost found stations.
+Find the closest unfound station to <i>l</i>, and call it <i>x</i>.
+Using the distances between <i>x</i> and <i>l, r</i>, we can
+determine by casework the position and type of <i>x</i>:</p>
+<ol>
+	<li><i>x</i> &lt; <i>l</i><br>
+		We can prove here that <i>x</i> must be type C. If it
+		were type D, to travel from <i>x</i> to <i>l</i>, the
+		train would have to move left from <i>x</i>, then turn
+		around at some C block, and then go to <i>l</i>. In
+		this case, the C block would be closer than <i>x</i>.
+		And because <i>l</i> represents the leftmost found
+		station, this C block cannot have previously been found.<br>
+		We can check for this case pretty easily. Consider the
+		following example:<br>
+		<pre class=code-color>
+( ( ) ( ) )
+  <span class=y>x</span>   <span class=y>l</span> m <span class=y>r</span></pre>
+		<i>m</i> denotes the closest station to <i>l</i>; it is
+		guaranteed to be of type D.<br>
+		To get from <i>x</i> to <i>l</i>, the shortest route is to
+		go left to <i>m</i>, then turn around and go to <i>l</i>.
+		The distance to <i>r</i> is just the direct difference in
+		position.<br>
+		Therefore, we can check for this condition by solving for
+		the position of <i>x</i> using both of the measured distances,
+		and checking if they match up.<br>
+		With some work we can prove that no other configuration
+		satisfies this, I think.</li><br>
+	<li><i>x</i> &gt; <i>r</i><br>
+		Similar to last case.</li><br>
+	<li><i>l</i> &lt; <i>x</i> &lt; <i>r</i>, <i>x</i><br>
+		Here we only need to check if <i>x</i> is of type C or D,
+		which we can do by calculating positions based on distances
+		for both cases and checking which one matches up.</li>
+</ol>
+<h3>2:00 - 3:45</h3>
+<p>implementation...</p>
+<p>First submit at <b>3:00</b>, got 8 pts due to some issue with
+determining case. Fixed that up for a 30 pt submission at <b>3:15</b>,
+then spent the next half hour or so trying to get subtask 3 to work.
+No luck.</p>
+<h3>3:45 - 4:30</h3>
+<p>Decided that fighting with p1 was probably not a good use of my
+remaining time and so decided to try farming p3.</p>
+<p>I decided that it was maybe optimal to only return 'edge exist'
+if all other edges connecting <i>u, v</i> had been previously asked.
+In theory this wasn't very complicated, but seeing that I don't know
+LCT or other form of dynamic connectivity, my approach used an n^2
+dfs to determine reachability, (n^2 because complete graph is quadratic
+in the # of edges), and was too slow for subtask 4.</p>
+<p>Took until <b>4:10</b> to get implementation correct, giving 42 pts,
+then spent a while trying to optimize approach for task 4. No luck.</p>
+<h3>4:30 - 5:00</h3>
+<p>fought with p1 some more, no improvement</p>
+<br>
+<hr>
+<br>
+<p>ya so.. my interactives definitely need work, as well as general
+implementation speed / debugging / not having bugs in the first place etc.
+Ended with 172 points, which sits at 71st place tie, I think?</p>
+<p>Gonna do d2 today at around the same time, hopefully won't throw
+as much !!</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> <a href="../content/contest-logs/index.html">contest-logs</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
