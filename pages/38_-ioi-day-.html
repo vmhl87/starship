@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="38_-ioi-day-.html">2014 IOI day 2</a>
+    <div class="post-title-date">Sep&nbsp;19&nbsp;2024<br>11:39&nbsp;AM</div>
+</div>
+<p>Took the contest 2 days ago but was pretty busy yesterday
+(with some discrete math project skull) so doing writeup rn
+in school lmao</p>
+
+<h3>0:00 - 0:02</h3>
+<p>Read through problems. p4 trivial w/ a bunch of casework.
+p5 maybe possible to bruteforce small cases, p6 kinda impossible</p>
+<h3>0:02 - 0:51</h3>
+<p>The general idea for p4 was essentially just to determine
+the shift in initial gondolas, then notice that replacement
+(adding gondola <b>i</b>) can occur in any slot whose final
+gondola is at most number <b>i</b>.</p>
+<p>I did by subtasks - set 1 at 25 min, set 2 at 35 min, AC at
+51 min.</p>
+<h3>0:51 - 1:14</h3>
+<p>Thought a bit more on p5 and p6. Small case on p5 trivial
+by build whole graph, individual protocol cases handled by
+separate cases. (prot. 0 must form tree, dp trivial, prot. 1
+always forms disconnected graph, prot. 2 always makes complete
+connected component, also trivial.)</p>
+<p>p6 subtask 1 was obviously solveable with literally any
+algo, went for the low-hanging fruit <b>2^n</b>. Couldn't
+think of subquadratic, did see quadratic but for some reason
+didn't see that subtask 2 was possible with it. idk</p>
+<h3>1:14 - 1:55</h3>
+<p>Wrote up individual cases for p5, passed subtasks 2-4 by
+<b>1:39</b>. Then got small case at <b>1:55</b> for 46 pts.</p>
+<h3>1:55 - 2:15</h3>
+<p>Wrote up small case <b>2^n</b> on p6, 7 pts.</p>
+<h3>2:22</h3>
+<p>Directly out of contest log: "i claim that i am screwed
+on p3"</p>
+<h3>2:32</h3>
+<p>Also from contest log: "i tentatively claim that i am
+also screwed on p2"</p>
+<br>
+<p>So, that ended IOI 2014. With <b>325</b> points total,
+this got me over the silver line.. (<b>323</b> points)</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/oly/index.html">oly</a> <a href="../content/contest-logs/index.html">contest-logs</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
