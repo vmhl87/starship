@@ -8,7 +8,7 @@ else
 	elif [[ -f $1 ]]; then
 		echo $1
 		lang="c"
-		if [[ $1 == *s ]]; then
+		if [[ $1 == *.cst ]]; then
 			lang="cst"
 		fi
 		cat $1 | python3 ~/misc/starship/build/format-$lang.py | xclip -i -selection clipboard

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="44_cses-fixedlength.html">CSES Fixed-Length Paths I</a>
+    <div class="post-title-date">Oct&nbsp;4&nbsp;2024<br>4:10&nbsp;PM</div>
+</div>
+<p>Actually very similar problem to IOI11p2 (Race) which I did last weekend,
+using centroid decomposition and then naive dp. Decided to write this one in
+C*, which was surprisingly easy.</p>
+
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;iframe&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;vec&gt;</span><br>
+<span class=r>// kind of a hack; c* does not have foreach</span>
+<span class=y>#define</span> <span class=b>nxt</span> adj[i]<span class=b>.</span>d[j]<br>
+<span class=b>@cgmain</span><br>
+<span class=b>@vec</span>[<span class=g>int</span>][<span class=y>2e5</span>] adj<span class=b>;</span>
+<span class=b>@m</span> <span class=g>int</span> n, k<span class=b>;</span><br>
+<span class=g>bool</span>[<span class=y>2e5</span>] vis<span class=b>;</span><br>
+<span class=r>// centroid decmp</span>
+    <span class=g>int</span>[<span class=y>2e5</span>] w<span class=b>;</span><br>
+    <span class=y>fn</span> pick(<span class=g>int</span> i, <span class=g>int</span> p, <span class=g>int</span> sz) <span class=b>-</span><span class=b>&gt;</span> <span class=g>int</span><span class=b>:</span>
+        w[i] <span class=b>=</span> <span class=y>1</span><span class=b>;</span><br>
+        <span class=g>int</span> res <span class=b>=</span> sz<span class=y>-</span><span class=y>1</span><span class=b>;</span>
+        <span class=g>bool</span> work <span class=b>=</span> <span class=y>1</span><span class=b>;</span><br>
+        <span class=g>int</span> j<span class=b>;</span>
+        <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span>adj[i]<span class=b>.</span>sz<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) <span class=y>if</span>(nxt<span class=b>!</span><span class=b>=</span>p &amp;&amp; <span class=b>!</span>vis[nxt])
+            <span class=g>int</span> r <span class=b>=</span> pick(nxt, i, sz)<span class=b>;</span>
+            <span class=y>if</span>(r<span class=b>!</span><span class=b>=</span><span class=y>-</span><span class=y>1</span>) <span class=y>return</span> r <span class=y>end</span>
+            w[i] <span class=b>=</span> w[i] <span class=b>+</span> w[nxt]<span class=b>;</span>
+            work <span class=b>=</span> work &amp; (w[nxt] <span class=b>&lt;</span><span class=b>=</span> sz<span class=b>/</span><span class=y>2</span>)<span class=b>;</span>
+            res <span class=b>=</span> res <span class=b>-</span> w[nxt]<span class=b>;</span>
+        <span class=y>end</span> <span class=y>end</span><br>
+        <span class=y>if</span>(res <span class=b>&lt;</span><span class=b>=</span> (sz<span class=b>/</span><span class=y>2</span>) &amp;&amp; work) <span class=y>return</span> i <span class=y>end</span>
+        <span class=y>return</span> <span class=y>-</span><span class=y>1</span><span class=b>;</span>
+    <span class=y>end</span><br>
+    <span class=y>fn</span> count(<span class=g>int</span> i, <span class=g>int</span> p) <span class=b>-</span><span class=b>&gt;</span> <span class=g>int</span><span class=b>:</span>
+        <span class=g>int</span> res <span class=b>=</span> <span class=y>1</span><span class=b>;</span><br>
+        <span class=g>int</span> j<span class=b>;</span>
+        <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span>adj[i]<span class=b>.</span>sz<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) <span class=y>if</span>(nxt<span class=b>!</span><span class=b>=</span>p &amp;&amp; <span class=b>!</span>vis[nxt])
+            res <span class=b>=</span> res <span class=b>+</span> count(nxt, i)<span class=b>;</span>
+        <span class=y>end</span> <span class=y>end</span><br>
+        <span class=y>return</span> res<span class=b>;</span>
+    <span class=y>end</span><br>
+    <span class=y>fn</span> <span class=g>inline</span> centroid(<span class=g>int</span> i) <span class=b>-</span><span class=b>&gt;</span> <span class=g>int</span><span class=b>:</span>
+        <span class=g>int</span> sz <span class=b>=</span> count(i, <span class=y>-</span><span class=y>1</span>)<span class=b>;</span>
+        <span class=y>return</span> pick(i, <span class=y>-</span><span class=y>1</span>, sz)<span class=b>;</span>
+    <span class=y>end</span><br>
+<span class=r>// naive dp; for each subtree "going away" from</span>
+<span class=r>// some node i, count # of nodes at depth 0..k.</span>
+<span class=r>// we use only two arrays to save mem</span>
+<span class=g>ll</span>[<span class=y>2e5</span><span class=b>+</span><span class=y>1</span>] build<span class=b>;</span>
+<span class=g>ll</span>[<span class=y>2e5</span><span class=b>+</span><span class=y>1</span>] final<span class=b>;</span>
+<span class=g>int</span> maxd<span class=b>;</span>
+<span class=g>ll</span> res<span class=b>;</span><br>
+<span class=r>// divide and conquer thing</span>
+    <span class=y>fn</span> depths(<span class=g>int</span> i, <span class=g>int</span> p, <span class=g>int</span> d)<span class=b>:</span>
+        <span class=y>if</span>(maxd <span class=b>&lt;</span> d) maxd <span class=b>=</span> d <span class=y>end</span>
+        <span class=y>if</span>(d <span class=b>&gt;</span> k) <span class=y>return</span> <span class=y>end</span>
+        <span class=b>+</span><span class=b>+</span>build[d]<span class=b>;</span><br>
+        <span class=g>int</span> j<span class=b>;</span>
+        <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span>adj[i]<span class=b>.</span>sz<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) <span class=y>if</span>(nxt<span class=b>!</span><span class=b>=</span>p &amp;&amp; <span class=b>!</span>vis[nxt])
+            depths(nxt, i, d<span class=b>+</span><span class=y>1</span>)<span class=b>;</span>
+        <span class=y>end</span> <span class=y>end</span>
+    <span class=y>end</span><br>
+    <span class=y>fn</span> relax(<span class=g>int</span> i)<span class=b>:</span>
+        i <span class=b>=</span> centroid(i)<span class=b>;</span><br>
+        vis[i] <span class=b>=</span> <span class=y>1</span><span class=b>;</span><br>
+        <span class=y>if</span>(count(i, <span class=y>-</span><span class=y>1</span>) <span class=b>&gt;</span><span class=b>=</span> k)
+            <span class=g>int</span> j<span class=b>;</span>
+            <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span><span class=b>=</span>k<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) final[j] <span class=b>=</span> <span class=y>0</span> <span class=y>end</span><br>
+<span class=r>            // for all subtrees 'connected' to i, process depths</span>
+            <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span>adj[i]<span class=b>.</span>sz<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) <span class=y>if</span>(<span class=b>!</span>vis[nxt])
+                maxd <span class=b>=</span> <span class=y>0</span><span class=b>;</span><br>
+                depths(nxt, i, <span class=y>1</span>)<span class=b>;</span><br>
+<span class=r>                // do some PIE stuff to avoid overcount (path from</span>
+<span class=r>                // node x of depth 3 to node y of depth 2 won't result</span>
+<span class=r>                // in path of length 5 if x,y in same subtree etc</span><br>
+                <span class=g>int</span> l<span class=b>;</span>
+                <span class=y>for</span>(l<span class=b>=</span><span class=y>0</span><span class=b>;</span> l<span class=b>&lt;</span><span class=b>=</span>maxd<span class=b>;</span> <span class=b>+</span><span class=b>+</span>l)
+                    <span class=y>if</span>(l<span class=b>+</span>l<span class=b>&gt;</span>k) <span class=y>break</span> <span class=y>end</span>
+                    res <span class=b>=</span> res <span class=b>-</span> build[l]<span class=b>*</span>build[k<span class=b>-</span>l] <span class=b>*</span> (<span class=y>1</span> <span class=b>+</span> (l<span class=b>+</span>l<span class=b>!</span><span class=b>=</span>k))
+                <span class=y>end</span><br>
+                <span class=y>for</span>(l<span class=b>=</span><span class=y>0</span><span class=b>;</span> l<span class=b>&lt;</span><span class=b>=</span>maxd<span class=b>;</span> <span class=b>+</span><span class=b>+</span>l)
+                    final[l] <span class=b>=</span> final[l] <span class=b>+</span> build[l]<span class=b>;</span>
+                    build[l] <span class=b>=</span> <span class=y>0</span><span class=b>;</span>
+                <span class=y>end</span>
+            <span class=y>end</span> <span class=y>end</span><br>
+            <span class=b>+</span><span class=b>+</span>final[<span class=y>0</span>]<span class=b>;</span><br>
+<span class=r>            // the rest of the PIE stuff</span>
+            <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>+</span>j<span class=b>&lt;</span><span class=b>=</span>k<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j)
+                res <span class=b>=</span> res <span class=b>+</span> final[j]<span class=b>*</span>final[k<span class=b>-</span>j] <span class=b>*</span> (<span class=y>1</span> <span class=b>+</span> (j<span class=b>+</span>j<span class=b>!</span><span class=b>=</span>k))
+            <span class=y>end</span><br>
+            <span class=y>for</span>(j<span class=b>=</span><span class=y>0</span><span class=b>;</span> j<span class=b>&lt;</span>adj[i]<span class=b>.</span>sz<span class=b>;</span> <span class=b>+</span><span class=b>+</span>j) <span class=y>if</span>(<span class=b>!</span>vis[nxt])
+                relax(nxt)<span class=b>;</span>
+            <span class=y>end</span> <span class=y>end</span>
+        <span class=y>end</span>
+    <span class=y>end</span><br>
+<span class=y>fn</span> <span class=g>inline</span> main<span class=b>:</span>
+    <span class=b>@poll</span> n k<span class=b>;</span><br>
+    <span class=y>for</span>(i<span class=b>=</span><span class=y>1</span><span class=b>;</span> i<span class=b>&lt;</span>n<span class=b>;</span> <span class=b>+</span><span class=b>+</span>i)
+        <span class=b>@m</span> <span class=g>int</span> a, b<span class=b>;</span> <span class=b>@poll</span> a b<span class=b>;</span>
+        adj[a<span class=y>-</span><span class=y>1</span>]<span class=b>:</span>push(b<span class=y>-</span><span class=y>1</span>)<span class=b>;</span>
+        adj[b<span class=y>-</span><span class=y>1</span>]<span class=b>:</span>push(a<span class=y>-</span><span class=y>1</span>)<span class=b>;</span>
+    <span class=y>end</span><br>
+    relax(<span class=y>0</span>)<span class=b>;</span><br>
+    <span class=b>@fmt</span> res<span class=b>/</span><span class=y>2</span><span class=b>;</span>
+<span class=y>end</span>
+</pre>
+<p>kinda clean I hope?</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/cses/index.html">cses</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
