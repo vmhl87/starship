@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="45_atcoder-beginner.html">Atcoder Beginner Contest 374</a>
+    <div class="post-title-date">Oct&nbsp;5&nbsp;2024<br>10:27&nbsp;AM</div>
+</div>
+<p>Woke up 10 min before contest, slow start but
+wow.. good contest I think</p>
+
+<p>A, B trivial, B was literally a 1:1 of strcmp I wrote
+a little while ago for C*</p>
+<p>C definition bitmask dp</p>
+<p>D bruteforce permutation, pretty easy, extra 2^n factor
+b/c segments can be reversed...</p>
+<p>E was fun. General idea: binary search over answer, write
+something to validate whether some W is reachable. Validation
+was the hard part, tried dumb linear search for some reason
+and got TLE, then tried to binary/ternary search, but func
+wasn't convex, so that didn't work either.</p>
+<p>Then I realized - the func was sorta overall convex, but
+had variance at small scale. Basically: for some two
+machines X and Y, where X is overall more efficient than Y,
+it is never optimal to have more than 100 machines of type Y.
+This is because: if machine X can produce U products, and
+machine Y can produce V products, then U machines of type Y
+can be exchanged for V machines of type X, and since U, V are
+bounded by 100, this holds.</p>
+<p>So this ended up being basically just a constant factor
+and ended up with a runtime of 2ms. lmao O(log 1e7 * 100 * 100) ftw</p>
+<p>F also very fun. I decided to just try the obvious DP of
+{for each shipment i, group it with 0..k-1 of the next few
+shipments}. Because of the delay between adjacent shipments
+this was slightly questionable, but I assumed that each index
+i would be given a non large number of different input timings,
+and yoloed it. 20 min later and a really cursed std::map memo
+got AC.</p>
+<p>G looked interesting, decompose into directed graph, then
+find min path cover? I figured that probably collapsing all
+cycles and then processing the resultant DAG would be easier,
+probably something about assigning each node a depth and then
+counting max nodes on same depth over all components. No time
+to implement but apparently this was sort of correct.</p>
+<p>Overall really good though? I think I got lucky, my guesses
+ended up being not too far off, and the problem types were ones
+that I am pretty familiar with. Can't complain :D</p>
+<p>anyway, ucuping later today w/ jasonwei, will probably work
+on upsolving in afternoon. math circle tomorrow around noon,
+then arc in afternoon, maybe more upsolve after that. will have
+to burn through hw early morning I guess..</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/atcoder/index.html">atcoder</a> <a href="../content/contest-logs/index.html">contest-logs</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
