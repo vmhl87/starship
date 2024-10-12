@@ -1,0 +1,30 @@
+<!--
+    :title Atcoder Beginner Contest 375
+	:date Oct 12 2024<br>10:06 AM
+    :tag programming atcoder contest-logs
+-->
+<p>I should put more effort into these surely[[ENDSUM]]</p>
+<ul>
+    <li>A: trivial</li>
+    <li>B: trivial</li>
+    <li>C: trivial (altho somewhat annoying)</li><br>
+    <li>D: state machine thing; track # of X, XY, then for each character
+        i of string, update i, Xi, and find number of iY (which turn into iYi)</li><br>
+    <li>E: no idea how to handle the 'move min # of people' part</li><br>
+    <li>F: bruteforce clearly doesn't work, idk speedup</li><br>
+    <li>G: pretty nice by dijkstra:<br><br>
+        observe that for an edge to result in two different values, it must
+        be part of all optimal-length paths. by dijkstra, we can find distance
+        from node 1 to all nodes. notice that we can then determine all optimal
+        paths in an efficient manner:<br><br>
+        the union of all optimal paths must form a DAG. we can reconstruct this
+        graph by inductively selecting some node <b>i</b> that we know to be on
+        the DAG, and then finding all edges <b>j -> i</b> such that <b>dist(1 -> j)
+            + dist(j -> i) == dist(1 -> i)</b>, where <b>dist(a -> b)</b> denotes
+        the shortest path length between <b>a, b</b>.<br><br>
+        setting our base case to be <b>i = n</b>, this suffices to reconstruct
+        the optimum-path DAG. then notice that for an edge to be present in all
+        optimal paths, it must be a bridge in the DAG; we can find these edges
+        by using another dijkstra pass (or dfs).</li>
+</ul>
+<p>gonna take ARC tomorrow I think</p>
