@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="47_arc-is-scary.html">ARC is scary</a>
+    <div class="post-title-date">Oct&nbsp;13&nbsp;2024<br>1:44&nbsp;PM</div>
+</div>
+<p>Took Atcoder Regular Contest 185 this morning. I had
+done one ARC virtual in the past, but that one had relatively
+more 'normal' questions than today's contest. I think it went
+alright? I don't really have a sense of scale with ARC yet.</p>
+
+<ul>
+    <li>A: The key observation was: for Bob to
+        win, he must create a configuration such that any of Alice's
+        moves result in divisibility by M. It can be shown that as
+        long as Alice has two or more possible moves, such a config
+        cannot be forced. Therefore, Bob must create a configuration
+        such that both Bob and Alice are on their last turn, and
+        Alice's last piece will create divisibility by M.<br><br>
+        This reduces the problem to: determine if Bob has some piece
+        <i>i</i> such that the sum of all of his other pieces, and
+        all of Alice's pieces is divisible by M.</li><br>
+    <li>B: Messed around with tons of configurations until I found
+        one that worked. Ended with 4 WA...</li><br>
+    <li>C: I tried to turn this into some sort of graph problem:<br><br>
+        First, sort the array of numbers. Then, consider the set of
+        all pairs 1 &lt;= i &lt; j &lt;= n, which form a graph: two
+        pairs are connected by an edge if either their <i>i</i> or
+        <i>j</i> differ by 1 (but not both). Also, define the "cost"
+        of a pair to be the sum a[i] + a[j].<br><br>
+        It can be shown that with a dijkstra-like algorithm, the pairs
+        can be processed <i>in order of increasing cost</i>. This I
+        tried to use to extract all pairs of indices whose costs were
+        bounded by <i>x</i>. For each of these pairs, binary search
+        can be used to find if their missing element exists.<br><br>
+        However, this got WA. If anything, I would have expected TLE,
+        because the bound on # of relevant pairs isn't linear, but idk.</li><br>
+    <li>D: Decomposes into EV of fully traversing a star graph with
+        arms of length <i>m</i>. This corresponds essentially to
+        visiting all of the ends of the arms, but I didn't know how
+        to compute.</li><br>
+    <li>E: By some pretty trivial DP there is an n^2 solution.
+        Couldn't find a speedup; apparently this is a 'standard'
+        configuration in chn..</li>
+</ul>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/atcoder/index.html">atcoder</a> <a href="../content/contest-logs/index.html">contest-logs</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
