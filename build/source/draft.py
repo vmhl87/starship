@@ -95,12 +95,13 @@ def draft(content, pageid):
     <div class="post-title-date">{form_date}</div>
 </div>\n""" + full
 
-    if len(tags) != 0:
+    if len(tags) != ("hidden" in tags):
         summary += "<p class=\"tag-container\">tags: "
         full += "<p class=\"tag-container\">tags: "
         for tag in tags:
-            summary += f"<a href=\"../{tag}/index.html\">{tag}</a> "
-            full += f"<a href=\"../content/{tag}/index.html\">{tag}</a> "
+            if tag != "hidden":
+                summary += f"<a href=\"../{tag}/index.html\">{tag}</a> "
+                full += f"<a href=\"../content/{tag}/index.html\">{tag}</a> "
         summary += "</p>"
         full += "</p>"
 
