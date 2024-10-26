@@ -1,0 +1,62 @@
+<!--
+    :title fun trie problem
+	:date Oct 26 2024<br>10:27 AM
+    :tag programming atcoder contest-logs
+-->
+<p>This problem is from <a href="https://atcoder.jp/contests/abc377" target=_blank>today's atcoder beginner contest</a></p>
+<p class=quote-nocenter>
+You are given a list A of lowercase English strings.<br>
+For each string S in A, solve the following problem:<br><br>
+You can perform two operations to S:<br><br>
+- Delete the last character of S (if it is non-empty)<br>
+- Add any lowercase character to the end of S<br><br>
+Find the minimum number of operations to convert S into
+either the empty string or a string that comes before it in A.
+</p>
+<p>This kind of screams trie[[ENDSUM]]:</p>
+<p>The conversion cost between two strings is essentially equal
+to the sum of their lengths, minus their prefix overlap (times
+two). So, for each string, use some sort of datastructure to
+match prefixes with the strings that come before them, and find
+which of these strings have the minimal length, etc.</p>
+<p>Trie is perfect for this because we can, while iterating through
+the list of input strings, mantain a trie of all processed strings.
+Then we can traverse this trie to see how much of the currently
+processing string matches the previous strings.</p>
+<p>And, if we encode in each trie node the minimum length string
+that is "encompassed" by that node, we can for each prefix of the
+current string see the optimal cost when "stopping" at that prefix.</p>
+<p>I had never used trie before so this implementation was somewhat
+improvised, but it works!</p>
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;string&gt;</span><br>
+<span class=g>struct</span> <span class=b>trie</span>{
+    <span class=g>int</span> minlen = <span class=y>0</span>;
+    trie *next<span class=b>[</span><span class=y>26</span><span class=b>]</span> = {};
+};<br>
+trie root;<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;<br>
+    <span class=y>while</span>(n--){
+        std::string s; std::cin &gt;&gt; s;<br>
+        trie *now = &amp;root;<br>
+<span class=r>        // matches root -&gt; traverse along until no avail</span>
+        <span class=g>int</span> i, best = s.<span class=b>length</span>();
+        <span class=y>for</span>(i=<span class=y>0</span>; i&lt;s.<span class=b>length</span>(); ++i){
+            <span class=y>if</span>(now -&gt; next<span class=b>[</span>s<span class=b>[</span>i<span class=b>]</span>-<span class=y>'a'</span><span class=b>]</span> != <span class=y>0</span>){
+                now = now -&gt; next<span class=b>[</span>s<span class=b>[</span>i<span class=b>]</span>-<span class=y>'a'</span><span class=b>]</span>;
+                best = std::<span class=b>min</span>(best, (<span class=g>int</span>)s.<span class=b>length</span>() - i + (now -&gt; minlen) - i - <span class=y>2</span>);
+                now -&gt; minlen = std::<span class=b>min</span>(now -&gt; minlen, (<span class=g>int</span>)s.<span class=b>length</span>());
+            }<span class=y>else</span> <span class=y>break</span>;
+        }<br>
+        std::cout &lt;&lt; best &lt;&lt; <span class=y>'\n'</span>;<br>
+<span class=r>        // build up trie</span>
+        <span class=y>for</span>(; i&lt;s.<span class=b>length</span>(); ++i){
+            now -&gt; next<span class=b>[</span>s<span class=b>[</span>i<span class=b>]</span>-<span class=y>'a'</span><span class=b>]</span> = new trie;
+            now = now -&gt; next<span class=b>[</span>s<span class=b>[</span>i<span class=b>]</span>-<span class=y>'a'</span><span class=b>]</span>;
+            now -&gt; minlen = s.<span class=b>length</span>();
+        }
+    }
+}
+</pre>
