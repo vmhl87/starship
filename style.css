@@ -297,6 +297,7 @@ pre.code-color > span.r {
 
 p.quote {
 	background-color: #151515;
+	width: fit-content;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
@@ -305,10 +306,29 @@ p.quote {
 
 p.quote-nocenter {
 	background-color: #151515;
+	width: fit-content;
 	padding: 15px;
 }
 
 pre.quote {
 	background-color: #151515;
+	width: fit-content;
 	padding: 15px;
+}
+
+/* encryption */
+
+p.protection-notice {
+	background-color: #151515;
+	width: fit-content;
+	font-size: 12px;
+	padding: 10px;
+}
+
+div.protected-content {
+    overflow-wrap: break-word;
+	word-wrap: break-word;
+    white-space: normal;
+	font-style: italic;
+	color: gray;
 }
