@@ -60,7 +60,7 @@ function decrypt_challenge() {
 	floatingBox.style.top = '50%';
 	floatingBox.style.left = '50%';
 	floatingBox.style.transform = 'translate(-50%, -50%)';
-	floatingBox.style.padding = '20px';
+	floatingBox.style.padding = '10px';
 	floatingBox.style.backgroundColor = '#404040';
 	floatingBox.style.zIndex = '1000';
 

@@ -332,3 +332,7 @@ div.protected-content {
 	font-style: italic;
 	color: gray;
 }
+
+div.unprotected-content {
+	color: #C08570;
+}
