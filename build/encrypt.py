@@ -108,7 +108,7 @@ else:
 
     w.write(ciph)
 
-    w.write("</div>\n")
+    w.write("</div></div>\n")
 
     w.close()
 

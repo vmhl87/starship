@@ -4,46 +4,40 @@ function decrypt(ciphertext, k) {
 	return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-function trypass(key) {
-	let work = {val: 1};
+function trypass(key, root) {
+	work = {val: true};
 
 	const decr_recursive = (element, key, work) => {
 		if(element.nodeType === Node.ELEMENT_NODE) {
 			element.childNodes.forEach(child => {
-				decr_recursive(child, key, work);
-				if(!work.val) return;
+				if(work.val) decr_recursive(child, key, work);
 			});
 
 			if(element.childNodes.length == 1) {
 				try{
 					const decrypted = decrypt(element.textContent, key);
 					if(decrypted.length == 0) {
-						work.val = 0;
+						work.val = false;
 					}else{
 						element.textContent = decrypted;
 					}
-				}catch(e){}
+				}catch(e){
+					work.val = false;
+				}
 			}
 		}
 	}
 
-	const enchblocks = document.querySelectorAll('.protected-content');
-	enchblocks.forEach(element => {
-		decr_recursive(element, key, work);
-	});
+	decr_recursive(root.childNodes[3], key, work);
 
 	if(work.val) {
-		enchblocks.forEach(element => {
-			element.classList.remove('protected-content');
-			element.classList.add('unprotected-content');
-		});
-
-		const protnotice = document.querySelectorAll('.protection-notice');
-		protnotice.forEach(element => { element.remove(); });
+		root.childNodes[3].classList.remove('protected-content');
+		root.childNodes[3].classList.add('unprotected-content');
+		root.childNodes[1].remove();
 	}
 };
 
-function decrypt_challenge() {
+function decrypt_challenge(elem) {
 	const overlay = document.createElement('div');
 	overlay.style.position = 'fixed';
 	overlay.style.top = '0';
@@ -80,7 +74,7 @@ function decrypt_challenge() {
 	const submitPassword = () => {
 		document.body.removeChild(floatingBox);
 		document.body.removeChild(overlay);
-		trypass(passwordInput.value);
+		trypass(passwordInput.value, elem.parentNode.parentNode);
 	};
 
 	const confirmButton = document.createElement('button');
