@@ -1,0 +1,86 @@
+<!--
+    :title Tarjan's algorithm is cool
+	:date Nov 1 2024<br>2:17 PM
+    :tag programming
+-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="/starship/assets/decrypt.js"></script>
+<div>
+    <p class=protection-notice>
+        This post is protected by encryption. <a href="javascript:void(0)" onclick="decrypt_challenge(this)">Unlock</a>
+    </p>
+    <div class=protected-content>
+<p><i>FGouHpgtkAaTc9eSWB9Xvn15fzXBEmeVHeC0Mlz2IaFSMFfFsaH44HGO5Gc+9hWC1s+EGgxJhH/Wi6IhNQFRZA==</i></p>
+<p><i>1BBb+QMvnTIAzvw5Uld43lx8rkKTzR+WW8bgIUJN+L0=</i></p></div></div>
+
+<p>Solved <a href="https://cses.fi/problemset/task/1686/">CSES Coin Collector</a> -
+first time working with SCC!</p>
+
+<p>but ya tarjan is cool :D</p>
+
+[[ENDSUM]]
+
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;vector&gt;</span><br>
+<span class=y>using</span> ll = <span class=g>long</span> <span class=g>long</span>;<br>
+std::vector&lt;<span class=g>int</span>&gt; adj<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;
+<span class=g>int</span> k<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;<br>
+<span class=g>int</span> loc<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, link<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, idx=<span class=y>1</span>;
+std::vector&lt;<span class=g>int</span>&gt; s;
+<span class=g>bool</span> in<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;<br>
+<span class=g>int</span> scc<span class=b>[</span><span class=y>100000</span><span class=b>]</span>, sidx;
+ll sz<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;
+std::vector&lt;<span class=g>int</span>&gt; sdj<span class=b>[</span><span class=y>100000</span><span class=b>]</span>;<br>
+<span class=g>void</span> <span class=b>dfs</span>(<span class=g>int</span> v){
+    loc<span class=b>[</span>v<span class=b>]</span> = idx;
+    link<span class=b>[</span>v<span class=b>]</span> = idx;
+    ++idx;<br>
+    s.push_back(v);
+    in<span class=b>[</span>v<span class=b>]</span> = <span class=y>1</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> x : adj<span class=b>[</span>v<span class=b>]</span>){
+        <span class=y>if</span>(!loc<span class=b>[</span>x<span class=b>]</span>){
+            <span class=b>dfs</span>(x);
+            link<span class=b>[</span>v<span class=b>]</span> = std::<span class=b>min</span>(link<span class=b>[</span>v<span class=b>]</span>, link<span class=b>[</span>x<span class=b>]</span>);
+        }<span class=y>else</span> <span class=y>if</span>(in<span class=b>[</span>x<span class=b>]</span>)
+            link<span class=b>[</span>v<span class=b>]</span> = std::<span class=b>min</span>(link<span class=b>[</span>v<span class=b>]</span>, loc<span class=b>[</span>x<span class=b>]</span>);
+    }<br>
+    <span class=y>if</span>(link<span class=b>[</span>v<span class=b>]</span> == loc<span class=b>[</span>v<span class=b>]</span>){
+        scc<span class=b>[</span>v<span class=b>]</span> = sidx, sz<span class=b>[</span>sidx<span class=b>]</span> += k<span class=b>[</span>v<span class=b>]</span>;
+        <span class=y>while</span>(v != s.<span class=b>back</span>()){
+            scc<span class=b>[</span>s.<span class=b>back</span>()<span class=b>]</span> = sidx;
+            sz<span class=b>[</span>sidx<span class=b>]</span> += k<span class=b>[</span>s.<span class=b>back</span>()<span class=b>]</span>;
+            in<span class=b>[</span>s.<span class=b>back</span>()<span class=b>]</span> = <span class=y>0</span>;
+            s.pop_back();
+        }
+        s.pop_back();
+        in<span class=b>[</span>v<span class=b>]</span> = <span class=y>0</span>;
+        ++sidx;
+    }
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, m; std::cin &gt;&gt; n &gt;&gt; m;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; k<span class=b>[</span>i<span class=b>]</span>;
+    <span class=y>while</span>(m--){
+        <span class=g>int</span> a, b; std::cin &gt;&gt; a &gt;&gt; b;
+        adj<span class=b>[</span>a<span class=y>-</span><span class=y>1</span><span class=b>]</span>.push_back(b<span class=y>-</span><span class=y>1</span>);
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) <span class=y>if</span>(!loc<span class=b>[</span>i<span class=b>]</span>) <span class=b>dfs</span>(i);<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i)
+        <span class=y>for</span>(<span class=g>int</span> x : adj<span class=b>[</span>i<span class=b>]</span>) <span class=y>if</span>(scc<span class=b>[</span>x<span class=b>]</span> != scc<span class=b>[</span>i<span class=b>]</span>)
+            sdj<span class=b>[</span>scc<span class=b>[</span>x<span class=b>]</span><span class=b>]</span>.push_back(scc<span class=b>[</span>i<span class=b>]</span>);<br>
+    <span class=y>for</span>(<span class=g>int</span> i=sidx<span class=y>-</span><span class=y>1</span>; i&gt;=<span class=y>0</span>; --i){
+        ll max = <span class=y>0</span>;
+        <span class=y>for</span>(<span class=g>int</span> x : sdj<span class=b>[</span>i<span class=b>]</span>)
+            max = std::<span class=b>max</span>(max, sz<span class=b>[</span>x<span class=b>]</span>);
+        sz<span class=b>[</span>i<span class=b>]</span> += max;
+    }<br>
+    ll best = <span class=y>0</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;sidx; ++i)
+        best = std::<span class=b>max</span>(best, sz<span class=b>[</span>i<span class=b>]</span>);<br>
+    std::cout &lt;&lt; best &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+
+<p>(impl is kind of messy but at least i did not use chinese stack)</p>

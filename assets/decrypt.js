@@ -49,7 +49,7 @@ function trypass(key, root) {
 				if(work.val) decr_recursive(child, key, work);
 			});
 
-			if(element.childNodes.length == 1) {
+			if(element.childNodes.length == 1 && element.childNodes[0].childNodes.length == 0) {
 				try{
 					const decrypted = decrypt(element.textContent, key);
 					if(decrypted.length == 0) {
