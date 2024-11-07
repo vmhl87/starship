@@ -122,11 +122,7 @@ else:
 
     w.write(head)
 
-    if sys.argv[1] == "preview":
-        w.write(open("source/decrypt-prev.html").read())
-
-    else:
-        w.write(open("source/decrypt.html").read())
+    w.write(open("source/decrypt.html").read())
 
     w.write(ciph)
 
