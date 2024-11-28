@@ -77,13 +77,13 @@ for i in range(len(tokens)):
         tokens[i-1] = '<br>'
 
 reserved = {
-        'struct': 'g', 'union': 'g', 'enum': 'g', 'static': 'g', 'inline': 'g',
+        'struct': 'g', 'union': 'g', 'enum': 'g', 'namespace': 'g', 'static': 'g', 'inline': 'g',
         'void': 'g', 'const': 'g', 'constexpr': 'g', 'volatile': 'g', 'static': 'g', 'auto': 'g',
         'int': 'g', 'long': 'g', 'float': 'g', 'double': 'g', 'char': 'g', 'bool': 'g', 'size_t': 'g',
         'unsigned': 'g', 'signed': 'g', 'short': 'g',
         'true': 'y', 'false': 'y', 'null': 'y',
-        'malloc': 'y', 'free': 'y', 'assert': 'y', 'using': 'y', 'typedef': 'y',
-        'break': 'y', 'continue': 'y', 'return': 'y', 'goto': 'y',
+        'malloc': 'y', 'free': 'y', 'assert': 'y', 'using': 'y', 'typedef': 'y', 'operator': 'y',
+        'break': 'y', 'continue': 'y', 'return': 'y', 'goto': 'y', 'new': 'y',
         'while': 'y', 'if': 'y', 'for': 'y', 'do': 'y', 'else': 'y', 'switch': 'y', 'case': 'y',
         '[': 'b', ']': 'b'
     }
@@ -136,12 +136,12 @@ def isfunc(i):
     if tokens[i] == ' ': return False
 
     if i == len(tokens)-1: return False
-    if tokens[i+1] == '(': return isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789')
+    if tokens[i+1] == '(': return isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789_')
 
     if tokens[i+1] == ' ':
         if i == len(tokens)-2: return False
         
-        return tokens[i+2] == '(' and isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789')
+        return tokens[i+2] == '(' and isonly(tokens[i], 'abcdefghijklmnopqrstuvwxyz0123456789_')
     
     return False
 
