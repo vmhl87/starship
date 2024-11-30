@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="69_floydwarshall-ar.html">Floyd-Warshall arises naturally from matrix operations</a>
+    <div class="post-title-date">Nov&nbsp;30&nbsp;2024<br>12:31&nbsp;PM</div>
+</div>
+<p>Recall that the Floyd-Warshall algorithm computes shortest paths between every
+pair of nodes. It does so by repeatedly "combining" paths into longer ones:
+Given three distinct nodes <b>a</b>, <b>b</b>, <b>c</b> form the new path <b>a -> c</b>
+from the two paths <b>a -> b</b>, <b>b -> c</b> and check if it is an improvement.</p>
+<p>How does this "arise" from matrix exponentiation?</p>
+<br>
+<p>Consider the following task:</p>
+<p class=quote-nocenter>
+A directed graph <b>G</b> consists of <b>N</b> nodes and <b>E</b> edges.
+Compute the number of (not necessarily simple) paths of length <b>K</b>
+between nodes <b>1</b> and <b>N</b> mod <b>10^9 + 7</b>.<br><br>
+Constraints:<br>
+<b>1</b> &lt;= <b>N</b> &lt; <b>100</b><br>
+<b>1</b> &lt;= <b>E</b> &lt; <b>n(n+1)</b><br>
+<b>1</b> &lt;= <b>K</b> &lt; <b>10^9</b>
+</p>
+<p>This is a very standard problem. By exponentiating the adjacency matrix (<b>A[i][j]</b>
+= <b>1</b> if there is an edge <b>i -> j</b> otherwise <b>0</b>) k times, we obtain a matrix
+<b>B[i][j]</b> = # of paths of length <b>K</b> from node <b>i</b> to node <b>j</b>.</p>
+<p>We can prove this inductively: Denote the matrix of K-length paths to be <b>M^K</b>. Our
+base case, <b>M^1</b>, is trivially identical to the adjacency matrix. To prove the transition
+step <b>M^a * M^b</b> = <b>M^a+b</b>, consider splitting the matrices into their respective elements:</p>
+<p>The multiplication holds if <b>M^a+b[i][j]</b> = <b>sum(M^a[i][k] * M^b[k][j])</b> for all <b>k</b>.
+This states that the number of paths in <b>G</b> of length <b>a+b</b> from <b>i -> j</b> is equal to
+the number of ways to pick a path of length <b>a</b> from <b>i -> k</b>, and a path of length <b>b</b>
+from <b>k -> j</b>. It makes sense why these two quantities are equal: Every length-<b>a+b</b> path
+can be unqiuely constructed in this manner (i.e. there is a bijection).</p>
+<p>Observe that the path-joining process implicitly used here is similar to floyd-warshall.</p>
+<br>
+<p>What if, instead of computing # of paths of specific length, we are tasked with finding
+(in a weighted directed graph) the <i>shortest</i> path <b>1 -> N</b> with <b>K</b> nodes?</p>
+<p>We can still build a family of "transition matrices" <b>M^x[i][j]</b> = shortest path
+<b>i -> j</b> with <b>X</b> nodes, though moving from one to the next won't be as simple
+as multiplication.</p>
+<p>Consider each entry of the matrix. <b>M^a+b[i][j]</b> can be constructed from some
+combination of entries in <b>M^a</b> and <b>M^b</b> using the same bijection (each path
+with <b>a+b</b> nodes maps to a unique pair of paths with <b>a</b>, <b>b</b> nodes):
+<b>M^a+b[i][j]</b> = minimum value of <b>M^a[i][k]</b> + <b>M^b[k][j]</b> over all <b>k</b>.</p>
+<p>We end up with an algorithm which resembles Floyd-Warshall.</p>
+<br>
+<p>I came across this while (finally) solving the
+<a href="https://cses.fi/problemset/task/1723">two CSES graph</a>
+<a href="https://cses.fi/problemset/task/1724">mat expo problems</a>
+today - my Graph Paths II code ended up looking like this:</p>
+<pre class=code-color>
+<span class=y>using</span> mat = std::array&lt;std::array&lt;ll, <span class=y>100</span>&gt;, <span class=y>100</span>&gt;;<br>
+mat <span class=b>mul</span>(mat a, mat b){
+    mat res = {};<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j)
+            res<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>2e18</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;n; ++j)
+            <span class=y>for</span>(<span class=g>int</span> k=<span class=y>0</span>; k&lt;n; ++k)
+                res<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = std::<span class=b>min</span>(res<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>,
+                        a<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>k<span class=b>]</span>+b<span class=b>[</span>k<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>);<br>
+    <span class=y>return</span> res;
+}
+</pre>
+<p>of which the triple nested loop looked <i>incredibly</i> familiar...</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
