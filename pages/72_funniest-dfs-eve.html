@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="72_funniest-dfs-eve.html">Funniest DFS ever</a>
+    <div class="post-title-date">Dec&nbsp;27&nbsp;2024<br>11:41&nbsp;AM</div>
+</div>
+<p>Continuation of my <a href="https://vmhl87.github.io/starship/pages/71_a-funny-patternm.html" target=_blank>
+    previous post about pattern-matching</a>.</p>
+<p>Previously, I explained how to use a depth-first-search of a trie to compute pattern-matchings
+in a set of strings. However, explicit trie used too much memory for the specific task I was trying
+to apply it on. (64 megabyte limit)</p>
+<p>So I took some advice from <b>Alternet</b> and made the trie implicit - rather than even storing
+intermediate nodes, the entropy of the strings being stored in the trie was low enough that storing
+each query individually and sorting it took up less memory than a trie. Then this sorted array could
+be "dfsed" with divide-and-conquer.</p>
+
+<pre class=code-color>
+<span class=y>#include</span> <span class=b>&lt;algorithm&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span><br>
+<span class=g>int</span> *a<span class=b>[</span><span class=y>21</span><span class=b>]</span>, d<span class=b>[</span><span class=y>1</span>&lt;&lt;<span class=y>21</span><span class=b>]</span>;<br>
+<span class=y>using</span> ll = <span class=g>long</span> <span class=g>long</span>;
+<span class=g>const</span> ll X = (<span class=y>1</span>&lt;&lt;<span class=y>22</span>) - <span class=y>1</span>;<br>
+<span class=g>int</span> res<span class=b>[</span><span class=y>1000000</span><span class=b>]</span>;
+ll b<span class=b>[</span><span class=y>1000000</span><span class=b>]</span>;<br>
+<span class=g>void</span> <span class=b>dfs</span>(<span class=g>int</span> l, <span class=g>int</span> r, <span class=g>int</span> d, <span class=g>int</span> s){
+    <span class=y>if</span>(!s)
+        <span class=y>for</span>(; l&lt;r; ++l) res<span class=b>[</span>b<span class=b>[</span>l<span class=b>]</span> &amp; X<span class=b>]</span> = a<span class=b>[</span>d<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span>;<br>
+    <span class=y>else</span>{
+        <span class=g>int</span> s1 = r, s2 = r;<br>
+        <span class=y>for</span>(<span class=g>int</span> i=r<span class=y>-</span><span class=y>1</span>; i&gt;=l; --i){
+            <span class=y>if</span>(((b<span class=b>[</span>i<span class=b>]</span> &gt;&gt; (<span class=y>60</span>-d*<span class=y>2</span>)) &amp; <span class=y>3</span>) == <span class=y>2</span>) s2 = s1 = i;
+            <span class=y>if</span>(((b<span class=b>[</span>i<span class=b>]</span> &gt;&gt; (<span class=y>60</span>-d*<span class=y>2</span>)) &amp; <span class=y>3</span>) == <span class=y>1</span>) s1 = i;
+        }<br>
+        <span class=y>if</span>(l != s1){
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;s; ++i)
+                a<span class=b>[</span>d+<span class=y>1</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = a<span class=b>[</span>d<span class=b>]</span><span class=b>[</span>i<span class=b>]</span>;
+            <span class=b>dfs</span>(l, s1, d+<span class=y>1</span>, s/<span class=y>2</span>);
+        }<br>
+        <span class=y>if</span>(s1 != s2){
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;s; ++i)
+                a<span class=b>[</span>d+<span class=y>1</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = a<span class=b>[</span>d<span class=b>]</span><span class=b>[</span>i+s<span class=b>]</span>;
+            <span class=b>dfs</span>(s1, s2, d+<span class=y>1</span>, s/<span class=y>2</span>);
+        }<br>
+        <span class=y>if</span>(s2 != r){
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;s; ++i)
+                a<span class=b>[</span>d+<span class=y>1</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = a<span class=b>[</span>d<span class=b>]</span><span class=b>[</span>i<span class=b>]</span> + a<span class=b>[</span>d<span class=b>]</span><span class=b>[</span>i+s<span class=b>]</span>;
+            <span class=b>dfs</span>(s2, r, d+<span class=y>1</span>, s/<span class=y>2</span>);
+        }
+    }
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    std::cin.<span class=b>tie</span>(<span class=y>0</span>) -&gt; <span class=b>sync_with_stdio</span>(<span class=y>0</span>);<br>
+    <span class=g>int</span> l, q; std::cin &gt;&gt; l &gt;&gt; q;<br>
+    a<span class=b>[</span><span class=y>0</span><span class=b>]</span> = d;
+    <span class=y>for</span>(<span class=g>int</span> s=<span class=y>1</span>&lt;&lt;l, p=<span class=y>1</span>; s; ++p, s/=<span class=y>2</span>)
+        a<span class=b>[</span>p<span class=b>]</span> = a<span class=b>[</span>p<span class=y>-</span><span class=y>1</span><span class=b>]</span>+s;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>1</span>&lt;&lt;l; ++i){
+        <span class=g>char</span> c; std::cin &gt;&gt; c;
+        a<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = c-<span class=y>'0'</span>;
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;q; ++i){
+        b<span class=b>[</span>i<span class=b>]</span> |= i;
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;l; ++j){
+            <span class=g>char</span> c; std::cin &gt;&gt; c;
+            ll m = c == <span class=y>'?'</span> ? <span class=y>2</span> : c - <span class=y>'0'</span>;
+            b<span class=b>[</span>i<span class=b>]</span> |= m &lt;&lt; (<span class=y>60</span>-j*<span class=y>2</span>);
+        }
+    }<br>
+    std::<span class=b>sort</span>(b, b+q);<br>
+    <span class=b>dfs</span>(<span class=y>0</span>, q, <span class=y>0</span>, <span class=y>1</span>&lt;&lt;(l<span class=y>-</span><span class=y>1</span>));<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;q; ++i) std::cout &lt;&lt; res<span class=b>[</span>i<span class=b>]</span> &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>This entire implementation is incredibly messy due to my attempts to memory-optimize my old
+trie code. Here's a simplified version of <b>dfs</b>:</p>
+<pre class=code-color>
+dfs(left boundary, right boundary, depth, segment size) -&gt;
+    if we are at a leaf:
+        the smallest 'leaf array' now is of size 1, and its only element
+            is the sum of all matching leaves so far.<br>
+        for every query between left and right boundary, set answer to
+            the value of this one element.<br>
+    else:
+        find the indices s1, s2 that partition the range l..r into
+            the three ranges l..s1, s1..s2, s2..r whose corresponding
+            sequences start with 0, 1, and ?.<br>
+        if the range l..s1 is not empty:
+            populate the next 'leaf array' with the first half of the
+                current one<br>
+            dfs(l, s1, depth+1, segment size/2)<br>
+        if the range s1..s2 is not empty:
+            do the same as above, but the take the second half of the
+                leaf array<br>
+        if the range s2..r is not empty:
+            do the same, but add together the two halves
+</pre>
+<p>So this DFS is not really a DFS. It's a divide-and-conquer traversal of
+an implicit trie, which handles the <i>bottom-up</i> traversal of a full
+binary tree.. good stuff.</p>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

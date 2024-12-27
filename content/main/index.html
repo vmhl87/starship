@@ -36,6 +36,24 @@
 <div class="post-spacer"></div>
 <div class="post"><div class="content">
 <div class="post-title">
+    <a class="post-title-name" href="../../pages/72_funniest-dfs-eve.html">Funniest DFS ever</a>
+    <div class="post-title-date">Dec&nbsp;27&nbsp;2024<br>11:41&nbsp;AM</div>
+</div>
+<p>Continuation of my <a href="https://vmhl87.github.io/starship/pages/71_a-funny-patternm.html" target=_blank>
+    previous post about pattern-matching</a>.</p>
+<p>Previously, I explained how to use a depth-first-search of a trie to compute pattern-matchings
+in a set of strings. However, explicit trie used too much memory for the specific task I was trying
+to apply it on. (64 megabyte limit)</p>
+<p>So I took some advice from <b>Alternet</b> and made the trie implicit - rather than even storing
+intermediate nodes, the entropy of the strings being stored in the trie was low enough that storing
+each query individually and sorting it took up less memory than a trie. Then this sorted array could
+be "dfsed" with divide-and-conquer.</p>
+...
+<p><a class="readmore" href="../../pages/72_funniest-dfs-eve.html">read more</a></p>
+<p class="tag-container">tags: <a href="../programming/index.html">programming</a> </p></div></div>
+<div class="post-spacer"></div>
+<div class="post"><div class="content">
+<div class="post-title">
     <a class="post-title-name" href="../../pages/71_a-funny-patternm.html">A funny pattern-matching technique</a>
     <div class="post-title-date">Dec&nbsp;26&nbsp;2024<br>11:19&nbsp;PM</div>
 </div>
