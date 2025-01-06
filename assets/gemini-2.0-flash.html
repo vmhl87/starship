@@ -34,8 +34,8 @@
             "user"===r.role?
                 e+=`<div><p><b>You</b><br>${clean(r.parts[0].text).replaceAll("\n","<br>")}</p></div>`:
                 //"model"===r.role&&(e+=`<div><p><b>Gemini</b><br><pre><i>${clean(r.parts[0].text).replaceAll("\n","<br>")}</i></pre></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[1].text))}</span></div>`);
-                "model"===r.role&&(e+=`<div><p><b>Gemini</b><br></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[1].text))}</span></div>`);
-                    return e
+                "model"===r.role&&(e+=`<div><p><b>Gemini</b><br></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[0].text))}</span></div>`);
+        return e;
     }
     async function run(){
         let e=document.getElementById("prompt").value;
