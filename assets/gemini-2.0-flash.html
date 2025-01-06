@@ -21,8 +21,6 @@
     async function getGeminiResponse(t){
             try{
                     const result = await chatSession.sendMessage(t);
-                    console.log(result);
-                    console.log(result.response);
                     return result.response;
                 }catch(r){return console.error("Error fetching data:",r),null;}
         }
