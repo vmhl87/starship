@@ -29,14 +29,30 @@
     getGeminiResponse("hello world");
     function clean(t){return t.replaceAll("<","&lt;").replaceAll(">","&gt;")}
     function simpleMarkdownFormatter(t){if("string"!=typeof t)return"";let e=t;return(e=(e=(e=e.replace(/\n/g,"<br>")).split("<br>").map(t=>{let e=t.match(/^(\s*)/)[1];if(t.trimStart().startsWith("* ")){let r;return`<span style="white-space:pre-wrap;word-wrap:break-word;">${e.replace(/ /g," ")}- ${t.trimStart().substring(2)}</span>`}return t}).join("<br>")).replace(/\*\*(.*?)\*\*/g,"<b>$1</b>")).replace(/\*(.*?)\*/g,"<i>$1</i>")}
-    function generateChatHTML(t){let e="";for(let r of t)"user"===r.role?e+=`<div><p><b>You</b><br>${clean(r.parts[0].text).replaceAll("\n","<br>")}</p></div>`:"model"===r.role&&(e+=`<div><p><b>Gemini</b><br><pre><i>${clean(r.parts[0].text).replaceAll("\n","<br>")}</i></pre></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[1].text))}</span></div>`);return e}
-        async function run(){
+    function generateChatHTML(t){
+        let e="";
+        for(let r of t)
+            "user"===r.role?
+                e+=`<div><p><b>You</b><br>${clean(r.parts[0].text).replaceAll("\n","<br>")}</p></div>`:
+                //"model"===r.role&&(e+=`<div><p><b>Gemini</b><br><pre><i>${clean(r.parts[0].text).replaceAll("\n","<br>")}</i></pre></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[1].text))}</span></div>`);
+                "model"===r.role&&(e+=`<div><p><b>Gemini</b><br></p><span style="white-space:pre-wrap;word-wrap:break-word;">${simpleMarkdownFormatter(clean(r.parts[1].text))}</span></div>`);
+                    return e
+    }
+    async function run(){
         let e=document.getElementById("prompt").value;
         if(e=="SETKEY"){API_KEY=prompt("enter API key");localStorage.setItem("APIKEY",API_KEY);document.getElementById("prompt").value="";return;}
         else if(e=="ERASE"){chatOutput.innerHTML="";document.getElementById("prompt").value="";return;};
         chatHistory.push({parts:[{text:e}],role:"user"});
         chatOutput.innerHTML=generateChatHTML(chatHistory)
-        try{let r=await getGeminiResponse(e);document.getElementById("prompt").value="";;if(r&&r.candidates&&r.candidates.length>0&&r.candidates[0].content&&r.candidates[0].content.parts){let a=r.candidates[0].content.parts[0].text,n=r.candidates[0].content.parts[1].text;chatHistory.push({parts:[{text:a},{text:n}],role:"model"}),chatOutput.innerHTML=generateChatHTML(chatHistory)}else chatOutput.innerHTML+="<p>Error: Could not retrieve a valid response format. You may not have correctly set your API key. Do so by entering `SETKEY`.</p>"}catch(i){chatOutput.innerHTML+="<p>Error: Could not receive a response from Gemini: "+i+".</p>"}
+        try{
+            let r=await getGeminiResponse(e);
+            document.getElementById("prompt").value="";
+            if(r&&r.candidates&&r.candidates.length>0&&r.candidates[0].content&&r.candidates[0].content.parts){
+                let a=r.candidates[0].content.parts[0].text;
+                //n=r.candidates[0].content.parts[1].text;
+                chatHistory.push({parts:[{text:a}/*,{text:n}*/],role:"model"});
+                chatOutput.innerHTML=generateChatHTML(chatHistory);
+            }else chatOutput.innerHTML+="<p>Error: Could not retrieve a valid response format. You may not have correctly set your API key. Do so by entering `SETKEY`.</p>"}catch(i){chatOutput.innerHTML+="<p>Error: Could not receive a response from Gemini: "+i+".</p>"}
     }
         chatForm.addEventListener("submit",t=>{t.preventDefault();run();});document.getElementById('prompt').addEventListener('keydown',function(event){if(event.key==='Enter'&&event.ctrlKey){event.preventDefault();run();}});
 </script>
