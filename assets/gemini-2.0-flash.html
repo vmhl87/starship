@@ -26,7 +26,6 @@
                     return result.response;
                 }catch(r){return console.error("Error fetching data:",r),null;}
         }
-    getGeminiResponse("hello world");
     function clean(t){return t.replaceAll("<","&lt;").replaceAll(">","&gt;")}
     function simpleMarkdownFormatter(t){if("string"!=typeof t)return"";let e=t;return(e=(e=(e=e.replace(/\n/g,"<br>")).split("<br>").map(t=>{let e=t.match(/^(\s*)/)[1];if(t.trimStart().startsWith("* ")){let r;return`<span style="white-space:pre-wrap;word-wrap:break-word;">${e.replace(/ /g," ")}- ${t.trimStart().substring(2)}</span>`}return t}).join("<br>")).replace(/\*\*(.*?)\*\*/g,"<b>$1</b>")).replace(/\*(.*?)\*/g,"<i>$1</i>")}
     function generateChatHTML(t){
