@@ -43,9 +43,9 @@
         else if(e=="ERASE"){chatOutput.innerHTML="";document.getElementById("prompt").value="";return;};
         chatHistory.push({parts:[{text:e}],role:"user"});
         chatOutput.innerHTML=generateChatHTML(chatHistory)
+        document.getElementById("prompt").value="";
         try{
             let r=await getGeminiResponse(e);
-            document.getElementById("prompt").value="";
             if(r&&r.candidates&&r.candidates.length>0&&r.candidates[0].content&&r.candidates[0].content.parts){
                 let a=r.candidates[0].content.parts[0].text;
                 //n=r.candidates[0].content.parts[1].text;
