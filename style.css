@@ -304,6 +304,14 @@ p.quote {
 	padding: 15px;
 }
 
+p.quote-center {
+	background-color: #151515;
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 15px;
+}
+
 p.quote-nocenter {
 	background-color: #151515;
 	width: fit-content;
