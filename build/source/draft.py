@@ -108,4 +108,4 @@ def draft(content, pageid):
     summary += "</div></div>"
     full += "</div></div>"
 
-    return (tags, summary, full, pubname, re_head+re_tail)
+    return (tags, summary, full, pubname, re_head+re_tail, title)

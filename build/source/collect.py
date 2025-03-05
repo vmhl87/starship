@@ -3,11 +3,15 @@ import os
 
 starship_version = 1.3
 
-def collect(body, index, styleroot):
+def collect(body, index, styleroot, title=None):
     final = ""
 
     template = open("source/template.html")
-    page_title = readfrom("../name.txt")
+    true_page_title = readfrom("../name.txt")
+    page_title = true_page_title
+
+    if title:
+        page_title += f" - {title}"
 
     for line in template:
         final += line
@@ -26,7 +30,7 @@ def collect(body, index, styleroot):
                 final += f"<div id=\"starship\">Powered by Starship v{starship_version}<div id=\"grabber\"><img width=\"14px\" src=\"/starship/assets/fire-emoji.png\"/></div></div>\n"
 
             elif "name" in line:
-                final += f"<a href=\"{index}\">{page_title}</a>\n"
+                final += f"<a href=\"{index}\">{true_page_title}</a>\n"
 
             elif "posts" in line:
                 final += body
