@@ -110,11 +110,16 @@ def draft(content, pageid):
         summary += "</p>"
         full += "</p>"
 
+    final_tags = []
+
     for tag in tags:
         if tag[0] == '!':
-            tag = tag[1:]
+            final_tags.append(tag[1:])
+
+        else:
+            final_tags.append(tag)
 
     summary += "</div></div>"
     full += "</div></div>"
 
-    return (tags, summary, full, pubname, re_head+re_tail, title)
+    return (final_tags, summary, full, pubname, re_head+re_tail, title)
