@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>O(sin(x))
+ - A possibly unusual way to solve CSES Increasing Array Queries</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="83_a-possibly-unusu.html">A possibly unusual way to solve CSES Increasing Array Queries</a>
+    <div class="post-title-date">Mar&nbsp;26&nbsp;2025<br>12:08&nbsp;PM</div>
+</div>
+<p><a href="https://cses.fi/problemset/task/2416/">https://cses.fi/problemset/task/2416/</a></p>
+<p>I had been kinda stuck on this for a while, mostly because I was trying to use some weird segtree bash.</p>
+
+<pre class=code-color>
+<span class=r>// https://cses.fi/problemset/task/2416/</span>
+<span class=r>//</span>
+<span class=r>// I didn't use a segtree, which I think is somewhat unusual.</span>
+<span class=r>//</span>
+<span class=r>// Visualizing the array as a height-graph sort of thing, the "make increasing"</span>
+<span class=r>// operation turned into something similar to leveling off the array, almost as</span>
+<span class=r>// if the height-graph were a basin in which water was being poured:</span>
+<span class=r>//</span>
+<span class=r>//                                   #</span>
+<span class=r>//                                   #     #</span>
+<span class=r>//                                   # #</span><span class=b>---</span><span class=r>#</span>
+<span class=r>//                                 # # # # #</span>
+<span class=r>//                                     &lt;---&gt;</span>
+<span class=r>//                                </span>
+<span class=r>//                                   #</span><span class=b>------</span>
+<span class=r>//                                   #</span><span class=b>-----</span><span class=r>#</span>
+<span class=r>//                                   # #</span><span class=b>---</span><span class=r>#</span>
+<span class=r>//                                 # # # # #</span>
+<span class=r>//                                   &lt;-----&gt;</span>
+<span class=r>// </span>
+<span class=r>// This stuck out to me as looking sort of like monstack: when "filling" these</span>
+<span class=r>// basins, we sort of draw lines moving horizontally to the right of each tower,</span>
+<span class=r>// until they hit another tower (or run off the side). Because this is the same</span>
+<span class=r>// as finding nearest largest neighbor to the right, monstack can do it.</span>
+<span class=r>//</span>
+<span class=r>// Each range query then also breaks down into a sequence of "basins", identified</span>
+<span class=r>// by the "upper hull" of all of the towers in the range, as illustrated:</span>
+<span class=r>//</span>
+<span class=r>//                                                #</span>
+<span class=r>//                                        #</span><span class=b>----</span><span class=r>   #</span>
+<span class=r>//                                    #</span><span class=b>---</span><span class=r>#</span><span class=b>----</span><span class=r>   #</span>
+<span class=r>//                            #       # # #</span><span class=b>----</span><span class=r> # #</span>
+<span class=r>//                            #   #</span><span class=b>---</span><span class=r># # #</span><span class=b>----</span><span class=r> # # #</span>
+<span class=r>//                          # # # # # # # # # # # # # #</span>
+<span class=r>//                                &lt;-----------&gt;</span>
+<span class=r>//</span>
+<span class=r>// This upper hull is the sequence of "prefix maximums" - indices such that there</span>
+<span class=r>// exist no values before them which are of larger value. (This is fairly trivially</span>
+<span class=r>// computed via monstack). Also, computing the "fill amount" of each basin is pretty</span>
+<span class=r>// easy: The "filled basin" becomes a rectangle, whose width is the width of the range,</span>
+<span class=r>// and height is the largest element in the range. Thus, we can compute the fill amt</span>
+<span class=r>// by subtracting the sum of all values in range from the area of the rectangle, which</span>
+<span class=r>// can be done with a prefix sum.</span>
+<span class=r>//</span>
+<span class=r>// In order to implement this process, we can compute the "next largest element" for</span>
+<span class=r>// each index. Then we can show that the upper hull will be identical to the sequence</span>
+<span class=r>//                  {start, next[start], next[next[start]], ...}.</span>
+<span class=r>//</span>
+<span class=r>// Unfortunately, this approach results in O(N) worst-case time complexity. Note that</span>
+<span class=r>// next[x] is always greater than x. Thus, we can construct the tree where each node</span>
+<span class=r>// x's parent is next[x]. Then, each upper hull will be an ascending path along this</span>
+<span class=r>// tree, which we need to find the sum of. This can be done with either binary lifting</span>
+<span class=r>// or euler tour.</span><br>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;vector&gt;</span><br>
+<span class=y>using</span> ll = <span class=g>long</span> <span class=g>long</span>;
+<span class=g>const</span> <span class=g>int</span> maxn = <span class=y>2e5</span>;<br>
+<span class=g>int</span> next<span class=b>[</span><span class=y>18</span><span class=b>]</span><span class=b>[</span>maxn+<span class=y>1</span><span class=b>]</span>, x<span class=b>[</span>maxn<span class=b>]</span>;<br>
+<span class=r>// p is pfx sum, c is cost</span>
+ll p<span class=b>[</span>maxn+<span class=y>1</span><span class=b>]</span>, c<span class=b>[</span><span class=y>18</span><span class=b>]</span><span class=b>[</span>maxn+<span class=y>1</span><span class=b>]</span>;<br>
+<span class=r>// fill amt of a basin from [l, r)</span>
+ll <span class=b>cost</span>(<span class=g>int</span> l, <span class=g>int</span> r){
+    <span class=y>return</span> (ll)x<span class=b>[</span>l<span class=b>]</span>*(r-l) - (p<span class=b>[</span>r<span class=b>]</span>-p<span class=b>[</span>l<span class=b>]</span>);
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    <span class=g>int</span> n, q; std::cin &gt;&gt; n &gt;&gt; q;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) std::cin &gt;&gt; x<span class=b>[</span>i<span class=b>]</span>;<br>
+<span class=r>    // monstack</span><br>
+    std::vector&lt;<span class=g>int</span>&gt; s;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i){
+        <span class=y>while</span>(s.<span class=b>size</span>() &amp;&amp; x<span class=b>[</span>s.<span class=b>back</span>()<span class=b>]</span> &lt; x<span class=b>[</span>i<span class=b>]</span>)
+            next<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>s.<span class=b>back</span>()<span class=b>]</span> = i, s.<span class=b>pop_back</span>();<br>
+        s.<span class=b>push_back</span>(i);
+    }<br>
+    <span class=y>for</span>(<span class=g>int</span> i : s) next<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = n;<br>
+<span class=r>    // binlift</span><br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) p<span class=b>[</span>i+<span class=y>1</span><span class=b>]</span> = p<span class=b>[</span>i<span class=b>]</span> + x<span class=b>[</span>i<span class=b>]</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) c<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = <span class=b>cost</span>(i, next<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span>);<br>
+    next<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>n<span class=b>]</span> = n, c<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>n<span class=b>]</span> = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;<span class=y>18</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;=n; ++j)
+            next<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = next<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>next<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>j<span class=b>]</span><span class=b>]</span>,
+            c<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = c<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>j<span class=b>]</span> + c<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>next<span class=b>[</span>i<span class=y>-</span><span class=y>1</span><span class=b>]</span><span class=b>[</span>j<span class=b>]</span><span class=b>]</span>;<br>
+<span class=r>    // answer queries</span><br>
+    <span class=y>while</span>(q--){
+        <span class=g>int</span> a, b; std::cin &gt;&gt; a &gt;&gt; b, --a;<br>
+        ll res = <span class=y>0</span>;<br>
+<span class=r>        // ascend tree w/ binlift</span>
+        <span class=y>for</span>(<span class=g>int</span> i=<span class=y>17</span>; i&gt;=<span class=y>0</span>; --i)
+            <span class=y>if</span>(next<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>a<span class=b>]</span> &lt; b) res += c<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>a<span class=b>]</span>, a = next<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>a<span class=b>]</span>;<br>
+<span class=r>        // clean up the end</span>
+        <span class=y>if</span>(a != b) res += <span class=b>cost</span>(a, b);<br>
+        std::cout &lt;&lt; res &lt;&lt; <span class=y>'\n'</span>;
+    }
+}
+</pre>
+<p class="tag-container">tags: <a href="../content/programming/index.html">programming</a> <a href="../content/cses/index.html">cses</a> </p></div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
