@@ -1,0 +1,128 @@
+<!--
+    :title Cheesing CSES Cut and Paste with a skiplist
+	:date Mar 27 2025<br>8:16 PM
+    :tag programming cses
+-->
+<p><a href="https://cses.fi/problemset/task/2072/">https://cses.fi/problemset/task/2072/</a></p>
+<p>Treap is the intended solution to this task, but I didn't know treap well enough to write it on the spot. I did however know skiplist (which imo is less complicated) and so I ended up implementing this goofball:</p>
+[[ENDSUM]]
+<pre class=code-color>
+<span class=r>// I used an order-statistic skiplist because I don't know treap</span>
+<span class=r>// not much to say here from an algorithmic standpoint; this is</span>
+<span class=r>// kinda a textbook skiplist operation (implemented weirdly)</span><br>
+<span class=y>#include</span> <span class=b>&lt;algorithm&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;array&gt;</span>
+<span class=y>#include</span> <span class=b>&lt;cmath&gt;</span><br>
+<span class=g>const</span> <span class=g>int</span> maxn = <span class=y>2e5</span>, lvl = <span class=y>11</span>;<br>
+<span class=g>struct</span> <span class=b>node</span>{
+    <span class=g>char</span> v = <span class=y>'$'</span>;           <span class=r>// head and tail delineator</span>
+    node *f<span class=b>[</span>lvl<span class=b>]</span>, *b<span class=b>[</span>lvl<span class=b>]</span>;  <span class=r>// next nodes</span>
+    <span class=g>int</span> fl<span class=b>[</span>lvl<span class=b>]</span>, bl<span class=b>[</span>lvl<span class=b>]</span>;   <span class=r>// length to next node</span>
+    <span class=g>int</span> h = lvl<span class=y>-</span><span class=y>1</span>;
+};<br>
+node s<span class=b>[</span>maxn+<span class=y>2</span><span class=b>]</span>;<br>
+node *<span class=b>find</span>(<span class=g>int</span> i){
+    node *res = s;  <span class=r>// me when arrays are pointers</span><br>
+    <span class=y>for</span>(<span class=g>int</span> j=lvl<span class=y>-</span><span class=y>1</span>; i; --j){
+        <span class=y>while</span>(res-&gt;fl<span class=b>[</span>j<span class=b>]</span> &lt;= i)
+            i -= res-&gt;fl<span class=b>[</span>j<span class=b>]</span>, res = res-&gt;f<span class=b>[</span>j<span class=b>]</span>;
+    }<br>
+    <span class=y>return</span> res;
+}<br>
+std::array&lt;<span class=g>int</span>, <span class=y>2</span>&gt; ord<span class=b>[</span>maxn<span class=b>]</span>;  <span class=r>// randomize initial order bc yes</span><br>
+<span class=g>int</span> <span class=b>main</span>(){
+    std::cin.<span class=b>tie</span>(<span class=y>0</span>) -&gt; <span class=b>sync_with_stdio</span>(<span class=y>0</span>);
+    <span class=b>srand</span>(<span class=y>69</span>);  <span class=r>// this is important (trust)</span><br>
+    <span class=g>int</span> n, m; std::cin &gt;&gt; n &gt;&gt; m;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i)
+        std::cin &gt;&gt; s<span class=b>[</span>i+<span class=y>1</span><span class=b>]</span>.v;<br>
+    {
+        <span class=g>int</span> p = <span class=y>0</span>, v = <span class=y>1</span>;
+        <span class=g>float</span> f = <span class=b>powf</span>(n, <span class=y>1</span><span class=y>.</span><span class=y>0</span>/lvl);<br>
+        <span class=y>for</span>(<span class=g>float</span> s=n/f; s &amp;&amp; v&lt;lvl; s/=f, ++v){
+            <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;s; ++i, ++p)
+                ord<span class=b>[</span>p<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span> = v;
+        }<br>
+        <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) ord<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>0</span><span class=b>]</span> = <span class=b>rand</span>();<br>
+        std::<span class=b>sort</span>(ord, ord+n);<br>
+        <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;n; ++i) s<span class=b>[</span>i+<span class=y>1</span><span class=b>]</span>.h = ord<span class=b>[</span>i<span class=b>]</span><span class=b>[</span><span class=y>1</span><span class=b>]</span>;
+    }<br>
+<span class=r>    // build interconnects</span><br>
+    node *p<span class=b>[</span>lvl<span class=b>]</span>;
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;lvl; ++i) p<span class=b>[</span>i<span class=b>]</span> = s;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>1</span>; i&lt;=n+<span class=y>1</span>; ++i){
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;=s<span class=b>[</span>i<span class=b>]</span>.h; ++j){
+            p<span class=b>[</span>j<span class=b>]</span>-&gt;f<span class=b>[</span>j<span class=b>]</span> = s+i;
+            p<span class=b>[</span>j<span class=b>]</span>-&gt;fl<span class=b>[</span>j<span class=b>]</span> = s+i-p<span class=b>[</span>j<span class=b>]</span>;
+            s<span class=b>[</span>i<span class=b>]</span>.b<span class=b>[</span>j<span class=b>]</span> = p<span class=b>[</span>j<span class=b>]</span>;
+            s<span class=b>[</span>i<span class=b>]</span>.bl<span class=b>[</span>j<span class=b>]</span> = s+i-p<span class=b>[</span>j<span class=b>]</span>;
+            p<span class=b>[</span>j<span class=b>]</span> = s+i;
+        }
+    }<br>
+<span class=r>    // queries</span><br>
+    <span class=y>while</span>(m--){
+        <span class=g>int</span> a, b; std::cin &gt;&gt; a &gt;&gt; b;<br>
+<span class=r>        // find ending nodes of the desired segment</span>
+<span class=r>        // then determine all of the edges that need to be cut</span><br>
+        node *start = <span class=b>find</span>(a), *end = <span class=b>find</span>(b);<br>
+        node *left<span class=b>[</span>lvl<span class=b>]</span>, *right<span class=b>[</span>lvl<span class=b>]</span>;
+        <span class=g>int</span> lp<span class=b>[</span>lvl<span class=b>]</span>, rp<span class=b>[</span>lvl<span class=b>]</span>, lf = <span class=y>0</span>, rf = <span class=y>0</span>;<br>
+<span class=r>        // find outward side of edges &amp; index them</span><br>
+        <span class=g>int</span> lpp = a-(start-&gt;bl<span class=b>[</span><span class=y>0</span><span class=b>]</span>);<br>
+        <span class=y>for</span>(node *p=start-&gt;b<span class=b>[</span><span class=y>0</span><span class=b>]</span>; lf&lt;lvl;){
+            <span class=y>for</span>(; lf&lt;=p-&gt;h; ++lf)
+                left<span class=b>[</span>lf<span class=b>]</span> = p, lp<span class=b>[</span>lf<span class=b>]</span> = lpp;
+            lpp -= p-&gt;bl<span class=b>[</span>p-&gt;h<span class=b>]</span>;
+            p = p-&gt;b<span class=b>[</span>p-&gt;h<span class=b>]</span>;
+        }<br>
+        <span class=g>int</span> rpp = b+(end-&gt;fl<span class=b>[</span><span class=y>0</span><span class=b>]</span>);<br>
+        <span class=y>for</span>(node *p=end-&gt;f<span class=b>[</span><span class=y>0</span><span class=b>]</span>; rf&lt;lvl;){
+            <span class=y>for</span>(; rf&lt;=p-&gt;h; ++rf)
+                right<span class=b>[</span>rf<span class=b>]</span> = p, rp<span class=b>[</span>rf<span class=b>]</span> = rpp;
+            rpp += p-&gt;fl<span class=b>[</span>p-&gt;h<span class=b>]</span>;
+            p = p-&gt;f<span class=b>[</span>p-&gt;h<span class=b>]</span>;
+        }<br>
+<span class=r>        // find inward side of edges</span><br>
+        node *leftright<span class=b>[</span>lvl<span class=b>]</span>, *rightleft<span class=b>[</span>lvl<span class=b>]</span>;
+        <span class=g>int</span> lrp<span class=b>[</span>lvl<span class=b>]</span>, rlp<span class=b>[</span>lvl<span class=b>]</span>;<br>
+        <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;lvl; ++i){
+            leftright<span class=b>[</span>i<span class=b>]</span> = left<span class=b>[</span>i<span class=b>]</span>-&gt;f<span class=b>[</span>i<span class=b>]</span>;
+            lrp<span class=b>[</span>i<span class=b>]</span> = lp<span class=b>[</span>i<span class=b>]</span>+left<span class=b>[</span>i<span class=b>]</span>-&gt;fl<span class=b>[</span>i<span class=b>]</span>;
+            rightleft<span class=b>[</span>i<span class=b>]</span> = right<span class=b>[</span>i<span class=b>]</span>-&gt;b<span class=b>[</span>i<span class=b>]</span>;
+            rlp<span class=b>[</span>i<span class=b>]</span> = rp<span class=b>[</span>i<span class=b>]</span>-right<span class=b>[</span>i<span class=b>]</span>-&gt;bl<span class=b>[</span>i<span class=b>]</span>;
+        }<br>
+<span class=r>        // re-arrange edges</span><br>
+        <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;lvl; ++i){
+            <span class=y>if</span>(left<span class=b>[</span>i<span class=b>]</span>-&gt;f<span class=b>[</span>i<span class=b>]</span> == right<span class=b>[</span>i<span class=b>]</span>){
+                left<span class=b>[</span>i<span class=b>]</span>-&gt;fl<span class=b>[</span>i<span class=b>]</span> -= (b-a+<span class=y>1</span>);
+                right<span class=b>[</span>i<span class=b>]</span>-&gt;bl<span class=b>[</span>i<span class=b>]</span> -= (b-a+<span class=y>1</span>);<br>
+                node *x = s<span class=b>[</span>n+<span class=y>1</span><span class=b>]</span>.b<span class=b>[</span>i<span class=b>]</span>;<br>
+                s<span class=b>[</span>n+<span class=y>1</span><span class=b>]</span>.bl<span class=b>[</span>i<span class=b>]</span> += (b-a+<span class=y>1</span>);
+                x-&gt;fl<span class=b>[</span>i<span class=b>]</span> += (b-a+<span class=y>1</span>);<br>
+            }<span class=y>else</span>{
+                left<span class=b>[</span>i<span class=b>]</span>-&gt;f<span class=b>[</span>i<span class=b>]</span> = right<span class=b>[</span>i<span class=b>]</span>;
+                right<span class=b>[</span>i<span class=b>]</span>-&gt;b<span class=b>[</span>i<span class=b>]</span> = left<span class=b>[</span>i<span class=b>]</span>;<br>
+                left<span class=b>[</span>i<span class=b>]</span>-&gt;fl<span class=b>[</span>i<span class=b>]</span> = rp<span class=b>[</span>i<span class=b>]</span>-lp<span class=b>[</span>i<span class=b>]</span>-(b-a+<span class=y>1</span>);
+                right<span class=b>[</span>i<span class=b>]</span>-&gt;bl<span class=b>[</span>i<span class=b>]</span> = rp<span class=b>[</span>i<span class=b>]</span>-lp<span class=b>[</span>i<span class=b>]</span>-(b-a+<span class=y>1</span>);<br>
+                node *x = s<span class=b>[</span>n+<span class=y>1</span><span class=b>]</span>.b<span class=b>[</span>i<span class=b>]</span>;<br>
+                x-&gt;f<span class=b>[</span>i<span class=b>]</span> = leftright<span class=b>[</span>i<span class=b>]</span>;
+                leftright<span class=b>[</span>i<span class=b>]</span>-&gt;b<span class=b>[</span>i<span class=b>]</span> = x;
+                <span class=g>int</span> ll = x-&gt;fl<span class=b>[</span>i<span class=b>]</span> + lrp<span class=b>[</span>i<span class=b>]</span>-a;
+                x-&gt;fl<span class=b>[</span>i<span class=b>]</span> = ll;
+                leftright<span class=b>[</span>i<span class=b>]</span>-&gt;bl<span class=b>[</span>i<span class=b>]</span> = ll;<br>
+                s<span class=b>[</span>n+<span class=y>1</span><span class=b>]</span>.b<span class=b>[</span>i<span class=b>]</span> = rightleft<span class=b>[</span>i<span class=b>]</span>;
+                rightleft<span class=b>[</span>i<span class=b>]</span>-&gt;f<span class=b>[</span>i<span class=b>]</span> = s+n+<span class=y>1</span>;
+                <span class=g>int</span> rl = b-rlp<span class=b>[</span>i<span class=b>]</span> + <span class=y>1</span>;
+                s<span class=b>[</span>n+<span class=y>1</span><span class=b>]</span>.bl<span class=b>[</span>i<span class=b>]</span> = rl;
+                rightleft<span class=b>[</span>i<span class=b>]</span>-&gt;fl<span class=b>[</span>i<span class=b>]</span> = rl;
+            }
+        }
+    }<br>
+<span class=r>    // profit</span><br>
+    <span class=y>for</span>(node *i=s<span class=b>[</span><span class=y>0</span><span class=b>]</span>.f<span class=b>[</span><span class=y>0</span><span class=b>]</span>; i-&gt;v != <span class=y>'$'</span>; i=i-&gt;f<span class=b>[</span><span class=y>0</span><span class=b>]</span>)
+        std::cout &lt;&lt; i-&gt;v;
+    std::cout &lt;&lt; <span class=y>'\n'</span>;
+}
+</pre>
+<p>This ended up not actually being that terrible - I managed to not have any errors in my core logic while writing. Constant factor was kind of suspicious though, which I cheesed by messing with the balance factors of the skiplist.</p>
