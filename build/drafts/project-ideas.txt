@@ -1,0 +1,10 @@
+some sort of automatic thrust vector control system, computer simulation, ideally simple rocket
+
+flow free mission generator (algorithm?)
+
+maybe some hardware stuff?
+	- would be nice to have portable network-comm mic & stream system
+
+learn to make ios app
+
+funny two finger swipe keyboard website demo
