@@ -44,18 +44,18 @@ function trypass(key, root) {
 	work = {val: true};
 
 	const decr_recursive = (element, key, work) => {
-		if(element.nodeType === Node.ELEMENT_NODE || true) {
+		if(element.nodeType === Node.ELEMENT_NODE) {
 			element.childNodes.forEach(child => {
 				if(work.val) decr_recursive(child, key, work);
 			});
 
-			if(element.childNodes.length == 0 && element.textContent.length != 0) {
+			if(element.childNodes.length == 1 && element.childNodes[0].childNodes.length == 0) {
 				try{
 					const decrypted = decrypt(element.textContent, key);
 					if(decrypted.length == 0) {
 						work.val = false;
 					}else{
-						element.textContent = decrypted;
+						element.innerHTML = decrypted;
 					}
 				}catch(e){
 					work.val = false;

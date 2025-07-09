@@ -2,6 +2,8 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad,unpad
 
+NEWLINE_ENT = "{{NEWLINE}}"
+
 def raw_encrypt(raw, k):
     key = k.ljust(16, '0')
     raw = pad(raw.encode(),16)
@@ -91,6 +93,8 @@ else:
     block, ciph = '', ''
     blen, light = 0, 1
 
+    tail = tail.replace("<br>", NEWLINE_ENT)
+
     for c in tail.strip():
         if angle:
             if c == '>':
@@ -103,7 +107,7 @@ else:
                 angle = True
 
                 if blen:
-                    ciph += encrypt(block, key)
+                    ciph += encrypt(block.replace(NEWLINE_ENT, "<br>"), key)
                     block = ''
                     blen = 0
                     light = 1
