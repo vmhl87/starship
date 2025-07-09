@@ -44,7 +44,7 @@ function trypass(key, root) {
 	work = {val: true};
 
 	const decr_recursive = (element, key, work) => {
-		if(element.nodeType === Node.ELEMENT_NODE) {
+		if(element.nodeType === Node.ELEMENT_NODE || true) {
 			element.childNodes.forEach(child => {
 				if(work.val) decr_recursive(child, key, work);
 			});
