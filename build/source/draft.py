@@ -51,8 +51,18 @@ def draft(content, pageid):
             continue
 
         if not cutoff and "[[ENDSUM]]" in line:
-            summary += line.split("[[ENDSUM]]")[0] + "...\n"
-            full += line.replace("[[ENDSUM]]", "")
+            if "[[ENDSPACER]]" in line.split("[[ENDSUM]]")[1]:
+                part = line.split("[[ENDSUM]]")[0]
+                summary += part
+                full += part
+
+                summary += line.split("[[ENDSUM]]")[1].split("[[ENDSPACER]]")[0] + "...\n"
+                full += line.split("[[ENDSUM]]")[1].split("[[ENDSPACER]]")[1]
+
+            else:
+                summary += line.split("[[ENDSUM]]")[0] + "...\n"
+                full += line.replace("[[ENDSUM]]", "")
+
             cutoff = True
 
         elif not cutoff:
