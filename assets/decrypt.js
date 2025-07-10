@@ -88,8 +88,8 @@ function decrypt_challenge(elem) {
 	const floatingBox = document.createElement('div');
 	floatingBox.style.position = 'fixed';
 	floatingBox.style.top = '50%';
-	floatingBox.style.left = '50%';
-	floatingBox.style.transform = 'translate(-50%, -50%)';
+	floatingBox.style.left = 'calc(50% - 200px)';  // fix formatting on mobile
+	floatingBox.style.transform = 'translate(calc(-50% + 200px), -50%)';
 	floatingBox.style.padding = '10px';
 	floatingBox.style.backgroundColor = '#404040';
 	floatingBox.style.zIndex = '1000';
