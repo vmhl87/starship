@@ -11,8 +11,7 @@ def collect(body, index, styleroot, title=None):
     page_title = true_page_title
 
     if title:
-        # page_title += f" - {title}"
-        page_title = title + " - " + page_title
+        page_title = title.capitalize() + " - " + page_title
 
     for line in template:
         final += line

@@ -48,7 +48,10 @@ def chunk(draft, loc, head=""):
         if loc.endswith("/main/"):
             content = getmenubar() + content
 
-        final = collect(content, "index.html", "../../style.css")
+        s_name = loc.strip().split('/')[-2].capitalize()
+
+        final = collect(content, "index.html", "../../style.css",
+                None if s_name == "Main" else s_name)
 
         writeto(f"{loc}index.html", final)
 
