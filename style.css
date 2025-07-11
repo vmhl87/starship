@@ -145,6 +145,7 @@ div.post-title-date {
 a {
 	text-decoration: none;
 	color: var(--link-color);
+	word-wrap: break-word;
 }
 
 a:link:hover {
