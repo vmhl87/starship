@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<!-- head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+<!---------->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- css -->
+<link rel="stylesheet" href="../style.css"><!--------->
+<!-- title -->
+<title>How to cheese `counting towers` - O(sin(x))
+</title>
+<!----------->
+	</head>
+	<body>
+<!-- grabber -->
+<div id="starship">Powered by Starship v1.3<div id="grabber"><img width="14px" src="/starship/assets/fire-emoji.png"/></div></div>
+<!------------->
+		<div id="flex-stack">
+			<div id="title-outer">
+				<div id="title-inner">
+<!-- name -->
+<a href="../content/main/index.html">O(sin(x))
+</a>
+<!---------->
+				</div>
+			</div>
+			<div id="posts-outer">
+				<div id="posts-inner">
+<!-- posts -->
+<div class="post"><div class="content">
+<div class="post-title">
+    <a class="post-title-name" href="115_how-to-cheese-co.html">how to cheese `counting towers`</a>
+    <div class="post-title-date">Jul&nbsp;23&nbsp;2025<br>8:48&nbsp;PM</div>
+</div>
+<style>
+html, body {
+    height: auto !important;
+}
+div#title-inner {
+    display: none !important;
+}
+div#title-outer {
+    padding: 0px !important;
+}
+div#starship {
+    display: none !important;
+}
+div.post {
+    margin-bottom: clamp(0px, calc((100vw - 900px) / 2), 40px) !important;
+    margin-top: clamp(20px, calc(20px + (100vw - 900px) / 2), 60px) !important;
+}
+::-webkit-scrollbar {
+    display: none !important;
+}
+div#posts-outer {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+</style>
+<!-- CONTENT BEGINS HERE -->
+<p>funny funny code!</p>
+<p>essentially, the idea is to start with the standard "build the tower level by level" DP, and then notice that we can use matrix exponentiation. for a little more detail about mat expo dp, check out <a href="https://vmhl87.github.io/starship/pages/12_the-m-in-logn-st.html" target=_blank>this previous post</a>. (i believe i referenced my goofy solution to <span style=color:var(--code-color)>`counting towers`</span> in that post; that's how long ago it was.)</p>
+<p class=quote-center>
+spoilers ahead! <a href="javascript:(_=>{document.getElementById('solution').style.display='block'})()">view code</a>
+</p>
+<pre class=code-color id=solution style=display:none>
+<span class=y>#include</span> <span class=b>&lt;iostream&gt;</span><br>
+<span class=y>using</span> mat = <span class=g>long</span> <span class=g>long</span> <span class=b>[</span><span class=y>6</span><span class=b>]</span><span class=b>[</span><span class=y>6</span><span class=b>]</span>;
+<span class=y>using</span> vec = <span class=g>long</span> <span class=g>long</span> <span class=b>[</span><span class=y>6</span><span class=b>]</span>;<br>
+<span class=g>const</span> <span class=g>int</span> mod = <span class=y>1e9</span> + <span class=y>7</span>;<br>
+<span class=r>// transformation matrix (precomputed)</span><br>
+mat transform = {
+    {<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>},
+    {<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>0</span>,<span class=y>0</span>},
+    {<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>0</span>,<span class=y>0</span>},
+    {<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>0</span>,<span class=y>0</span>},
+    {<span class=y>0</span>,<span class=y>0</span>,<span class=y>0</span>,<span class=y>0</span>,<span class=y>1</span>,<span class=y>1</span>},
+    {<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>,<span class=y>1</span>}
+};<br>
+<span class=r>// multiply vector v with matrix m, storing the result back in v</span><br>
+<span class=g>void</span> <span class=b>multiply</span>(vec v, mat m){
+    mat tmp;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i) tmp<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span> = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;<span class=y>6</span>; ++j)
+            tmp<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = (tmp<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>j<span class=b>]</span> + m<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>*v<span class=b>[</span>i<span class=b>]</span>) % mod;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i) v<span class=b>[</span>i<span class=b>]</span> = tmp<span class=b>[</span><span class=y>0</span><span class=b>]</span><span class=b>[</span>i<span class=b>]</span>;
+}<br>
+<span class=r>// square matrix m and write the result back into m</span><br>
+<span class=g>void</span> <span class=b>square</span>(mat m){
+    mat tmp;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;<span class=y>6</span>; ++j)
+            tmp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = <span class=y>0</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;<span class=y>6</span>; ++j)
+            <span class=y>for</span>(<span class=g>int</span> a=<span class=y>0</span>; a&lt;<span class=y>6</span>; ++a)
+                tmp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = (tmp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> + m<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>a<span class=b>]</span>*m<span class=b>[</span>a<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>) % mod;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;<span class=y>6</span>; ++j)
+            m<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = tmp<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;
+}<br>
+<span class=g>void</span> <span class=b>test</span>(){
+    <span class=g>int</span> n; std::cin &gt;&gt; n;<br>
+<span class=r>    // initialize</span><br>
+    mat base;
+    vec row;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        row<span class=b>[</span>i<span class=b>]</span> = <span class=y>1</span>;<br>
+    <span class=y>for</span>(<span class=g>int</span> i=<span class=y>0</span>; i&lt;<span class=y>6</span>; ++i)
+        <span class=y>for</span>(<span class=g>int</span> j=<span class=y>0</span>; j&lt;<span class=y>6</span>; ++j)
+            base<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span> = transform<span class=b>[</span>i<span class=b>]</span><span class=b>[</span>j<span class=b>]</span>;<br>
+<span class=r>    // binary exponentiate</span><br>
+    <span class=y>for</span>(--n; n; n /= <span class=y>2</span>){
+        <span class=y>if</span>(n&amp;<span class=y>1</span>) <span class=b>multiply</span>(row, base);
+        <span class=b>square</span>(base);
+    }<br>
+    std::cout &lt;&lt; ((row<span class=b>[</span><span class=y>0</span><span class=b>]</span> + row<span class=b>[</span><span class=y>5</span><span class=b>]</span>) % mod) &lt;&lt; <span class=y>'\n'</span>;
+}<br>
+<span class=g>int</span> <span class=b>main</span>(){
+    std::cin.<span class=b>tie</span>(<span class=y>0</span>) -&gt; <span class=b>sync_with_stdio</span>(<span class=y>0</span>);
+    <span class=g>int</span> t; std::cin &gt;&gt; t;
+    <span class=y>while</span>(t--) <span class=b>test</span>();
+}
+</pre>
+<p class=tag-container>
+tags: <a href=../content/programming/index.html>programming</a> <a href=../content/cses/index.html>cses</a>
+<p>
+</div></div><!----------->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
